@@ -7,6 +7,8 @@
   </strong>
 </div>
 
+> [!Important]
+> Open the Main Scene inside the Scene Folder
 
 ## Features:
 
