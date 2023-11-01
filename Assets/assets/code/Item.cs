@@ -56,8 +56,7 @@ namespace assets.code
         /// <returns>if the item should be deleted after use</returns>
         public virtual bool Interact()
         {
-            print("using item");
-            return true;
+            return false;
         }
 
         /// <summary>

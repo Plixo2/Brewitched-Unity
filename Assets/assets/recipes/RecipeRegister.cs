@@ -17,7 +17,7 @@ namespace assets.recipes
             Add("ash, water -> potion_frog");   
             Add("water, feather -> potion_fire");   
             Add("potion_fire, potion_frog -> apple");   
-            Add("apple, coal -> upgrade");   
+            Add("apple, coal -> key");   
         }
 
         /// <summary>

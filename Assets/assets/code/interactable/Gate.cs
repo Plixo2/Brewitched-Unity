@@ -6,6 +6,8 @@ namespace assets.code.interactable
 {
     public class Gate : Interactable
     {
+        [SerializeField] private Sprite openSprite;
+        [SerializeField] private string itemName = "key";
         private Collider2D _collider2D;
         public void Start()
         {
@@ -14,13 +16,19 @@ namespace assets.code.interactable
         }
         public override bool Interact(Item? item)
         {
-            if (item != null && item.itemName.Equals("upgrade"))
+            if (item != null && item.itemName.Equals(itemName))
             {
-                _collider2D.enabled = false;
+                Open();
                 return true;
             }
 
             return false;
+        }
+
+        private void Open()
+        {
+            _collider2D.enabled = false;
+            GetComponent<SpriteRenderer>().sprite = openSprite;
         }
     }
 }
