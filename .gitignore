@@ -2,3 +2,5 @@
 .idea/*
 Temp/*
 obj/Debug/*
+Logs/*
+Assembly-CSharp.csproj
