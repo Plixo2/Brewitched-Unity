@@ -11,7 +11,6 @@ namespace assets.code
         public void Start()
         {
             States.AddInteractable(this);
-            Debug.Log("registered");
         }
 
         //returns true, if the holding item is used, and should be destroyed

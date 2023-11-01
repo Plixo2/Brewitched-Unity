@@ -55,7 +55,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Interact();
+            InteractPrimary();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            InteractSecondary();
         }
 
         if (Input.GetKey(KeyCode.F))
@@ -76,7 +81,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Interact()
+    /// <summary>
+    /// Secondary Interaction for interacting with the World and using items 
+    /// </summary>
+    private void InteractSecondary()
     {
         var hand = GetHandItem();
         var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
@@ -87,14 +95,29 @@ public class Player : MonoBehaviour
             {
                 if (hand != null)
                 {
-                    DropHandItem();
-                    Destroy(hand.gameObject);
+                    DeleteHandItem();
                 }
 
                 return;
             }
         }
 
+        if (hand != null)
+        {
+            var result = hand.Interact();
+            if (result)
+            {
+                DeleteHandItem();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Primary Interaction for picking/deposition items
+    /// and placing them in the cauldron
+    /// </summary>
+    private void InteractPrimary()
+    {
         if (HasHandItem())
         {
             var handItem = GetHandItem()!;
@@ -106,8 +129,7 @@ public class Player : MonoBehaviour
                 if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
                 {
                     currentCauldron.Add(handItem);
-                    DropHandItem();
-                    Destroy(handItem.gameObject);
+                    DeleteHandItem();
                     interacted = true;
                 }
             }
@@ -162,10 +184,19 @@ public class Player : MonoBehaviour
     private void DropHandItem()
     {
         var handItem = GetHandItem();
-        if (handItem is { } item)
+        if (handItem != null)
         {
-            item.Disconnect();
-            //   item.transform.parent = null;
+            handItem.Disconnect();
+        }
+    }
+
+    private void DeleteHandItem()
+    {
+        var handItem = GetHandItem();
+        DropHandItem();
+        if (handItem != null)
+        {
+            Destroy(handItem.gameObject);
         }
     }
 

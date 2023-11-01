@@ -45,6 +45,16 @@ public class Item : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// Item interaction function for child classes
+    /// </summary>
+    /// <returns>if the item should be deleted after use</returns>
+    public virtual bool Interact()
+    {
+        print("using item");
+        return true;
+    }
+
     public bool IsConnected()
     {
         return _connectionPoint != null;
