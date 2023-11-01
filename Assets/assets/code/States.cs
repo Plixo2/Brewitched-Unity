@@ -1,128 +1,133 @@
 #nullable enable
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using assets.code;
-using JetBrains.Annotations;
 using UnityEngine;
 
-public class States : MonoBehaviour
+namespace assets.code
 {
-    private static States _instance;
+    /// <summary>
+    /// Class to register connection points, items, cauldrons and interactables
+    /// Also used to keep track of the overall game progress, like waterlevel
+    /// </summary>
+    public class States : MonoBehaviour
+    {
+        private static States _instance;
 
-    public int level = 0;
-    private List<ConnectionPoint> _connectionPoints = new();
-    private List<TheCauldron> _cauldrons = new();
-    private List<Item> _items = new();
-    private List<Interactable> _interactables = new();
+        public int level = 0;
+        private List<ConnectionPoint> _connectionPoints = new();
+        private List<TheCauldron> _cauldrons = new();
+        private List<Item> _items = new();
+        private List<Interactable> _interactables = new();
 
-    private void Awake()
-    {
-        _instance = this;
-    }
-
-    public static void AddConnectionPoint(ConnectionPoint connectionPoint)
-    {
-        _instance._connectionPoints.Add(connectionPoint);
-    }
-    public static void AddItem(Item item)
-    {
-        _instance._items.Add(item);
-    }
-    public static void AddInteractable(Interactable interactable)
-    {
-        _instance._interactables.Add(interactable);
-    }
-    public static void AddCauldron(TheCauldron cauldron)
-    {
-        _instance._cauldrons.Add(cauldron);
-    }
-
-    public static TheCauldron? CurrentCauldron()
-    {
-        foreach (var cauldron in _instance._cauldrons)
+        private void Awake()
         {
-            if (cauldron.level == _instance.level)
-            {
-                return cauldron;
-            }
+            _instance = this;
         }
 
-        return null;
-    }
+        
+        public static void AddConnectionPoint(ConnectionPoint connectionPoint)
+        {
+            _instance._connectionPoints.Add(connectionPoint);
+        }
+        public static void AddItem(Item item)
+        {
+            _instance._items.Add(item);
+        }
+        public static void AddInteractable(Interactable interactable)
+        {
+            _instance._interactables.Add(interactable);
+        }
+        public static void AddCauldron(TheCauldron cauldron)
+        {
+            _instance._cauldrons.Add(cauldron);
+        }
+
+        public static TheCauldron? CurrentCauldron()
+        {
+            foreach (var cauldron in _instance._cauldrons)
+            {
+                if (cauldron.level == _instance.level)
+                {
+                    return cauldron;
+                }
+            }
+
+            return null;
+        }
     
-    public static Interactable? GetInteractable(Vector3 position, float range, Predicate<Interactable> predicate)
-    {
-        var rangeMin = range;
-        Interactable? bestPoint = null;
-        foreach (var point in _instance._interactables)
+        public static Interactable? GetInteractable(Vector3 position, float range, Predicate<Interactable> predicate)
         {
-            var pos = point.transform.position;
-            var distSqr = Vector3.Distance(position, pos);
-            if ((distSqr-point.interactionRange) < rangeMin && predicate.Invoke(point))
+            var rangeMin = range;
+            Interactable? bestPoint = null;
+            foreach (var point in _instance._interactables)
             {
-                rangeMin = distSqr;
-                bestPoint = point;
+                var pos = point.transform.position;
+                var distSqr = Vector3.Distance(position, pos);
+                if ((distSqr-point.interactionRange) < rangeMin && predicate.Invoke(point))
+                {
+                    rangeMin = distSqr;
+                    bestPoint = point;
+                }
             }
+
+            return bestPoint;
+        }
+        public static ConnectionPoint? GetPoint(Vector3 position, float range, Predicate<ConnectionPoint> predicate)
+        {
+            var rangeMin = range;
+            ConnectionPoint? bestPoint = null;
+            foreach (var point in _instance._connectionPoints)
+            {
+                var pos = point.transform.position;
+                var distSqr = Vector3.Distance(position, pos);
+                if (distSqr < rangeMin && predicate.Invoke(point))
+                {
+                    rangeMin = distSqr;
+                    bestPoint = point;
+                }
+            }
+
+            return bestPoint;
+        }
+        public static Item? GetItem(Vector3 position, float range)
+        {
+            var rangeMin = range;
+            Item? bestPoint = null;
+            foreach (var point in _instance._items)
+            {
+                var pos = point.transform.position;
+                var distSqr = Vector3.Distance(position, pos);
+                if (distSqr < rangeMin)
+                {
+                    rangeMin = distSqr;
+                    bestPoint = point;
+                }
+            }
+
+            return bestPoint;
+        }
+        public static Item? GetItem(Vector3 position, float range, Predicate<Item> predicate)
+        {
+            var rangeMin = range;
+            Item? bestPoint = null;
+            foreach (var point in _instance._items)
+            {
+                var pos = point.transform.position;
+                var distSqr = Vector3.Distance(position, pos);
+                if (distSqr < rangeMin && predicate.Invoke(point))
+                {
+                    rangeMin = distSqr;
+                    bestPoint = point;
+                }
+            }
+
+            return bestPoint;
         }
 
-        return bestPoint;
-    }
-    public static ConnectionPoint? GetPoint(Vector3 position, float range, Predicate<ConnectionPoint> predicate)
-    {
-        var rangeMin = range;
-        ConnectionPoint? bestPoint = null;
-        foreach (var point in _instance._connectionPoints)
+
+        public static void RemoveItem(Item item)
         {
-            var pos = point.transform.position;
-            var distSqr = Vector3.Distance(position, pos);
-            if (distSqr < rangeMin && predicate.Invoke(point))
-            {
-                rangeMin = distSqr;
-                bestPoint = point;
-            }
+            _instance._items.Remove(item);
         }
-
-        return bestPoint;
-    }
-    public static Item? GetItem(Vector3 position, float range)
-    {
-        var rangeMin = range;
-        Item? bestPoint = null;
-        foreach (var point in _instance._items)
-        {
-            var pos = point.transform.position;
-            var distSqr = Vector3.Distance(position, pos);
-            if (distSqr < rangeMin)
-            {
-                rangeMin = distSqr;
-                bestPoint = point;
-            }
-        }
-
-        return bestPoint;
-    }
-    public static Item? GetItem(Vector3 position, float range, Predicate<Item> predicate)
-    {
-        var rangeMin = range;
-        Item? bestPoint = null;
-        foreach (var point in _instance._items)
-        {
-            var pos = point.transform.position;
-            var distSqr = Vector3.Distance(position, pos);
-            if (distSqr < rangeMin && predicate.Invoke(point))
-            {
-                rangeMin = distSqr;
-                bestPoint = point;
-            }
-        }
-
-        return bestPoint;
-    }
-
-
-    public static void RemoveItem(Item item)
-    {
-        _instance._items.Remove(item);
     }
 }

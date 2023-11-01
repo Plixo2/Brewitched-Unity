@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace assets.recipes
 {
+    /// <summary>
+    /// Main recipe class
+    /// </summary>
     public class Recipe
     {
         public readonly string Result;

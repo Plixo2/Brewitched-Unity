@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace assets.recipes
 {
+    /// <summary>
+    /// Register for adding recipes with a markup 
+    /// </summary>
     public class RecipeRegister : MonoBehaviour
     {
         public static List<Recipe> AllRecipes = new();
@@ -17,6 +20,10 @@ namespace assets.recipes
             Add("apple, coal -> upgrade");   
         }
 
+        /// <summary>
+        /// Converts and adds a markup string to the recipe list
+        /// </summary>
+        /// <param name="markup">markup recipe</param>
         private static void Add(string markup)
         {
             var separator = markup.Split("->");
@@ -34,11 +41,20 @@ namespace assets.recipes
             AllRecipes.Add(recipe);
         }
 
+        /// <summary>
+        /// Helper for converting to an ingredient.
+        /// Might be complexer in the future
+        /// </summary>
+        /// <param name="txt">the raw string literal</param>
+        /// <returns>the converted string</returns>
         private static string ToIngredientName(string txt)
         {
             return txt.Trim();
         }
 
+        /// <summary>
+        /// Prints all recipes on start
+        /// </summary>
         private void Start()
         {
             print("all recipes:");

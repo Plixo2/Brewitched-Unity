@@ -1,237 +1,262 @@
 #nullable enable
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using assets.code;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+namespace assets.code
 {
-    private Rigidbody2D _rigidbody2D;
-    private float _currentSpeed = 0;
-
-    [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
-    [SerializeField] private float groundRadius = 0.2f;
-    [SerializeField] private float jumpHeight = 9;
-    [SerializeField] private float movementSpeed = 5;
-    [SerializeField] private float acceleration = 0.1f;
-
-    [SerializeField] private float reach = 1f;
-
-    private DelayAction _dropTimer = new DelayAction();
-
-
-    [SerializeField] private LayerMask groundMask = new LayerMask();
-
-    void Start()
-    {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
-    {
-        var moveInput = Input.GetAxisRaw("Horizontal");
-        move(moveInput);
-    }
-
-    private void move(float target)
-    {
-        _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
-        var dx = _currentSpeed * movementSpeed;
-        // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
-        _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
-    }
-
-    void Update()
-    {
-        if (IsGrounded())
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            InteractPrimary();
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            InteractSecondary();
-        }
-
-        if (Input.GetKey(KeyCode.F))
-        {
-            _dropTimer.Advance(Time.deltaTime);
-        }
-        else
-        {
-            _dropTimer.Reset();
-        }
-
-        if (_dropTimer.HasJustPassed(0.4f))
-        {
-            if (HasHandItem())
-            {
-                DropHandItem();
-            }
-        }
-    }
-
     /// <summary>
-    /// Secondary Interaction for interacting with the World and using items 
+    /// Main player movement and interaction script
     /// </summary>
-    private void InteractSecondary()
+    public class Player : MonoBehaviour
     {
-        var hand = GetHandItem();
-        var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
-        if (interactable != null)
-        {
-            var interacted = interactable.Interact(hand);
-            if (interacted)
-            {
-                if (hand != null)
-                {
-                    DeleteHandItem();
-                }
+        private Rigidbody2D _rigidbody2D;
+        private float _currentSpeed = 0;
 
-                return;
-            }
+        [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
+        [SerializeField] private float groundRadius = 0.2f;
+        [SerializeField] private float jumpHeight = 9;
+        [SerializeField] private float movementSpeed = 5;
+        [SerializeField] private float acceleration = 0.1f;
+
+        [SerializeField] private float reach = 1f;
+
+        private DelayAction _dropTimer = new();
+
+        [SerializeField] private LayerMask groundMask;
+
+        void Start()
+        {
+            _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
-        if (hand != null)
+        private void FixedUpdate()
         {
-            var result = hand.Interact();
-            if (result)
-            {
-                DeleteHandItem();
-            }
+            var moveInput = Input.GetAxisRaw("Horizontal");
+            Move(moveInput);
         }
-    }
 
-    /// <summary>
-    /// Primary Interaction for picking/deposition items
-    /// and placing them in the cauldron
-    /// </summary>
-    private void InteractPrimary()
-    {
-        if (HasHandItem())
+        private void Move(float target)
         {
-            var handItem = GetHandItem()!;
+            _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
+            var dx = _currentSpeed * movementSpeed;
+            // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
+            _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
+        }
 
-            var currentCauldron = States.CurrentCauldron();
-            var interacted = false;
-            if (currentCauldron != null)
+        void Update()
+        {
+            if (IsGrounded())
             {
-                if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    currentCauldron.Add(handItem);
-                    DeleteHandItem();
-                    interacted = true;
+                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                 }
             }
 
-            if (!interacted)
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                var connectionPoint = States.GetPoint(transform.position, this.reach, point => !point.hasItem
-                    ());
-                if (connectionPoint != null)
-                {
-                    DropHandItem();
-                    handItem.Connect(connectionPoint);
-                    interacted = true;
-                }
+                InteractPrimary();
             }
-        }
-        else
-        {
-            var freeItem = States.GetItem(transform.position, this.reach, item1 => !item1.IsConnected());
-            if (freeItem != null)
+
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                PickItem(freeItem);
+                InteractSecondary();
+            }
+
+            if (Input.GetKey(KeyCode.F))
+            {
+                _dropTimer.Advance(Time.deltaTime);
             }
             else
             {
-                var connectedItem =
-                    States.GetItem(transform.position, this.reach, item1 => item1.IsConnected());
-                if (connectedItem != null)
+                _dropTimer.Reset();
+            }
+
+            if (_dropTimer.HasJustPassed(0.4f))
+            {
+                if (HasHandItem())
                 {
-                    connectedItem.Disconnect();
-                    PickItem(connectedItem);
+                    DropHandItem();
                 }
             }
         }
-    }
 
-    private bool HasHandItem()
-    {
-        return GetHandItem() != null;
-    }
-
-    private void PickItem(Item item)
-    {
-        var handItem = HasHandItem();
-        if (!handItem)
+        /// <summary>
+        /// Secondary Interaction for interacting with the World and using items 
+        /// </summary>
+        private void InteractSecondary()
         {
-            item.transform.parent = this.transform;
-            item.Pickup();
-        }
-    }
-
-    private void DropHandItem()
-    {
-        var handItem = GetHandItem();
-        if (handItem != null)
-        {
-            handItem.Disconnect();
-        }
-    }
-
-    private void DeleteHandItem()
-    {
-        var handItem = GetHandItem();
-        DropHandItem();
-        if (handItem != null)
-        {
-            Destroy(handItem.gameObject);
-        }
-    }
-
-    private Item? GetHandItem()
-    {
-        for (int i = 0; i < this.transform.childCount; i++)
-        {
-            var child = this.transform.GetChild(i);
-            var item = child.gameObject.GetComponent<Item>();
-            if (item != null)
+            var hand = GetHandItem();
+            var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
+            if (interactable != null)
             {
-                return item;
+                var interacted = interactable.Interact(hand);
+                if (interacted)
+                {
+                    if (hand != null)
+                    {
+                        DeleteHandItem();
+                    }
+
+                    return;
+                }
+            }
+
+            if (hand != null)
+            {
+                var result = hand.Interact();
+                if (result)
+                {
+                    DeleteHandItem();
+                }
             }
         }
 
-        return null;
-    }
-
-    private bool IsGrounded()
-    {
-        var position = this.transform.position;
-        var pos = new Vector2(position.x, position.y);
-        return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        if (IsGrounded())
+        /// <summary>
+        /// Primary Interaction for picking/deposition items
+        /// and placing them in the cauldron
+        /// </summary>
+        private void InteractPrimary()
         {
-            Gizmos.color = Color.red;
+            if (HasHandItem())
+            {
+                var handItem = GetHandItem()!;
+
+                var currentCauldron = States.CurrentCauldron();
+                var interacted = false;
+                if (currentCauldron != null)
+                {
+                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+                    {
+                        currentCauldron.Add(handItem);
+                        DeleteHandItem();
+                        interacted = true;
+                    }
+                }
+
+                if (!interacted)
+                {
+                    var connectionPoint = States.GetPoint(transform.position, this.reach, point => !point.HasItem
+                        ());
+                    if (connectionPoint != null)
+                    {
+                        DropHandItem();
+                        handItem.Connect(connectionPoint);
+                        interacted = true;
+                    }
+                }
+            }
+            else
+            {
+                var freeItem = States.GetItem(transform.position, this.reach, item1 => !item1.IsConnected());
+                if (freeItem != null)
+                {
+                    PickItem(freeItem);
+                }
+                else
+                {
+                    var connectedItem =
+                        States.GetItem(transform.position, this.reach, item1 => item1.IsConnected());
+                    if (connectedItem != null)
+                    {
+                        connectedItem.Disconnect();
+                        PickItem(connectedItem);
+                    }
+                }
+            }
         }
 
-        var down = new Vector3(groundOffset.x, groundOffset.y, 0);
-        Gizmos.DrawSphere(this.transform.position + down,
-            groundRadius);
+        /// <summary>
+        /// Tests if the player is holding an item
+        /// </summary>
+        /// <returns>if the player is holding an item</returns>
+        private bool HasHandItem()
+        {
+            return GetHandItem() != null;
+        }
+
+        /// <summary>
+        /// Pick up an item, and set its properties
+        /// </summary>
+        /// <param name="item">item to pick up</param>
+        private void PickItem(Item item)
+        {
+            var handItem = HasHandItem();
+            if (!handItem)
+            {
+                item.transform.parent = this.transform;
+                item.Pickup();
+            }
+        }
+
+        /// <summary>
+        /// Drops the current held item on the ground 
+        /// </summary>
+        private void DropHandItem()
+        {
+            var handItem = GetHandItem();
+            if (handItem != null)
+            {
+                handItem.Disconnect();
+            }
+        }
+
+        /// <summary>
+        /// removes the current held item from the world
+        /// </summary>
+        private void DeleteHandItem()
+        {
+            var handItem = GetHandItem();
+            DropHandItem();
+            if (handItem != null)
+            {
+                Destroy(handItem.gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Searches for a item inside the children of the GameObject 
+        /// </summary>
+        /// <returns>A potential Item</returns>
+        private Item? GetHandItem()
+        {
+            for (int i = 0; i < this.transform.childCount; i++)
+            {
+                var child = this.transform.GetChild(i);
+                var item = child.gameObject.GetComponent<Item>();
+                if (item != null)
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
+        /// </summary>
+        /// <returns>if the player is grounded</returns>
+        private bool IsGrounded()
+        {
+            var position = this.transform.position;
+            var pos = new Vector2(position.x, position.y);
+            return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+        }
+
+        /// <summary>
+        /// Draws a debug circle to display the ground check, if the GameObject is selected  
+        /// </summary>
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.cyan;
+            if (IsGrounded())
+            {
+                Gizmos.color = Color.red;
+            }
+
+            var down = new Vector3(groundOffset.x, groundOffset.y, 0);
+            Gizmos.DrawSphere(this.transform.position + down,
+                groundRadius);
+        }
     }
 }

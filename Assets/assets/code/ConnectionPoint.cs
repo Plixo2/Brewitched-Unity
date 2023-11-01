@@ -1,51 +1,75 @@
-using System;
+#nullable enable
 using UnityEngine;
 
-
-public class ConnectionPoint : MonoBehaviour
+namespace assets.code
 {
-    [HideInInspector] public bool isSelected = false;
-
-    private Rigidbody2D _rigidbody2D;
-    
-    private Point img; 
-    private void Start()
+    /// <summary>
+    /// Connection point for adding or picking up items
+    /// a connected point is added as a child of the GameObject 
+    /// </summary>
+    public class ConnectionPoint : MonoBehaviour
     {
-        States.AddConnectionPoint(this);
-        img = GetComponent<Point>();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-    }
+        /// <summary>
+        /// Used for debugging a selected point
+        /// </summary>
+        [HideInInspector] public bool isSelected = false;
 
-    private void Update()
-    {
-        if (isSelected)
+        /// <summary>
+        /// Debug point
+        /// </summary>
+        private Point? img;
+
+        private void Start()
         {
-            img.color = Color.red;
+            States.AddConnectionPoint(this);
+            img = GetComponent<Point>();
         }
-        else
-        {
-            img.color = Color.white;
-        }
-        isSelected = false;  
-    }
 
-    public bool hasItem()
-    {
-        return getHandItem() != null;
-    }
-    
-    private Item? getHandItem()
-    {
-        for (int i = 0; i < this.transform.childCount; i++)
+        /// <summary>
+        /// Updates the color of the debug point if the point is selected
+        /// used for debug purposes 
+        /// </summary>
+        private void Update()
         {
-            var child = this.transform.GetChild(i);
-            var item = child.gameObject.GetComponent<Item>();
-            if (item != null)
+            if (img != null)
+                if (isSelected)
+                {
+                    img.color = Color.red;
+                }
+                else
+                {
+                    img.color = Color.white;
+                }
+
+            isSelected = false;
+        }
+
+        /// <summary>
+        /// test if the point got an item
+        /// </summary>
+        /// <returns>if the point has an item</returns>
+        public bool HasItem()
+        {
+            return GetHandItem() != null;
+        }
+
+        /// <summary>
+        /// finds the Item script in the children of the GameObject
+        /// </summary>
+        /// <returns></returns>
+        private Item? GetHandItem()
+        {
+            for (int i = 0; i < this.transform.childCount; i++)
             {
-                return item;
+                var child = this.transform.GetChild(i);
+                var item = child.gameObject.GetComponent<Item>();
+                if (item != null)
+                {
+                    return item;
+                }
             }
-        }
 
-        return null;
+            return null;
+        }
     }
 }

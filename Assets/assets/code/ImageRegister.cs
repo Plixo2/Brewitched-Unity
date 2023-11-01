@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace assets.code
 {
+    /// <summary>
+    /// Registers Images of Items, so later items with the same name can be created.
+    /// That means every items that will be created has to be in the scene one,
+    /// and has to call the 'RegisterSprite' method
+    /// </summary>
     public class ImageRegister
     {
         private static ImageRegister _instance = new();

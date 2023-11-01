@@ -1,77 +1,92 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-// [ExecuteInEditMode]
-public class ConnectionGrid : MonoBehaviour
+namespace assets.code
 {
-    [SerializeField] private GameObject pointPrefab;
-
-    [SerializeField] [Range(1, 10)] private int rows = 1;
-    [SerializeField] [Range(1, 10)] private int collums = 1;
-    [SerializeField] private float spacingX = 1;
-    [SerializeField] private float spacingY = 1;
-    [SerializeField] private bool generate = true;
-    [SerializeField] private bool drawGizmos = false;
-
-
-    void Update()
+    /// <summary>
+    /// Spawns a grid of connection points at the start of the Game
+    /// </summary>
+    public class ConnectionGrid : MonoBehaviour
     {
-        if (generate)
-        {
-            generate = false;
-            GeneratePoint();
-        }
-    }
+        [SerializeField] private GameObject pointPrefab;
 
-    private void GeneratePoint()
-    {
-        if (pointPrefab == null)
-        {
-            return;
-        }
-        foreach (Transform child in transform)
-        {
-            DestroyImmediate(child.gameObject);
-            DestroyImmediate(child);
-        }
+        [SerializeField] [Range(1, 10)] private int rows = 1;
+        [SerializeField] [Range(1, 10)] private int collums = 1;
+        [SerializeField] private float spacingX = 1;
+        [SerializeField] private float spacingY = 1;
+        [SerializeField] private bool generate = true;
+        [SerializeField] private bool drawGizmos = false;
 
-        var startPosition = transform.position;
-        for (int x = 0; x < rows; x++)
+
+        void Update()
         {
-            for (int y = 0; y < collums; y++)
+            if (generate)
             {
-                var pos = startPosition + new Vector3(x * spacingX, y * spacingY, 0);
-                CreateConnection(pos);
+                generate = false;
+                GeneratePoint();
             }
         }
-    }
 
-    private void CreateConnection(Vector3 position)
-    {
-        var point = Instantiate(pointPrefab, transform);
-        point.transform.position = position;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (drawGizmos)
+        /// <summary>
+        /// Main generation function
+        /// </summary>
+        private void GeneratePoint()
         {
-            OnDrawGizmosSelected();
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = new Color(1, 0, 0, 0.7f);
-        var startPosition = transform.position;
-        for (int x = 0; x < rows; x++)
-        {
-            for (int y = 0; y < collums; y++)
+            if (pointPrefab == null)
             {
-                var pos = startPosition + new Vector3(x * spacingX, y * spacingY, 0);
-                Gizmos.DrawSphere(pos, 0.05f);
+                return;
+            }
+            foreach (Transform child in transform)
+            {
+                DestroyImmediate(child.gameObject);
+                DestroyImmediate(child);
+            }
+
+            var startPosition = transform.position;
+            for (int x = 0; x < rows; x++)
+            {
+                for (int y = 0; y < collums; y++)
+                {
+                    var pos = startPosition + new Vector3(x * spacingX, y * spacingY, 0);
+                    CreateConnection(pos);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Spawns a Connection point at a position
+        /// </summary>
+        /// <param name="position">position to spawn a point</param>
+        private void CreateConnection(Vector3 position)
+        {
+            var point = Instantiate(pointPrefab, transform);
+            point.transform.position = position;
+        }
+
+        /// <summary>
+        /// debug drawing
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            if (drawGizmos)
+            {
+                OnDrawGizmosSelected();
+            }
+        }
+
+        /// <summary>
+        /// debug drawing if the GameObject is selected
+        /// </summary>
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = new Color(1, 0, 0, 0.7f);
+            var startPosition = transform.position;
+            for (int x = 0; x < rows; x++)
+            {
+                for (int y = 0; y < collums; y++)
+                {
+                    var pos = startPosition + new Vector3(x * spacingX, y * spacingY, 0);
+                    Gizmos.DrawSphere(pos, 0.05f);
+                }
             }
         }
     }

@@ -2,6 +2,11 @@ using UnityEngine;
 
 namespace assets.code
 {
+    /// <summary>
+    /// Helper Class used for detecting if a action was
+    /// performed for a certain amount of time.
+    /// Used for Input Handing
+    /// </summary>
     public class DelayAction
     {
         private float _triggerTime = 0;

@@ -10,6 +10,11 @@ using Random = System.Random;
 
 namespace assets.code
 {
+    /// <summary>
+    /// Main cauldron code.
+    /// The Player can add Ingredients by calling 'Add'.
+    /// The Script then checks for valid recipes
+    /// </summary>
     public class TheCauldron : MonoBehaviour
     {
         [SerializeField] private GameObject? dropParticleSystem;
@@ -24,6 +29,9 @@ namespace assets.code
             States.AddCauldron(this);
         }
 
+        /// <summary>
+        /// activates the 'idleParticleSystem' if an item is inside to cauldron
+        /// </summary>
         private void Update()
         {
             if (idleParticleSystem != null)
@@ -32,6 +40,11 @@ namespace assets.code
             }
         }
 
+        /// <summary>
+        /// Adds an item to the cauldron.
+        /// If an item is found the Cauldron will spit it out and play particle effects
+        /// </summary>
+        /// <param name="item">Item to add</param>
         public void Add(Item item)
         {
             var random = new Random();
@@ -55,6 +68,10 @@ namespace assets.code
             // else 
         }
 
+        /// <summary>
+        /// Creates a Particle Effect 
+        /// </summary>
+        /// <param name="color">The Color of the Particles</param>
         private void SpawnParticle(Color color)
         {
             if (dropParticleSystem != null)
@@ -69,7 +86,11 @@ namespace assets.code
             }
         }
 
-
+        /// <summary>
+        /// Searches for a valid recipe 
+        /// </summary>
+        /// <param name="items">items to test</param>
+        /// <returns>a potential Recipe</returns>
         private Recipe? FindRecipeResult(List<string> items)
         {
             //can be done with IsSubSet method i think
@@ -91,7 +112,12 @@ namespace assets.code
         }
 
 
-        public void NewItem(string name)
+        /// <summary>
+        /// Creates a new Item the the specified name.
+        /// Also updates the Image
+        /// </summary>
+        /// <param name="name">name and id of the item</param>
+        private void NewItem(string name)
         {
             if (itemPrefab != null)
             {
