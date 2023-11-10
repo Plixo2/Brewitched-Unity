@@ -1,0 +1,21 @@
+<h1 align="center">
+    Brewitched (working title)
+</h1>
+<div align="center">
+  <strong>
+        Unity Project
+  </strong>
+</div>
+
+> [!Important]
+> Open the Main Scene inside the Scene Folder
+
+## Features:
+
+- Crafting (look into RecipieRegister.cs)
+- Unlocking a Gate with an item
+- Player Movement
+- Picking up items
+- Dropping items
+- Placing items
+- Item Outline Shader
