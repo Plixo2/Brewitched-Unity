@@ -5,7 +5,7 @@ namespace assets.code
     /// <summary>
     /// A Simple Debug Circle Script
     /// if 'drawAlways' is set the circle will always be drawn,
-    /// otherwise only if the gameobject is selected
+    /// otherwise only if the gameobject is selected 
     /// </summary>
     public class Point : MonoBehaviour
     {
