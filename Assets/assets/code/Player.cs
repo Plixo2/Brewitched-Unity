@@ -1,4 +1,5 @@
 #nullable enable
+using Assets.assets.code;
 using UnityEngine;
 
 namespace assets.code
@@ -10,14 +11,15 @@ namespace assets.code
     {
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
+        private int _doubleJumpCount = 1;
 
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
         [SerializeField] private float acceleration = 0.1f;
-
         [SerializeField] private float reach = 1f;
+        [SerializeField] private bool doubleJumpEnabled = false;
 
         private DelayAction _dropTimer = new();
 
@@ -44,12 +46,26 @@ namespace assets.code
 
         void Update()
         {
-            if (IsGrounded())
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (IsGrounded() || (doubleJumpEnabled && _doubleJumpCount > 0))
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
+                    if(doubleJumpEnabled)
+                    {
+                        _doubleJumpCount--;
+                    }
                 }
+            }
+
+            if (IsGrounded() && doubleJumpEnabled)
+            {
+                _doubleJumpCount = 1;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                DrinkPotion();
             }
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -78,6 +94,34 @@ namespace assets.code
                     DropHandItem();
                 }
             }
+        }
+
+        private void EnableDoubleJump()
+        {
+            this.doubleJumpEnabled = true;
+        }
+
+
+        private void DrinkPotion()
+        {
+            var heldItem = GetHandItem() as Potion;
+
+            if (heldItem == null)
+            {
+                return;
+            }
+
+            switch (heldItem.PotionType)
+            {
+                case PotionType.DoubleJump:
+                    EnableDoubleJump();
+                    break;
+                case PotionType.HighJump:
+                    // implement highjump
+                    break;
+            }
+
+            DeleteHandItem();
         }
 
         /// <summary>
