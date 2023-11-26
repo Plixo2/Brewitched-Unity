@@ -22,7 +22,8 @@ namespace assets.code
         [SerializeField] private GameObject? idleParticleSystem;
         [SerializeField] private GameObject? itemPrefab;
         [SerializeField] public int level = 0;
-
+        [SerializeField] private Item itemLayer;
+        [SerializeField] private Player playerLayer;
         private SpriteRenderer _spriteRenderer;
 
         private List<string> _currentItems = new();
@@ -31,6 +32,11 @@ namespace assets.code
         {
             States.AddCauldron(this);
             _spriteRenderer = GetComponent<SpriteRenderer>();
+
+            // Disable collision with item and player for the cauldron
+            int cauldronLayer = gameObject.layer;
+            Physics2D.IgnoreLayerCollision(itemLayer.gameObject.layer, cauldronLayer);
+            Physics2D.IgnoreLayerCollision(playerLayer.gameObject.layer, cauldronLayer);
 
         }
 
@@ -136,8 +142,8 @@ namespace assets.code
                 component.UpdateImage();
 
                 // New Items will fly above the cauldron when they spawn
-                var componentRigidbody = component.GetComponent<Rigidbody2D>();
-                componentRigidbody.bodyType = RigidbodyType2D.Kinematic;
+                // var componentRigidbody = component.GetComponent<Rigidbody2D>();
+                // componentRigidbody.bodyType = RigidbodyType2D.Kinematic;
 
             }
         }

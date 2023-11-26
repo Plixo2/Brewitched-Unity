@@ -4606,7 +4606,7 @@ GameObject:
   - component: {fileID: 1032573187}
   - component: {fileID: 1032573186}
   - component: {fileID: 1032573185}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: cauldron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4697,6 +4697,8 @@ MonoBehaviour:
   idleParticleSystem: {fileID: 133087887}
   itemPrefab: {fileID: 6340507243584237092, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
   level: 0
+  itemLayer: {fileID: 59092858}
+  playerLayer: {fileID: 835353166}
 --- !u!60 &1032573185
 PolygonCollider2D:
   m_ObjectHideFlags: 0
