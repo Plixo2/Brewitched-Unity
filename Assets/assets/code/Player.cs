@@ -10,6 +10,7 @@ namespace assets.code
     {
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
+        public bool playerIsAlive = true;
 
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
@@ -36,11 +37,15 @@ namespace assets.code
 
         private void Move(float target)
         {
-            _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
-            var dx = _currentSpeed * movementSpeed;
-            // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
-            _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
+            if(playerIsAlive == true)
+            {
+                _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
+                var dx = _currentSpeed * movementSpeed;
+                // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
+                _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
+            }
         }
+    
 
         void Update()
         {
@@ -258,5 +263,6 @@ namespace assets.code
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
         }
+
     }
 }
