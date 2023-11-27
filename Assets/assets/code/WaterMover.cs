@@ -1,7 +1,10 @@
 using UnityEngine;
 
-namespace assets.images.water
+namespace assets.code
 {
+    /// <summary>
+    /// Just a demo script for moving water sprites up and down
+    /// </summary>
     public class WaterMover : MonoBehaviour
     {
 
