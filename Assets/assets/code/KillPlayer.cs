@@ -1,30 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using assets.code;
 using UnityEngine;
 
-public class KillPlayer : MonoBehaviour
+namespace assets.code
 {
-    public GameObject player;
-    public LogicScript logic;
-
-    // Start is called before the first frame update
-    void Start()
+    public class KillPlayer : MonoBehaviour
     {
-        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if(other.gameObject.CompareTag("Player"))
+        public LogicScript logic;
+    
+        void Start()
         {
-            logic.gameOver();
+            logic = GameObject.FindGameObjectWithTag("logic").GetComponent<LogicScript>();
+        }
 
+    
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if(other.gameObject.CompareTag("Player"))
+            {
+                var player = other.gameObject.GetComponent<Player>();
+                player.Kill();
+                logic.gameOver();
+            }
         }
     }
 }

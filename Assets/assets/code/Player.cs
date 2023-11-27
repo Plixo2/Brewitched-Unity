@@ -10,7 +10,7 @@ namespace assets.code
     {
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
-        public bool playerIsAlive = true;
+        private bool _playerIsAlive = true;
 
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
@@ -37,7 +37,7 @@ namespace assets.code
 
         private void Move(float target)
         {
-            if(playerIsAlive == true)
+            if(_playerIsAlive == true)
             {
                 _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
                 var dx = _currentSpeed * movementSpeed;
@@ -246,6 +246,14 @@ namespace assets.code
             var position = this.transform.position;
             var pos = new Vector2(position.x, position.y);
             return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+        }
+        
+        /// <summary>
+        /// Kills the player
+        /// </summary>
+        public void Kill()
+        {
+            _playerIsAlive = false;
         }
 
         /// <summary>

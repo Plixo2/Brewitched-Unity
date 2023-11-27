@@ -1,19 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
+#nullable enable
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LogicScript : MonoBehaviour
+namespace assets.code
 {
-    public GameObject GameOverScreen;
-    public void restartGame()
+    public class LogicScript : MonoBehaviour
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+        public GameObject? gameOverScreen;
 
-    public void gameOver()
-    {
-        GameOverScreen.SetActive(true);
+        public void restartGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        public void gameOver()
+        {
+            if (gameOverScreen != null)
+            {
+                gameOverScreen.SetActive(true);
+            }
+        }
     }
 }
