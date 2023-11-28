@@ -15,7 +15,7 @@ namespace assets.code
 
         public int level = 0;
         private List<ConnectionPoint> _connectionPoints = new();
-        private List<TheCauldron> _cauldrons = new();
+        private TheCauldron _cauldrons = new();
         private List<Item> _items = new();
         private List<Interactable> _interactables = new();
 
@@ -39,20 +39,12 @@ namespace assets.code
         }
         public static void AddCauldron(TheCauldron cauldron)
         {
-            _instance._cauldrons.Add(cauldron);
+            _instance._cauldrons = cauldron;
         }
 
         public static TheCauldron? CurrentCauldron()
         {
-            foreach (var cauldron in _instance._cauldrons)
-            {
-                if (cauldron.level == _instance.level)
-                {
-                    return cauldron;
-                }
-            }
-
-            return null;
+            return _instance._cauldrons;
         }
     
         public static Interactable? GetInteractable(Vector3 position, float range, Predicate<Interactable> predicate)
