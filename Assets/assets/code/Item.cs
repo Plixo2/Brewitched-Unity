@@ -105,6 +105,11 @@ namespace assets.code
             this.transform.rotation = Quaternion.Euler(0,0,45);
             this.rigidbody.velocity = new Vector2();
             DisableColliders();
+
+            // If the Item is the cauldron change its height so its not in character
+            if (this.name.Equals("cauldron")){
+                this.transform.position = this.transform.position + new Vector3(0,1,0);
+            }
         }
 
         /// <summary>

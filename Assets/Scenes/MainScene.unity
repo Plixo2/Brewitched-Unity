@@ -4669,7 +4669,10 @@ GameObject:
   - component: {fileID: 1032573183}
   - component: {fileID: 1032573182}
   - component: {fileID: 1032573184}
-  m_Layer: 0
+  - component: {fileID: 1032573187}
+  - component: {fileID: 1032573186}
+  - component: {fileID: 1032573185}
+  m_Layer: 9
   m_Name: cauldron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4760,6 +4763,74 @@ MonoBehaviour:
   idleParticleSystem: {fileID: 133087887}
   itemPrefab: {fileID: 6340507243584237092, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
   level: 0
+  itemLayer: {fileID: 59092858}
+  playerLayer: {fileID: 835353166}
+--- !u!60 &1032573185
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032573181}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: c70966d7341e5b85aba3b0de31f8fbca, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.40223742, y: 0.09561467}
+      - {x: -0.39048338, y: -0.23946452}
+      - {x: -0.4375, y: -0.5}
+      - {x: 0.4375, y: -0.5}
+      - {x: 0.38460636, y: -0.22762418}
+      - {x: 0.3904835, y: 0.089737535}
+--- !u!50 &1032573186
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032573181}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: c70966d7341e5b85aba3b0de31f8fbca, type: 2}
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!114 &1032573187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1032573181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fde88f5166cb8741a76e1dbb9e6b988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: cauldron
+  rigidbody: {fileID: 0}
 --- !u!1 &1037901745
 GameObject:
   m_ObjectHideFlags: 0
