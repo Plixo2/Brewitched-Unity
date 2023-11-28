@@ -50,7 +50,7 @@ namespace assets.code
         /// Water Level is calculated using the current level and the next level
         /// </summary>
         /// <returns>The World Coordinates Y Level of the Water</returns>
-        private float GetCurrentWaterLevel()
+        public float GetCurrentWaterLevel()
         {
             if (currentLevel < 0)
             {
