@@ -123,7 +123,7 @@ namespace assets.code
 
                 var currentCauldron = States.CurrentCauldron();
                 var interacted = false;
-                if (currentCauldron != null)
+                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
                 {
                     if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
                     {
@@ -135,8 +135,9 @@ namespace assets.code
 
                 if (!interacted)
                 {
-                    var connectionPoint = States.GetPoint(transform.position, this.reach, point => !point.HasItem
-                        ());
+                    var connectionPoint = States.GetPoint(transform.position, this.reach, point =>
+                        !point.HasItem
+                            ());
                     if (connectionPoint != null)
                     {
                         DropHandItem();
