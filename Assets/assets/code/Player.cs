@@ -1,5 +1,4 @@
 #nullable enable
-using Assets.assets.code;
 using UnityEngine;
 
 namespace assets.code
@@ -63,11 +62,6 @@ namespace assets.code
                 _doubleJumpCount = 1;
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                DrinkPotion();
-            }
-
             if (Input.GetKeyDown(KeyCode.F))
             {
                 InteractPrimary();
@@ -101,29 +95,6 @@ namespace assets.code
             this.doubleJumpEnabled = true;
         }
 
-
-        private void DrinkPotion()
-        {
-            var heldItem = GetHandItem() as Potion;
-
-            if (heldItem == null)
-            {
-                return;
-            }
-
-            switch (heldItem.PotionType)
-            {
-                case PotionType.DoubleJump:
-                    EnableDoubleJump();
-                    break;
-                case PotionType.HighJump:
-                    // implement highjump
-                    break;
-            }
-
-            DeleteHandItem();
-        }
-
         /// <summary>
         /// Secondary Interaction for interacting with the World and using items 
         /// </summary>
@@ -147,7 +118,15 @@ namespace assets.code
 
             if (hand != null)
             {
+                switch (hand.itemName)
+                {
+                    case "Double_Jump_Potion":
+                        EnableDoubleJump();
+                        break;
+                }
+
                 var result = hand.Interact();
+
                 if (result)
                 {
                     DeleteHandItem();

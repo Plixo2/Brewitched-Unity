@@ -56,7 +56,7 @@ namespace assets.code
         /// <returns>if the item should be deleted after use</returns>
         public virtual bool Interact()
         {
-            return false;
+            return itemName == "Double_Jump_Potion";
         }
 
         /// <summary>

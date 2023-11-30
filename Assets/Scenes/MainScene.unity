@@ -12682,9 +12682,9 @@ GameObject:
   - component: {fileID: 1897419963}
   - component: {fileID: 1897419962}
   - component: {fileID: 1897419961}
-  - component: {fileID: 1897419960}
+  - component: {fileID: 1897419964}
   m_Layer: 8
-  m_Name: Potion Double Jump
+  m_Name: Double_Jump_Potion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12705,21 +12705,6 @@ Transform:
   m_Father: {fileID: 1218647094}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1897419960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1897419958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 937f33f634f96ce449b3f872d1ac7586, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemName: double_jump_potion
-  rigidbody: {fileID: 0}
-  PotionType: 0
 --- !u!58 &1897419961
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -12809,6 +12794,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1897419964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897419958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fde88f5166cb8741a76e1dbb9e6b988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Double_Jump_Potion
+  rigidbody: {fileID: 0}
 --- !u!1 &1904738849
 GameObject:
   m_ObjectHideFlags: 0
