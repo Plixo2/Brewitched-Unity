@@ -11,10 +11,14 @@ namespace assets.code
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
 
+        public GameObject camera;
+        private CamFollow camFollow;
+
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
+        private bool canMove = true;
         [SerializeField] private float acceleration = 0.1f;
 
         [SerializeField] private float reach = 1f;
@@ -26,12 +30,16 @@ namespace assets.code
         void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
+            camFollow = camera.GetComponent<CamFollow>();
         }
 
         private void FixedUpdate()
         {
-            var moveInput = Input.GetAxisRaw("Horizontal");
-            Move(moveInput);
+            if(canMove)
+            {
+                var moveInput = Input.GetAxisRaw("Horizontal");
+                Move(moveInput);
+            }
         }
 
         private void Move(float target)
@@ -46,10 +54,39 @@ namespace assets.code
         {
             if (IsGrounded())
             {
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && canMove)
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                 }
+                
+                float velocityX = _rigidbody2D.velocity.x;
+                bool playerNotMoving = velocityX < 0.001f && velocityX > -0.001f;
+                
+                if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
+                {
+                    camFollow.offset.y += camFollow.cameraRaiseAmount;
+                    camFollow.cameraRaised = true;
+                    canMove = false;
+                }
+                if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
+                {
+                    camFollow.offset.y -= camFollow.cameraRaiseAmount;
+                    camFollow.cameraLowered = true;
+                    canMove = false;
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.U) && camFollow.cameraRaised)
+            {
+                camFollow.offset.y -= camFollow.cameraRaiseAmount;
+                camFollow.cameraRaised = false;
+                canMove = true;
+            }
+            if (Input.GetKeyUp(KeyCode.J) && camFollow.cameraLowered)
+            {
+                camFollow.offset.y += camFollow.cameraLowerAmount;
+                camFollow.cameraLowered = false;
+                canMove = true;
             }
 
             if (Input.GetKeyDown(KeyCode.F))
