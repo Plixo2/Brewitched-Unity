@@ -70,7 +70,7 @@ namespace assets.code
                 }
                 if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
                 {
-                    camFollow.offset.y -= camFollow.cameraRaiseAmount;
+                    camFollow.offset.y -= camFollow.cameraLowerAmount;
                     camFollow.cameraLowered = true;
                     canMove = false;
                 }
