@@ -10,6 +10,7 @@ namespace assets.code
     {
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
+        private int _jumpCount = 1;
 
         public GameObject camera;
         private CamFollow camFollow;
@@ -20,8 +21,8 @@ namespace assets.code
         [SerializeField] private float movementSpeed = 5;
         private bool canMove = true;
         [SerializeField] private float acceleration = 0.1f;
-
         [SerializeField] private float reach = 1f;
+        [SerializeField] private bool doubleJumpEnabled = false;
 
         private DelayAction _dropTimer = new();
 
@@ -52,11 +53,15 @@ namespace assets.code
 
         void Update()
         {
-            if (IsGrounded())
+            if (Input.GetKeyDown(KeyCode.Space) && canMove)
             {
-                if (Input.GetKeyDown(KeyCode.Space) && canMove)
+                if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
+                    if(doubleJumpEnabled)
+                    {
+                        _jumpCount--;
+                    }
                 }
                 
                 float velocityX = _rigidbody2D.velocity.x;
@@ -89,6 +94,11 @@ namespace assets.code
                 canMove = true;
             }
 
+            if (IsGrounded() && doubleJumpEnabled)
+            {
+                _jumpCount = 1;
+            }
+
             if (Input.GetKeyDown(KeyCode.F))
             {
                 InteractPrimary();
@@ -117,6 +127,11 @@ namespace assets.code
             }
         }
 
+        public void EnableDoubleJump()
+        {
+            this.doubleJumpEnabled = true;
+        }
+
         /// <summary>
         /// Secondary Interaction for interacting with the World and using items 
         /// </summary>
@@ -140,7 +155,8 @@ namespace assets.code
 
             if (hand != null)
             {
-                var result = hand.Interact();
+                var result = hand.Interact(this);
+
                 if (result)
                 {
                     DeleteHandItem();
