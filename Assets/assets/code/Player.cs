@@ -19,7 +19,7 @@ namespace assets.code
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
-        private bool canMove = true;
+        private bool canMove = true; // Is the player allowed to move or jump
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
@@ -66,15 +66,16 @@ namespace assets.code
             }
 
             float velocityX = _rigidbody2D.velocity.x;
-            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f;
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
+            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f; // Is the player not moving horizontally right now
+            bool playerIsGrounded = IsGrounded(); // To not calculate more than once
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving && playerIsGrounded)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving && playerIsGrounded)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;
