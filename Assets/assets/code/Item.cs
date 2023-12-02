@@ -31,12 +31,12 @@ namespace assets.code
             States.AddItem(this);
             rigidbody = GetComponent<Rigidbody2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
             foreach (var component in GetComponents<Collider2D>())
             {
                 _collider2Ds.Add(component);
             }
-        
+
             var connectionPoint = GetComponentInParent<ConnectionPoint>();
             if (connectionPoint != null)
             {
@@ -48,15 +48,26 @@ namespace assets.code
                 ImageRegister.RegisterSprite(this.itemName, _spriteRenderer.sprite);
             }
         }
-        
+
 
         /// <summary>
         /// Item interaction function for child classes
         /// </summary>
         /// <returns>if the item should be deleted after use</returns>
-        public virtual bool Interact()
+        public virtual bool Interact(Player player)
         {
-            return itemName == "Double_Jump_Potion";
+            switch (itemName)
+            {
+                case "Double_Jump_Potion":
+                {
+                    player.EnableDoubleJump();
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
         }
 
         /// <summary>
@@ -78,7 +89,7 @@ namespace assets.code
             rigidbody.bodyType = RigidbodyType2D.Kinematic;
             this.transform.parent = connectionPoint.transform;
             this.transform.localPosition = new Vector3();
-            this.transform.rotation = Quaternion.Euler(0,0,0);
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
             _spriteRenderer.sortingOrder = 5;
             DisableColliders();
         }
@@ -92,7 +103,7 @@ namespace assets.code
             rigidbody.bodyType = RigidbodyType2D.Dynamic;
             this.transform.parent = null;
             _spriteRenderer.sortingOrder = 20;
-            this.transform.rotation = Quaternion.Euler(0,0,0);
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
             EnableColliders();
         }
 
@@ -102,7 +113,7 @@ namespace assets.code
             this.rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _spriteRenderer.sortingOrder = 20;
             this.rigidbody.angularVelocity = 0;
-            this.transform.rotation = Quaternion.Euler(0,0,45);
+            this.transform.rotation = Quaternion.Euler(0, 0, 45);
             this.rigidbody.velocity = new Vector2();
             DisableColliders();
         }
@@ -127,11 +138,12 @@ namespace assets.code
             _spriteRenderer.sprite = sprite;
         }
 
-        
+
         private void DisableColliders()
         {
             _collider2Ds.ForEach(var => var.enabled = false);
         }
+
         private void EnableColliders()
         {
             _collider2Ds.ForEach(var => var.enabled = true);

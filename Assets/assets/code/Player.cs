@@ -10,7 +10,7 @@ namespace assets.code
     {
         private Rigidbody2D _rigidbody2D;
         private float _currentSpeed = 0;
-        private int _doubleJumpCount = 1;
+        private int _jumpCount = 1;
 
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
@@ -47,19 +47,19 @@ namespace assets.code
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (IsGrounded() || (doubleJumpEnabled && _doubleJumpCount > 0))
+                if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if(doubleJumpEnabled)
                     {
-                        _doubleJumpCount--;
+                        _jumpCount--;
                     }
                 }
             }
 
             if (IsGrounded() && doubleJumpEnabled)
             {
-                _doubleJumpCount = 1;
+                _jumpCount = 1;
             }
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -90,7 +90,7 @@ namespace assets.code
             }
         }
 
-        private void EnableDoubleJump()
+        public void EnableDoubleJump()
         {
             this.doubleJumpEnabled = true;
         }
@@ -118,14 +118,7 @@ namespace assets.code
 
             if (hand != null)
             {
-                switch (hand.itemName)
-                {
-                    case "Double_Jump_Potion":
-                        EnableDoubleJump();
-                        break;
-                }
-
-                var result = hand.Interact();
+                var result = hand.Interact(this);
 
                 if (result)
                 {
