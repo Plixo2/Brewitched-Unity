@@ -24,7 +24,18 @@ namespace assets.code
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
 
+        [SerializeField] private AudioSource walk1;
+        [SerializeField] private AudioSource walk2;
+        private bool firstStep = true;
+        private bool walkIterator = true;
+
+        [SerializeField] private AudioSource jump;
+        [SerializeField] private AudioSource bottleJug;
+        [SerializeField] private AudioSource pickUp;
+        [SerializeField] private AudioSource dropItem;
+
         private DelayAction _dropTimer = new();
+        private DelayAction walkTimer = new();
 
         [SerializeField] private LayerMask groundMask;
 
@@ -57,6 +68,7 @@ namespace assets.code
             {
                 if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
                 {
+                    jump.Play();
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if (doubleJumpEnabled)
                     {
@@ -73,6 +85,22 @@ namespace assets.code
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 canMove = false;
+            }
+
+            if (playerIsGrounded) {
+                if (!playerNotMoving) {
+                    if (firstStep) {
+                        playWalkSound();
+                        firstStep = false;
+                        walkTimer.Reset();
+                    }
+                    if (walkTimer.HasJustPassed(.25f)) {
+                        playWalkSound();
+                        walkTimer.Reset();
+                    } else {
+                        walkTimer.Advance(Time.deltaTime);
+                    }
+                } else firstStep = true;
             }
 
             if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving && playerIsGrounded)
@@ -109,6 +137,7 @@ namespace assets.code
 
             if (Input.GetKeyDown(KeyCode.E))
             {
+                if (HasHandItem()) { bottleJug.Play(); }
                 InteractSecondary();
             }
 
@@ -208,6 +237,7 @@ namespace assets.code
                 if (freeItem != null)
                 {
                     PickItem(freeItem);
+                    pickUp.Play();
                 }
                 else
                 {
@@ -253,6 +283,7 @@ namespace assets.code
             var handItem = GetHandItem();
             if (handItem != null)
             {
+                dropItem.Play();
                 handItem.Disconnect();
             }
         }
@@ -314,6 +345,16 @@ namespace assets.code
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
+        }
+
+        void playWalkSound() {
+            if (walkIterator) {
+                walk1.Play();
+                walkIterator = false;
+            } else {
+                walk2.Play();
+                walkIterator = true;
+            }
         }
     }
 }
