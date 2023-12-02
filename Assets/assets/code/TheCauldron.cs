@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = System.Random;
 
+
 namespace assets.code
 {
     /// <summary>
@@ -20,13 +21,15 @@ namespace assets.code
         [SerializeField] private GameObject? dropParticleSystem;
         [SerializeField] private GameObject? idleParticleSystem;
         [SerializeField] private GameObject? itemPrefab;
-        [SerializeField] public int level = 0;
+        private SpriteRenderer _spriteRenderer;
 
         private List<string> _currentItems = new();
 
         private void Start()
         {
             States.AddCauldron(this);
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            
         }
 
         /// <summary>
@@ -38,6 +41,9 @@ namespace assets.code
             {
                 idleParticleSystem.SetActive(_currentItems.Count != 0);
             }
+
+            // The cauldron will always be in the background
+            this._spriteRenderer.sortingOrder = 5;
         }
 
         /// <summary>
@@ -122,11 +128,18 @@ namespace assets.code
             if (itemPrefab != null)
             {
                 var obj = Instantiate(itemPrefab);
-                obj.transform.position = this.transform.position;
+                obj.transform.position = this.transform.position + new Vector3(0, 1, 0);
                 var component = obj.GetComponent<Item>();
                 component.itemName = name;
                 component.UpdateImage();
+
+                // New Items will fly above the cauldron when they spawn
+                // var componentRigidbody = component.GetComponent<Rigidbody2D>();
+                // componentRigidbody.bodyType = RigidbodyType2D.Kinematic;
+
             }
         }
+    
     }
+    
 }
