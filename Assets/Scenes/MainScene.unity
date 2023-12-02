@@ -3951,6 +3951,7 @@ GameObject:
   - component: {fileID: 835353162}
   - component: {fileID: 835353167}
   - component: {fileID: 835353166}
+  - component: {fileID: 835353168}
   m_Layer: 7
   m_Name: player
   m_TagString: Untagged
@@ -4083,6 +4084,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.15}
   m_Size: {x: 0.6, y: 0.79}
   m_Direction: 0
+--- !u!114 &835353168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835353161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc31c6089a0f2fee6a78d813ab4b131a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCollider: {fileID: 835353167}
 --- !u!4 &850355538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2259787899284559648, guid: 67127293b0ddef249ae0d2d736cb111f, type: 3}
@@ -4762,9 +4776,6 @@ MonoBehaviour:
   dropParticleSystem: {fileID: 2259787899284559651, guid: 67127293b0ddef249ae0d2d736cb111f, type: 3}
   idleParticleSystem: {fileID: 133087887}
   itemPrefab: {fileID: 6340507243584237092, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
-  level: 0
-  itemLayer: {fileID: 59092858}
-  playerLayer: {fileID: 835353166}
 --- !u!60 &1032573185
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -5475,7 +5486,7 @@ GameObject:
   - component: {fileID: 1162356055}
   m_Layer: 6
   m_Name: plattform
-  m_TagString: Untagged
+  m_TagString: OneWayPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
