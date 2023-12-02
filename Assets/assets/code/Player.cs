@@ -36,7 +36,7 @@ namespace assets.code
 
         private void FixedUpdate()
         {
-            if(canMove)
+            if (canMove)
             {
                 var moveInput = Input.GetAxisRaw("Horizontal");
                 Move(moveInput);
@@ -58,28 +58,29 @@ namespace assets.code
                 if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
-                    if(doubleJumpEnabled)
+                    if (doubleJumpEnabled)
                     {
                         _jumpCount--;
                     }
                 }
-                
-                float velocityX = _rigidbody2D.velocity.x;
-                bool playerNotMoving = velocityX < 0.001f && velocityX > -0.001f;
-                
-                if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
-                {
-                    camFollow.offset.y += camFollow.cameraRaiseAmount;
-                    camFollow.cameraRaised = true;
-                    canMove = false;
-                }
-                if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
-                {
-                    camFollow.offset.y -= camFollow.cameraLowerAmount;
-                    camFollow.cameraLowered = true;
-                    canMove = false;
-                }
             }
+
+            float velocityX = _rigidbody2D.velocity.x;
+            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f;
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
+            {
+                camFollow.offset.y += camFollow.cameraRaiseAmount;
+                camFollow.cameraRaised = true;
+                canMove = false;
+            }
+
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
+            {
+                camFollow.offset.y -= camFollow.cameraLowerAmount;
+                camFollow.cameraLowered = true;
+                canMove = false;
+            }
+
 
             if (Input.GetKeyUp(KeyCode.U) && camFollow.cameraRaised)
             {
@@ -87,6 +88,7 @@ namespace assets.code
                 camFollow.cameraRaised = false;
                 canMove = true;
             }
+
             if (Input.GetKeyUp(KeyCode.J) && camFollow.cameraLowered)
             {
                 camFollow.offset.y += camFollow.cameraLowerAmount;
