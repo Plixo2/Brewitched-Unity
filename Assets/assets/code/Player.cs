@@ -1,5 +1,6 @@
 #nullable enable
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace assets.code
 {
@@ -28,10 +29,16 @@ namespace assets.code
 
         [SerializeField] private LayerMask groundMask;
 
+        private SpriteRenderer _spriteRenderer;
+
+        [HideInInspector] public Vector3 lastGroundedPosition;
+
         void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
             camFollow = camera.GetComponent<CamFollow>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            lastGroundedPosition = transform.position;
         }
 
         private void FixedUpdate()
@@ -53,9 +60,28 @@ namespace assets.code
 
         void Update()
         {
+            var waterManager = States.GetWaterManager();
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
+            {
+                this.Kill();
+            }
+
+            {
+                var scaleX = this.gameObject.transform.localScale.x;
+                var target = _currentSpeed < 0 ? -1 : 1;
+                this.gameObject.transform.localScale =
+                    new Vector3(Mathf.Lerp(scaleX, target, Time.deltaTime * 16), 1, 1);
+            }
+            var isGrounded = IsGrounded();
+            if (isGrounded)
+            {
+                lastGroundedPosition = transform.position;
+            }
+            
+            
             if (Input.GetKeyDown(KeyCode.Space) && canMove)
             {
-                if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
+                if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
                 {
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if (doubleJumpEnabled)
@@ -96,7 +122,7 @@ namespace assets.code
                 canMove = true;
             }
 
-            if (IsGrounded() && doubleJumpEnabled)
+            if (isGrounded && doubleJumpEnabled)
             {
                 _jumpCount = 1;
             }
@@ -193,7 +219,7 @@ namespace assets.code
                     var connectionPoint = States.GetPoint(transform.position, this.reach, point =>
                         !point.HasItem
                             ());
-                    if (connectionPoint != null)
+                    if (connectionPoint != null && handItem.canConnect())
                     {
                         DropHandItem();
                         handItem.Connect(connectionPoint);
@@ -288,6 +314,11 @@ namespace assets.code
             return null;
         }
 
+        public void Kill()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         /// <summary>
         /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
         /// </summary>
@@ -313,6 +344,10 @@ namespace assets.code
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(this.transform.position,
+                reach);
         }
     }
 }

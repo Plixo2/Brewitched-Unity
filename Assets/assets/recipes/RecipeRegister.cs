@@ -14,10 +14,9 @@ namespace assets.recipes
         static RecipeRegister()
         {
             // Add("ash, bottle, phoenix_feather -> potion_fire_resistant");   
-            Add("ash, water -> potion_frog");   
-            Add("water, feather -> potion_fire");   
-            Add("potion_fire, potion_frog -> apple");   
-            Add("apple, coal -> key");   
+            Add("water, feather -> double_Jump_Potion");   
+            Add("water, apple -> potion_fire");   
+            Add("potion_fire, scroll -> key");   
         }
 
         /// <summary>
