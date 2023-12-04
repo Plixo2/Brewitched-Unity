@@ -175,9 +175,15 @@ namespace assets.code
                 }
             }
         }
+
         private void SetDesiredScale()
         {
             this.transform.localScale = Vector3.one;
+        }
+
+        public bool isCauldron()
+        {
+            return itemName.Equals("cauldron");
         }
     }
 }

@@ -77,8 +77,8 @@ namespace assets.code
             {
                 lastGroundedPosition = transform.position;
             }
-            
-            
+
+
             if (Input.GetKeyDown(KeyCode.Space) && canMove)
             {
                 if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
@@ -188,6 +188,22 @@ namespace assets.code
                 if (result)
                 {
                     DeleteHandItem();
+                    return;
+                }
+            }
+
+            if (HasHandItem())
+            {
+                var handItem = GetHandItem()!;
+
+                var currentCauldron = States.CurrentCauldron();
+                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
+                {
+                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+                    {
+                        currentCauldron.Add(handItem);
+                        DeleteHandItem();
+                    }
                 }
             }
         }
@@ -198,51 +214,39 @@ namespace assets.code
         /// </summary>
         private void InteractPrimary()
         {
+            var position = transform.position;
             if (HasHandItem())
             {
                 var handItem = GetHandItem()!;
 
-                var currentCauldron = States.CurrentCauldron();
-                var interacted = false;
-                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
+                var connectionPoint = States.GetPoint(position, this.reach, point =>
+                    !point.HasItem());
+                if (connectionPoint != null && handItem.canConnect())
                 {
-                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
-                    {
-                        currentCauldron.Add(handItem);
-                        DeleteHandItem();
-                        interacted = true;
-                    }
-                }
-
-                if (!interacted)
-                {
-                    var connectionPoint = States.GetPoint(transform.position, this.reach, point =>
-                        !point.HasItem
-                            ());
-                    if (connectionPoint != null && handItem.canConnect())
-                    {
-                        DropHandItem();
-                        handItem.Connect(connectionPoint);
-                        interacted = true;
-                    }
+                    DropHandItem();
+                    handItem.Connect(connectionPoint);
                 }
             }
             else
             {
-                var freeItem = States.GetItem(transform.position, this.reach, item1 => !item1.IsConnected());
-                if (freeItem != null)
+                var freeItemNotCauldron = States.GetItem(position, reach, item1 => !item1.IsConnected()
+                    && !item1.isCauldron());
+                var freeItemCauldron = States.GetItem(position, reach, item1 => !item1.IsConnected()
+                    && item1.isCauldron());
+                var connectedItem =
+                    States.GetItem(position, reach, item1 => item1.IsConnected());
+                if (freeItemNotCauldron != null)
                 {
-                    PickItem(freeItem);
+                    PickItem(freeItemNotCauldron);
                 }
-                else
+                else if (freeItemCauldron != null)
                 {
-                    var connectedItem =
-                        States.GetItem(transform.position, this.reach, item1 => item1.IsConnected());
-                    if (connectedItem != null)
-                    {
-                        connectedItem.Disconnect();
-                        PickItem(connectedItem);
-                    }
+                    PickItem(freeItemCauldron);
+                }
+                else if (connectedItem != null)
+                {
+                    connectedItem.Disconnect();
+                    PickItem(connectedItem);
                 }
             }
         }
@@ -344,7 +348,7 @@ namespace assets.code
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
-            
+
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(this.transform.position,
                 reach);
