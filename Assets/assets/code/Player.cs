@@ -24,7 +24,16 @@ namespace assets.code
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
 
+        private bool firstStep = true;
+        private bool walkClipSwitch = true;
+
+        [SerializeField] private AudioSource jump;
+        [SerializeField] private AudioSource bottleJug;
+        [SerializeField] private AudioSource pickUp;
+        [SerializeField] private AudioSource dropItem;
+
         private DelayAction _dropTimer = new();
+        private DelayAction walkTimer = new();
 
         [SerializeField] private LayerMask groundMask;
 
@@ -57,6 +66,7 @@ namespace assets.code
             {
                 if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
                 {
+                    jump.Play();
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if (doubleJumpEnabled)
                     {
@@ -66,7 +76,8 @@ namespace assets.code
             }
 
             float velocityX = _rigidbody2D.velocity.x;
-            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f; // Is the player not moving horizontally right now
+            bool playerNotMoving =
+                Mathf.Abs(velocityX) < 0.001f; // Is the player not moving horizontally right now
             bool playerIsGrounded = IsGrounded(); // To not calculate more than once
             if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving && playerIsGrounded)
             {
@@ -125,6 +136,7 @@ namespace assets.code
             {
                 if (HasHandItem())
                 {
+                    dropItem.Play();
                     DropHandItem();
                 }
             }
@@ -147,6 +159,7 @@ namespace assets.code
                 var interacted = interactable.Interact(hand);
                 if (interacted)
                 {
+                    bottleJug.Play();
                     if (hand != null)
                     {
                         DeleteHandItem();
@@ -159,9 +172,10 @@ namespace assets.code
             if (hand != null)
             {
                 var result = hand.Interact(this);
-
+            
                 if (result)
                 {
+                    bottleJug.Play();
                     DeleteHandItem();
                 }
             }
@@ -183,6 +197,8 @@ namespace assets.code
                 {
                     if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
                     {
+                        bottleJug.Play();
+                        bottleJug.Play();
                         currentCauldron.Add(handItem);
                         DeleteHandItem();
                         interacted = true;
@@ -198,7 +214,6 @@ namespace assets.code
                     {
                         DropHandItem();
                         handItem.Connect(connectionPoint);
-                        interacted = true;
                     }
                 }
             }
@@ -208,6 +223,7 @@ namespace assets.code
                 if (freeItem != null)
                 {
                     PickItem(freeItem);
+                    pickUp.Play();
                 }
                 else
                 {
@@ -217,6 +233,7 @@ namespace assets.code
                     {
                         connectedItem.Disconnect();
                         PickItem(connectedItem);
+                        pickUp.Play();
                     }
                 }
             }
@@ -241,7 +258,6 @@ namespace assets.code
             if (!handItem)
             {
                 item.transform.parent = this.transform;
-                item.Pickup();
             }
         }
 
@@ -315,5 +331,6 @@ namespace assets.code
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
         }
+
     }
 }
