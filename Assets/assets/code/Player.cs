@@ -28,6 +28,11 @@ namespace assets.code
         private DelayAction _dropTimer = new();
 
         [SerializeField] private LayerMask groundMask;
+        
+        [SerializeField] AudioSource? jumpSound;
+        [SerializeField] AudioSource? bottleSound;
+        [SerializeField] AudioSource? dropSound;
+        [SerializeField] AudioSource? pickSound;
 
         private SpriteRenderer _spriteRenderer;
 
@@ -83,6 +88,10 @@ namespace assets.code
             {
                 if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
                 {
+                    if (jumpSound != null)
+                    {
+                        jumpSound.Play();
+                    }
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if (doubleJumpEnabled)
                     {
@@ -150,6 +159,10 @@ namespace assets.code
             {
                 if (HasHandItem())
                 {
+                    if (dropSound != null)
+                    {
+                        dropSound.Play();
+                    }
                     DropHandItem();
                 }
             }
@@ -174,6 +187,11 @@ namespace assets.code
                 {
                     if (hand != null)
                     {
+                        if (pickSound != null)
+                        {
+                            pickSound.Play();
+                        }
+
                         DeleteHandItem();
                     }
 
@@ -187,6 +205,10 @@ namespace assets.code
 
                 if (result)
                 {
+                    if (bottleSound != null)
+                    {
+                        bottleSound.Play();
+                    }
                     DeleteHandItem();
                     return;
                 }
@@ -201,6 +223,10 @@ namespace assets.code
                 {
                     if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
                     {
+                        if (bottleSound != null)
+                        {
+                            bottleSound.Play();
+                        }
                         currentCauldron.Add(handItem);
                         DeleteHandItem();
                     }
@@ -223,6 +249,10 @@ namespace assets.code
                     !point.HasItem());
                 if (connectionPoint != null && handItem.canConnect())
                 {
+                    if (dropSound != null)
+                    {
+                        dropSound.Play();
+                    }
                     DropHandItem();
                     handItem.Connect(connectionPoint);
                 }
@@ -238,15 +268,22 @@ namespace assets.code
                 if (freeItemNotCauldron != null)
                 {
                     PickItem(freeItemNotCauldron);
+                    return;
                 }
                 else if (freeItemCauldron != null)
                 {
                     PickItem(freeItemCauldron);
+                    return;
                 }
                 else if (connectedItem != null)
                 {
                     connectedItem.Disconnect();
                     PickItem(connectedItem);
+                    return;
+                }
+                if (pickSound != null)
+                {
+                    pickSound.Play();
                 }
             }
         }
