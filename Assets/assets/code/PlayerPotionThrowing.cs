@@ -17,10 +17,8 @@ public class PlayerPotionThrowing : MonoBehaviour
     void Start(){
         force = forceStart;
     }
-
     void Update()
     {
-
         if(player.HasHandItem()){
 
             if(Input.GetMouseButton(0)){
@@ -28,25 +26,23 @@ public class PlayerPotionThrowing : MonoBehaviour
                 if(force <= forceLimit){
                     force += Time.deltaTime;
                 }
-
             }
 
             if(Input.GetMouseButtonUp(0)){
-
-                    Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                    mousePosition.z = 0f;
-
                     Item handItem = player.GetHandItem();
-                    throwItem(handItem, mousePosition);
+                    throwItem(handItem);
 
                     force = forceStart;
                 }
         }
-
     }
-    private void throwItem(Item handItem, Vector3 mousePosition)
+    private void throwItem(Item handItem)
         {
             handItem.Disconnect();
+
+            Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                    mousePosition.z = 0f;
+                    
             Vector3 playerPosition = player.transform.position;
             Vector3 finalForce = Vector3.Normalize(mousePosition - playerPosition) * force;    
             handItem.rigidbody.AddForce(finalForce, ForceMode2D.Impulse);
