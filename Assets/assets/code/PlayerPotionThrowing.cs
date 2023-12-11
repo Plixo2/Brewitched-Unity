@@ -12,7 +12,6 @@ public class PlayerPotionThrowing : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private float forceStart;
     [SerializeField] private float forceLimit;
-
     [SerializeField] private float force;
 
     void Start(){
@@ -21,14 +20,11 @@ public class PlayerPotionThrowing : MonoBehaviour
 
     void Update()
     {
-        // Debug.Log(mainCamera.ScreenToWorldPoint(Input.mousePosition))
 
         if(player.HasHandItem()){
 
             if(Input.GetMouseButton(0)){
                 
-                // var hantItemPosition = handItem.transform.position;
-                // hantItemPosition = Vector3.MoveTowards(hantItemPosition, mousePosition, speed * Time.deltaTime);
                 if(force <= forceLimit){
                     force += Time.deltaTime;
                 }
@@ -45,27 +41,14 @@ public class PlayerPotionThrowing : MonoBehaviour
 
                     force = forceStart;
                 }
-
-
         }
 
     }
     private void throwItem(Item handItem, Vector3 mousePosition)
         {
-            handItem._connectionPoint = null;
-            handItem.rigidbody.bodyType = RigidbodyType2D.Dynamic;
-
+            handItem.Disconnect();
             Vector3 playerPosition = player.transform.position;
-
-            Vector3 finalForce = Vector3.Normalize(mousePosition - playerPosition) * force;
-            
-
+            Vector3 finalForce = Vector3.Normalize(mousePosition - playerPosition) * force;    
             handItem.rigidbody.AddForce(finalForce, ForceMode2D.Impulse);
-            
-            handItem.transform.parent = null;
-            handItem._spriteRenderer.sortingOrder = 20;
-            handItem.transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            handItem.EnableColliders();
         }    
 }   
