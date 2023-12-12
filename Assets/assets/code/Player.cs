@@ -292,7 +292,7 @@ namespace assets.code
         /// Tests if the player is holding an item
         /// </summary>
         /// <returns>if the player is holding an item</returns>
-        private bool HasHandItem()
+        public bool HasHandItem()
         {
             return GetHandItem() != null;
         }
@@ -340,7 +340,7 @@ namespace assets.code
         /// Searches for a item inside the children of the GameObject 
         /// </summary>
         /// <returns>A potential Item</returns>
-        private Item? GetHandItem()
+        public Item? GetHandItem()
         {
             for (int i = 0; i < this.transform.childCount; i++)
             {
