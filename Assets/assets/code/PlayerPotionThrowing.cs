@@ -13,6 +13,8 @@ public class PlayerPotionThrowing : MonoBehaviour
     [SerializeField] private float forceStart;
     [SerializeField] private float forceLimit;
     [SerializeField] private float force;
+    [SerializeField] private float chargeSpeed;
+
 
     void Start(){
         force = forceStart;
@@ -24,7 +26,7 @@ public class PlayerPotionThrowing : MonoBehaviour
             if(Input.GetMouseButton(0)){
                 
                 if(force <= forceLimit){
-                    force += Time.deltaTime;
+                    force += Time.deltaTime * chargeSpeed;
                 }
             }
 

@@ -6583,6 +6583,8 @@ MonoBehaviour:
   player: {fileID: 835353166}
   forceStart: 10
   forceLimit: 15
+  force: 0
+  chargeSpeed: 2
 --- !u!1001 &841205490
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8016,7 +8018,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 3
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -24417,8 +24419,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25464916, y: -3.53195, z: 0}
-    m_Extent: {x: 19.574749, y: 11.76445, z: 0}
+    m_Center: {x: 0.25829983, y: -3.5293503, z: 0}
+    m_Extent: {x: 19.580898, y: 11.77135, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
