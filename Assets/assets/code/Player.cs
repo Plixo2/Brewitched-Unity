@@ -1,5 +1,6 @@
 #nullable enable
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace assets.code
 {
@@ -19,7 +20,7 @@ namespace assets.code
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
-        private bool canMove = true; // Is the player allowed to move or jump
+        private bool canMove = true;
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
@@ -27,11 +28,22 @@ namespace assets.code
         private DelayAction _dropTimer = new();
 
         [SerializeField] private LayerMask groundMask;
+        
+        [SerializeField] AudioSource? jumpSound;
+        [SerializeField] AudioSource? bottleSound;
+        [SerializeField] AudioSource? dropSound;
+        [SerializeField] AudioSource? pickSound;
+
+        private SpriteRenderer _spriteRenderer;
+
+        [HideInInspector] public Vector3 lastGroundedPosition;
 
         void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
             camFollow = camera.GetComponent<CamFollow>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            lastGroundedPosition = transform.position;
         }
 
         private void FixedUpdate()
@@ -53,10 +65,33 @@ namespace assets.code
 
         void Update()
         {
+            var waterManager = States.GetWaterManager();
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
+            {
+                this.Kill();
+            }
+
+            {
+                var scaleX = this.gameObject.transform.localScale.x;
+                var target = _currentSpeed < 0 ? -1 : 1;
+                this.gameObject.transform.localScale =
+                    new Vector3(Mathf.Lerp(scaleX, target, Time.deltaTime * 16), 1, 1);
+            }
+            var isGrounded = IsGrounded();
+            if (isGrounded)
+            {
+                lastGroundedPosition = transform.position;
+            }
+
+
             if (Input.GetKeyDown(KeyCode.Space) && canMove)
             {
-                if (IsGrounded() || (doubleJumpEnabled && _jumpCount > 0))
+                if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
                 {
+                    if (jumpSound != null)
+                    {
+                        jumpSound.Play();
+                    }
                     _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
                     if (doubleJumpEnabled)
                     {
@@ -66,16 +101,15 @@ namespace assets.code
             }
 
             float velocityX = _rigidbody2D.velocity.x;
-            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f; // Is the player not moving horizontally right now
-            bool playerIsGrounded = IsGrounded(); // To not calculate more than once
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving && playerIsGrounded)
+            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f;
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving && playerIsGrounded)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;
@@ -97,7 +131,7 @@ namespace assets.code
                 canMove = true;
             }
 
-            if (IsGrounded() && doubleJumpEnabled)
+            if (isGrounded && doubleJumpEnabled)
             {
                 _jumpCount = 1;
             }
@@ -125,6 +159,10 @@ namespace assets.code
             {
                 if (HasHandItem())
                 {
+                    if (dropSound != null)
+                    {
+                        dropSound.Play();
+                    }
                     DropHandItem();
                 }
             }
@@ -149,6 +187,11 @@ namespace assets.code
                 {
                     if (hand != null)
                     {
+                        if (pickSound != null)
+                        {
+                            pickSound.Play();
+                        }
+
                         DeleteHandItem();
                     }
 
@@ -162,7 +205,31 @@ namespace assets.code
 
                 if (result)
                 {
+                    if (bottleSound != null)
+                    {
+                        bottleSound.Play();
+                    }
                     DeleteHandItem();
+                    return;
+                }
+            }
+
+            if (HasHandItem())
+            {
+                var handItem = GetHandItem()!;
+
+                var currentCauldron = States.CurrentCauldron();
+                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
+                {
+                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+                    {
+                        if (bottleSound != null)
+                        {
+                            bottleSound.Play();
+                        }
+                        currentCauldron.Add(handItem);
+                        DeleteHandItem();
+                    }
                 }
             }
         }
@@ -173,51 +240,50 @@ namespace assets.code
         /// </summary>
         private void InteractPrimary()
         {
+            var position = transform.position;
             if (HasHandItem())
             {
                 var handItem = GetHandItem()!;
 
-                var currentCauldron = States.CurrentCauldron();
-                var interacted = false;
-                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
+                var connectionPoint = States.GetPoint(position, this.reach, point =>
+                    !point.HasItem());
+                if (connectionPoint != null && handItem.canConnect())
                 {
-                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+                    if (dropSound != null)
                     {
-                        currentCauldron.Add(handItem);
-                        DeleteHandItem();
-                        interacted = true;
+                        dropSound.Play();
                     }
-                }
-
-                if (!interacted)
-                {
-                    var connectionPoint = States.GetPoint(transform.position, this.reach, point =>
-                        !point.HasItem
-                            ());
-                    if (connectionPoint != null)
-                    {
-                        DropHandItem();
-                        handItem.Connect(connectionPoint);
-                        interacted = true;
-                    }
+                    DropHandItem();
+                    handItem.Connect(connectionPoint);
                 }
             }
             else
             {
-                var freeItem = States.GetItem(transform.position, this.reach, item1 => !item1.IsConnected());
-                if (freeItem != null)
+                var freeItemNotCauldron = States.GetItem(position, reach, item1 => !item1.IsConnected()
+                    && !item1.isCauldron());
+                var freeItemCauldron = States.GetItem(position, reach, item1 => !item1.IsConnected()
+                    && item1.isCauldron());
+                var connectedItem =
+                    States.GetItem(position, reach, item1 => item1.IsConnected());
+                if (freeItemNotCauldron != null)
                 {
-                    PickItem(freeItem);
+                    PickItem(freeItemNotCauldron);
+                    return;
                 }
-                else
+                else if (freeItemCauldron != null)
                 {
-                    var connectedItem =
-                        States.GetItem(transform.position, this.reach, item1 => item1.IsConnected());
-                    if (connectedItem != null)
-                    {
-                        connectedItem.Disconnect();
-                        PickItem(connectedItem);
-                    }
+                    PickItem(freeItemCauldron);
+                    return;
+                }
+                else if (connectedItem != null)
+                {
+                    connectedItem.Disconnect();
+                    PickItem(connectedItem);
+                    return;
+                }
+                if (pickSound != null)
+                {
+                    pickSound.Play();
                 }
             }
         }
@@ -226,7 +292,7 @@ namespace assets.code
         /// Tests if the player is holding an item
         /// </summary>
         /// <returns>if the player is holding an item</returns>
-        private bool HasHandItem()
+        public bool HasHandItem()
         {
             return GetHandItem() != null;
         }
@@ -274,7 +340,7 @@ namespace assets.code
         /// Searches for a item inside the children of the GameObject 
         /// </summary>
         /// <returns>A potential Item</returns>
-        private Item? GetHandItem()
+        public Item? GetHandItem()
         {
             for (int i = 0; i < this.transform.childCount; i++)
             {
@@ -287,6 +353,11 @@ namespace assets.code
             }
 
             return null;
+        }
+
+        public void Kill()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         /// <summary>
@@ -314,6 +385,10 @@ namespace assets.code
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
             Gizmos.DrawSphere(this.transform.position + down,
                 groundRadius);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(this.transform.position,
+                reach);
         }
     }
 }

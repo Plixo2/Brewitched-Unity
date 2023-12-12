@@ -37,6 +37,10 @@ namespace assets.code
         // Time of the current level
         [SerializeField] private float currentLevelTime = 0;
 
+        private void Start()
+        {
+            States.setWaterManager(this);
+        }
 
         void Update()
         {

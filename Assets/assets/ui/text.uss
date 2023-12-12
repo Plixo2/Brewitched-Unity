@@ -1,0 +1,12 @@
+.text {
+    color: rgba(255, 255, 255, 255);
+    font-size: 16px;
+    -unity-font: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=f56d2b98c8764734088828d2654c44a4&type=3#NotInter-Regular');
+    -unity-font-style: bold;
+}
+
+.image {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}

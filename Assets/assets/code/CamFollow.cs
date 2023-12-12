@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace assets.code
@@ -7,37 +8,53 @@ namespace assets.code
     /// </summary>
     public class CamFollow : MonoBehaviour
     {
-        [SerializeField] private Transform target;
+        [SerializeField] private Player target;
         [SerializeField] public Vector3 offset = new Vector3(0, 0, 0);
         [SerializeField] private float damping = 0.5f;
         [SerializeField] private bool onlyY = false;
         [SerializeField] private int groundY;
         [SerializeField] private int ceilingY;
-        public bool cameraRaised = false;
-        public bool cameraLowered = false;
+        [SerializeField] private float deadZone = 0.5f;
         [SerializeField] public float cameraRaiseAmount = 0;
         [SerializeField] public float cameraLowerAmount = 0;
 
+        [HideInInspector] public bool cameraRaised = false;
+        [HideInInspector] public bool cameraLowered = false;
+
         private Vector3 _velocity = Vector3.zero;
+        private Camera _camera;
+
+        private void Start()
+        {
+            _camera = GetComponent<Camera>();
+        }
 
         private void FixedUpdate()
         {
-            var pos = target.transform.position + offset;
+            var cameraScale = _camera.orthographicSize;
+            var pos = target.lastGroundedPosition + offset;
             var currentPos = transform.position;
             
+            var diff = pos - currentPos;
+            var horizontalDistance = Mathf.Sqrt(diff.x * diff.x + diff.y * diff.y); 
+            if (horizontalDistance < deadZone)
+            {
+                pos = currentPos;
+            }
+
             var posTemp = pos;
-            if (posTemp.y - groundY <= 6) // if below ground would be visible
+            if (posTemp.y - groundY <= cameraScale) // if below ground would be visible
             {
                 if (!cameraRaised)
                 {
-                    pos.y = groundY + 6; // show ground at the lowest tilelevel on screen
+                    pos.y = groundY + cameraScale; // show ground at the lowest tilelevel on screen
                 }
                 else
                 {
                     pos.y = currentPos.y;
                 }
             }
-            else if (ceilingY - posTemp.y <= 6) // if above ceiling would be visible
+            else if (ceilingY - posTemp.y <= cameraScale) // if above ceiling would be visible
             {
                 if (!cameraLowered)
                 {
@@ -48,7 +65,7 @@ namespace assets.code
                     pos.y = currentPos.y;
                 }
             }
-            
+
             if (onlyY)
             {
                 pos.x = currentPos.x;
@@ -56,6 +73,12 @@ namespace assets.code
             }
 
             transform.position = Vector3.SmoothDamp(currentPos, pos, ref _velocity, damping);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, deadZone);
         }
     }
 }

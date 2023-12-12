@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -11,13 +12,13 @@ namespace assets.code
     /// </summary>
     public class Item : MonoBehaviour
     {
-        private ConnectionPoint? _connectionPoint = null;
+        public ConnectionPoint? _connectionPoint = null;
 
         [SerializeField] public string itemName = "";
 
         [HideInInspector] public Rigidbody2D rigidbody;
 
-        private SpriteRenderer? _spriteRenderer;
+        public SpriteRenderer? _spriteRenderer;
         private List<Collider2D> _collider2Ds = new();
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace assets.code
         {
             switch (itemName)
             {
-                case "Double_Jump_Potion":
+                case "double_Jump_Potion":
                 {
                     player.EnableDoubleJump();
                     return true;
@@ -85,13 +86,13 @@ namespace assets.code
         /// <param name="connectionPoint">the point to connect the item</param>
         public void Connect(ConnectionPoint connectionPoint)
         {
+            SetDesiredScale();
             this._connectionPoint = connectionPoint;
             rigidbody.bodyType = RigidbodyType2D.Kinematic;
             this.transform.parent = connectionPoint.transform;
             this.transform.localPosition = new Vector3();
             this.transform.rotation = Quaternion.Euler(0, 0, 0);
             _spriteRenderer.sortingOrder = 5;
-            DisableColliders();
         }
 
         /// <summary>
@@ -118,8 +119,9 @@ namespace assets.code
             DisableColliders();
 
             // If the Item is the cauldron change its height so its not in character
-            if (this.name.Equals("cauldron")){
-                this.transform.position = this.transform.position + new Vector3(0,1,0);
+            if (this.name.Equals("cauldron"))
+            {
+                this.transform.position = this.transform.position + new Vector3(0, 1, 0);
             }
         }
 
@@ -143,15 +145,45 @@ namespace assets.code
             _spriteRenderer.sprite = sprite;
         }
 
+        private void Update()
+        {
+            this.transform.localScale = Vector3.one;
+        }
+
 
         private void DisableColliders()
         {
             _collider2Ds.ForEach(var => var.enabled = false);
         }
 
-        private void EnableColliders()
+        public void EnableColliders()
         {
             _collider2Ds.ForEach(var => var.enabled = true);
+        }
+
+        public bool canConnect()
+        {
+            switch (itemName)
+            {
+                case "cauldron":
+                {
+                    return false;
+                }
+                default:
+                {
+                    return true;
+                }
+            }
+        }
+
+        private void SetDesiredScale()
+        {
+            this.transform.localScale = Vector3.one;
+        }
+
+        public bool isCauldron()
+        {
+            return itemName.Equals("cauldron");
         }
     }
 }
