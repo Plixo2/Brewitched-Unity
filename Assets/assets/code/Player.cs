@@ -68,7 +68,7 @@ namespace assets.code
             var waterManager = States.GetWaterManager();
             if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
             {
-                this.Kill();
+                //this.Kill();
             }
 
             {
