@@ -87,5 +87,23 @@ namespace assets.code
             currentLevelTime = 0;
             return currentLevel += 1;
         }
+
+        /// <summary>
+        /// Calculates slope of the water curve plot at call time and returns it to be used as a value proportionate to speed
+        /// </summary>
+        /// <returns>Current rising speed of the water</returns>
+        public float getCurrentSpeed()
+        {
+            var currentTimespan = levelTimes[this.currentLevel];
+            
+            var normalizedTime = currentLevelTime / currentTimespan;
+            var normalizedTimeDX = (currentLevelTime + Time.deltaTime) / currentTimespan;
+            
+            var curveSample = Mathf.Clamp01(curve.Evaluate(Mathf.Clamp01(normalizedTime)));
+            var curveSampleDX = Mathf.Clamp01(curve.Evaluate(Mathf.Clamp01(normalizedTimeDX)));
+
+            float speed = (curveSampleDX - curveSample) / (normalizedTimeDX - normalizedTime);
+            return speed;
+        }
     }
 }

@@ -98,4 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 4917884352919683068}
-  toggleInterval: 0.1
+  toggleInterval: 0.6
+  waterSpeedFactorOnToggleInterval: 0.3
+  toggleIntervalMax: 1

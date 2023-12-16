@@ -26,7 +26,7 @@ public class WaterBubbleGenerator : MonoBehaviour
     private float bubbleTimeInterval = 0; // time until the next bubble spawn, will be decided randomly between it's min and max variables
     public GameObject dangerIconToSpawn;
     
-    [SerializeField] float timeBetweenDangerAndBubble = 1.5f; // Elapsed time between danger icon appearance and it's corresponding bubble spawn.
+    [SerializeField] float timeBetweenDangerAndBubble = 2f; // Elapsed time between danger icon appearance and it's corresponding bubble spawn.
     [SerializeField] float timeBeforeFirstBubble = 5f; // Elapsed time between scene beginning and first bubble spawn
 
     
