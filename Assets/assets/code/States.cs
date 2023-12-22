@@ -17,7 +17,6 @@ namespace assets.code
 
         public int level = 0;
         private List<ConnectionPoint> _connectionPoints = new();
-        private TheCauldron _cauldrons = new();
         private List<Item> _items = new();
         private List<Interactable> _interactables = new();
         
@@ -41,11 +40,6 @@ namespace assets.code
         {
             _instance._interactables.Add(interactable);
         }
-        public static void AddCauldron(TheCauldron cauldron)
-        {
-            _instance._cauldrons = cauldron;
-        }
-
         public static void setWaterManager(WaterAsset asset)
         {
             _instance._waterManager = asset;
@@ -55,13 +49,7 @@ namespace assets.code
         {
             return _instance._waterManager;
         }
-        
-        
 
-        public static TheCauldron? CurrentCauldron()
-        {
-            return _instance._cauldrons;
-        }
     
         public static Interactable? GetInteractable(Vector3 position, float range, Predicate<Interactable> predicate)
         {

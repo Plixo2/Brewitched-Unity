@@ -16,20 +16,20 @@ namespace assets.code
     /// The Player can add Ingredients by calling 'Add'.
     /// The Script then checks for valid recipes
     /// </summary>
-    public class TheCauldron : MonoBehaviour
+    public class TheCauldron : Interactable
     {
         [SerializeField] private GameObject? dropParticleSystem;
         [SerializeField] private GameObject? idleParticleSystem;
         [SerializeField] private GameObject? itemPrefab;
         private SpriteRenderer _spriteRenderer;
 
-        private List<string> _currentItems = new();
+        private List<string> _currentItems;
 
         private void Start()
         {
-            States.AddCauldron(this);
+            base.Start();
+            _currentItems = new List<string>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            
         }
 
         /// <summary>
@@ -46,12 +46,21 @@ namespace assets.code
             this._spriteRenderer.sortingOrder = 5;
         }
 
+        public override bool Interact(Item? item)
+        {
+            if (item != null)
+            {
+                Add(item);
+            }
+            return true;
+        }
+
         /// <summary>
         /// Adds an item to the cauldron.
         /// If an item is found the Cauldron will spit it out and play particle effects
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void Add(Item item)
+        private void Add(Item item)
         {
             var random = new Random();
 
@@ -132,11 +141,6 @@ namespace assets.code
                 var component = obj.GetComponent<Item>();
                 component.itemName = name;
                 component.UpdateImage();
-
-                // New Items will fly above the cauldron when they spawn
-                // var componentRigidbody = component.GetComponent<Rigidbody2D>();
-                // componentRigidbody.bodyType = RigidbodyType2D.Kinematic;
-
             }
         }
     
