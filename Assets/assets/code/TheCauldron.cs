@@ -50,9 +50,14 @@ namespace assets.code
         {
             if (item != null)
             {
+                if (item.isCauldron())
+                {
+                    return false;
+                }
                 Add(item);
+                return true;
             }
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -143,7 +148,5 @@ namespace assets.code
                 component.UpdateImage();
             }
         }
-    
     }
-    
 }

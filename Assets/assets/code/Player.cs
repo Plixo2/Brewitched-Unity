@@ -1,24 +1,29 @@
 #nullable enable
+using System.Collections;
+using assets.images.mage2;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace assets.code
 {
     /// <summary>
     /// Main player movement and interaction script
     /// </summary>
-    [RequireComponent(typeof(Rigidbody2D), typeof(PlayerSound), typeof(CustomCursor))]
+    [RequireComponent(typeof(Rigidbody2D), typeof(PlayerSound), typeof(PlayerAnimator))]
     public class Player : MonoBehaviour
     {
-        private Rigidbody2D _rigidbody2D;
+        public Rigidbody2D rigidbody2D;
         private PlayerSound _playerSound;
-        private CustomCursor _cursor;
+        private PlayerAnimator _playerAnimator;
 
         private float _currentSpeed = 0;
         private int _jumpCount = 1;
         private bool _canMove = true;
         private DelayAction _dropTimer = new();
         [HideInInspector] public Vector3 lastGroundedPosition;
+        [HideInInspector] public Vector3 lastFixedPosition;
+        [HideInInspector] public Vector3 fixedPosition;
 
 
         [SerializeField] private CamFollow camFollow;
@@ -30,14 +35,13 @@ namespace assets.code
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
-
-        private Vector3 _mousePosition = new();
+        [SerializeField] private float jumpDelay = 0.2f;
 
         void Start()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
+            rigidbody2D = GetComponent<Rigidbody2D>();
             _playerSound = GetComponent<PlayerSound>();
-            _cursor = GetComponent<CustomCursor>();
+            _playerAnimator = GetComponent<PlayerAnimator>();
 
             lastGroundedPosition = transform.position;
         }
@@ -49,6 +53,9 @@ namespace assets.code
                 var moveInput = Input.GetAxisRaw("Horizontal");
                 Move(moveInput);
             }
+
+            lastFixedPosition = new Vector3(fixedPosition.x, fixedPosition.y, fixedPosition.z);
+            fixedPosition = transform.position;
         }
 
         private void Move(float target)
@@ -56,41 +63,11 @@ namespace assets.code
             _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
             // var dx = _currentSpeed * movementSpeed;
             // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
-            _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
+            rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, rigidbody2D.velocity.y);
         }
 
         void Update()
         {
-            _mousePosition.x += Input.GetAxis("Mouse X") * 0.1f;
-            _mousePosition.y += Input.GetAxis("Mouse Y") * 0.1f;
-            var mousePosition = Input.mousePosition;
-            var world = camFollow.camera.ScreenToWorldPoint(mousePosition);
-            var position = transform.position;
-            position.z = 0;
-            var dir = world - position;
-            dir.z = 0;
-            _cursor.cursor.SetActive(true);
-            Cursor.visible = false;
-            if (dir.magnitude > reach)
-            {
-                Cursor.visible = true;
-                dir = dir.normalized * reach;
-                _cursor.cursor.SetActive(false);
-            }
-
-            var cursorPosition = position + dir;
-            _cursor.SetPosition(cursorPosition);
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                OnClick(cursorPosition);
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                onDrop(cursorPosition);
-            }
-
             var waterManager = States.GetWaterManager();
             if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
             {
@@ -114,16 +91,11 @@ namespace assets.code
             {
                 if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
                 {
-                    _playerSound.PlayJump();
-                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, jumpHeight);
-                    if (doubleJumpEnabled)
-                    {
-                        _jumpCount--;
-                    }
+                    Jump();
                 }
             }
 
-            float velocityX = _rigidbody2D.velocity.x;
+            float velocityX = rigidbody2D.velocity.x;
             bool playerMoving = Mathf.Abs(velocityX) > 0.1f;
             if (playerMoving && isGrounded)
             {
@@ -193,76 +165,29 @@ namespace assets.code
             }
         }
 
+        public void Jump()
+        {
+            _playerAnimator.OnJump();
+            StartCoroutine(JumpInX(jumpDelay));
+            IEnumerator JumpInX(float secs)
+            {
+                yield return new WaitForSeconds(secs);
+                _playerSound.PlayJump();
+                rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.y, jumpHeight);
+                    
+                if (doubleJumpEnabled)
+                {
+                    _jumpCount--;
+                }
+            }
+        }
+       
+
+       
+
         public void EnableDoubleJump()
         {
             this.doubleJumpEnabled = true;
-        }
-
-        private void OnClick(Vector3 pos)
-        {
-            var hand = _cursor.GetHandItem();
-            var range = 0.5f;
-            if (hand == null)
-            {
-                var freeItemNotCauldron = States.GetItem(pos, range, item1 => !item1.IsConnected()
-                    && !item1.isCauldron());
-                var freeItemCauldron = States.GetItem(pos, range, item1 => !item1.IsConnected()
-                    && item1.isCauldron());
-                var connectedItem =
-                    States.GetItem(pos, range, item1 => item1.IsConnected());
-                if (freeItemNotCauldron != null)
-                {
-                    _cursor.PickItem(freeItemNotCauldron);
-                    _playerSound.PlayPick();
-                    return;
-                }
-
-                if (freeItemCauldron != null)
-                {
-                    _cursor.PickItem(freeItemCauldron);
-                    _playerSound.PlayPick();
-                    return;
-                }
-
-                if (connectedItem != null)
-                {
-                    connectedItem.Disconnect();
-                    _cursor.PickItem(connectedItem);
-                    _playerSound.PlayPick();
-                    return;
-                }
-            }
-        }
-
-        private void onDrop(Vector3 pos)
-        {
-            var hand = _cursor.GetHandItem();
-            var range = 0.05f;
-            var interactable = States.GetInteractable(pos, range, _ => true);
-            if (interactable != null)
-            {
-                var interacted = interactable.Interact(hand);
-                if (interacted)
-                {
-                    if (hand != null)
-                    {
-                        _playerSound.PlayPick();
-                        _cursor.DeleteHandItem();
-                    }
-                    else
-                    {
-                        _cursor.DropHandItem();
-                    }
-
-                    return;
-                }
-            }
-
-            if (hand != null)
-            {
-                _playerSound.PlayDrop();
-                _cursor.DropHandItem();
-            }
         }
 
         /// <summary>
@@ -438,7 +363,7 @@ namespace assets.code
         /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
         /// </summary>
         /// <returns>if the player is grounded</returns>
-        private bool IsGrounded()
+        public bool IsGrounded()
         {
             var position = this.transform.position;
             var pos = new Vector2(position.x, position.y);
