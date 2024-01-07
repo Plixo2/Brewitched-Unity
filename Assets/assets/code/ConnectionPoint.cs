@@ -14,6 +14,8 @@ namespace assets.code
         /// </summary>
         [HideInInspector] public bool isSelected = false;
 
+        [SerializeField] public bool isFireplace = false;
+        
         /// <summary>
         /// Debug point
         /// </summary>

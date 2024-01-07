@@ -20,6 +20,8 @@ namespace assets.code
         private float _currentSpeed = 0;
         private int _jumpCount = 1;
         private bool _canMove = true;
+        private float lastJumpTime = -10;
+        private float lastGroundTime = -10;
         private DelayAction _dropTimer = new();
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
@@ -29,6 +31,7 @@ namespace assets.code
         [SerializeField] private CamFollow camFollow;
         [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
+        [SerializeField] private bool groundRectangle = true;
         [SerializeField] private LayerMask groundMask;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
@@ -36,6 +39,8 @@ namespace assets.code
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
         [SerializeField] private float jumpDelay = 0.2f;
+        [SerializeField] private float jumpBuffer = 0.2f;
+        [SerializeField] private float coyoteTime = 0.2f;
 
         void Start()
         {
@@ -84,13 +89,24 @@ namespace assets.code
             if (isGrounded)
             {
                 lastGroundedPosition = transform.position;
+                lastGroundTime = Time.time;
             }
 
-
-            if (Input.GetKeyDown(KeyCode.Space) && _canMove)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
+                lastJumpTime = Time.time;
+            }
+
+            var lastJumpDelta = Time.time - lastJumpTime;
+            var isJumping = lastJumpDelta <= jumpBuffer;
+            var lastGroundDelta = Time.time - lastGroundTime;
+            var isCoyote = lastGroundDelta <= coyoteTime;
+            if (isJumping && _canMove)
+            {
+                if (isCoyote || (doubleJumpEnabled && _jumpCount > 0))
                 {
+                    lastGroundTime = 0;
+                    lastJumpTime = 0;
                     Jump();
                 }
             }
@@ -169,21 +185,20 @@ namespace assets.code
         {
             _playerAnimator.OnJump();
             StartCoroutine(JumpInX(jumpDelay));
+
             IEnumerator JumpInX(float secs)
             {
                 yield return new WaitForSeconds(secs);
                 _playerSound.PlayJump();
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.y, jumpHeight);
-                    
+
                 if (doubleJumpEnabled)
                 {
                     _jumpCount--;
                 }
             }
         }
-       
 
-       
 
         public void EnableDoubleJump()
         {
@@ -367,7 +382,15 @@ namespace assets.code
         {
             var position = this.transform.position;
             var pos = new Vector2(position.x, position.y);
-            return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+            if (groundRectangle)
+            {
+                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                    groundMask);
+            }
+            else
+            {
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+            }
         }
 
         /// <summary>
@@ -381,9 +404,19 @@ namespace assets.code
                 Gizmos.color = Color.red;
             }
 
+
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
-            Gizmos.DrawSphere(this.transform.position + down,
-                groundRadius);
+
+            if (groundRectangle)
+            {
+                Gizmos.DrawCube(this.transform.position + down,
+                    new Vector2(groundRadius, 0.05f));
+            }
+            else
+            {
+                Gizmos.DrawSphere(this.transform.position + down,
+                    groundRadius);
+            }
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(this.transform.position,

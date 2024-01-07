@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
 
 public class HUD : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class HUD : MonoBehaviour
     private VisualElement _rootVisualElement;
     
     private bool isBookOpen = false;
+    private float time;
 
     void Start()
     {
@@ -32,6 +35,14 @@ public class HUD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
+        var milliseconds = (int) (time * 100) % 100;
+        var seconds = (int) time % 60;
+        var minutes = (int) time / 60;
+        var timeString = $"{minutes:D2}:{seconds:D2}:{milliseconds:D2}";
+        var timerElement = _rootVisualElement.Q<Label>("timer");
+        timerElement.text = timeString;
+        
         var keyE = _rootVisualElement.Q<VisualElement>("key0");
         var keyF = _rootVisualElement.Q<VisualElement>("key1");
         
