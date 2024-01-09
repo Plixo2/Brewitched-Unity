@@ -18,7 +18,7 @@ namespace assets.code
 
         [HideInInspector] public Rigidbody2D rigidbody;
 
-        private SpriteRenderer? _spriteRenderer;
+        public SpriteRenderer? _spriteRenderer;
         private List<Collider2D> _collider2Ds = new();
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace assets.code
             _collider2Ds.ForEach(var => var.enabled = false);
         }
 
-        private void EnableColliders()
+        public void EnableColliders()
         {
             _collider2Ds.ForEach(var => var.enabled = true);
         }

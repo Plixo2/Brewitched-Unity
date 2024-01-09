@@ -27,8 +27,9 @@ namespace assets.code
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
 
+        public GameObject _camera;
+        private CamFollow camFollow;
 
-        [SerializeField] private CamFollow camFollow;
         [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private bool groundRectangle = true;
@@ -47,6 +48,9 @@ namespace assets.code
             rigidbody2D = GetComponent<Rigidbody2D>();
             _playerSound = GetComponent<PlayerSound>();
             _playerAnimator = GetComponent<PlayerAnimator>();
+
+            camFollow = _camera.GetComponent<CamFollow>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
 
             lastGroundedPosition = transform.position;
         }
@@ -306,7 +310,7 @@ namespace assets.code
         /// Tests if the player is holding an item
         /// </summary>
         /// <returns>if the player is holding an item</returns>
-        private bool HasHandItem()
+        public bool HasHandItem()
         {
             return GetHandItem() != null;
         }
@@ -354,7 +358,7 @@ namespace assets.code
         /// Searches for a item inside the children of the GameObject 
         /// </summary>
         /// <returns>A potential Item</returns>
-        private Item? GetHandItem()
+        public Item? GetHandItem()
         {
             for (int i = 0; i < this.transform.childCount; i++)
             {
@@ -367,6 +371,14 @@ namespace assets.code
             }
 
             return null;
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("WaterBubble"))
+            {
+                this.Kill();
+            }
         }
 
         public void Kill()
