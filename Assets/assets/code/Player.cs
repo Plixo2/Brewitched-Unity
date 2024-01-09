@@ -13,7 +13,7 @@ namespace assets.code
         private float _currentSpeed = 0;
         private int _jumpCount = 1;
 
-        public GameObject camera;
+        public GameObject _camera;
         private CamFollow camFollow;
 
         [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
@@ -41,7 +41,7 @@ namespace assets.code
         void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            camFollow = camera.GetComponent<CamFollow>();
+            camFollow = _camera.GetComponent<CamFollow>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             lastGroundedPosition = transform.position;
         }
@@ -353,6 +353,14 @@ namespace assets.code
             }
 
             return null;
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("WaterBubble"))
+            {
+                this.Kill();
+            }
         }
 
         public void Kill()

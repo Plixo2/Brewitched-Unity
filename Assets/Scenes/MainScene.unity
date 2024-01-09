@@ -6151,7 +6151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6521,7 +6521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5addb0da4a21d0049a2442e518507174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 519420028}
+  _camera: {fileID: 519420028}
   groundOffset: {x: -0.14, y: -0.67}
   groundRadius: 0.45
   jumpHeight: 11
@@ -7747,6 +7747,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1020581536}
   - component: {fileID: 1020581537}
+  - component: {fileID: 1020581538}
   m_Layer: 0
   m_Name: water
   m_TagString: Untagged
@@ -7806,45 +7807,42 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.44953948
-      value: 0.13085638
-      inSlope: 0.25486052
-      outSlope: 0.25486052
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.91180724
-    - serializedVersion: 3
-      time: 0.69102836
-      value: 0.37696368
-      inSlope: 1.1403961
-      outSlope: 1.1403961
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.84807
-      value: 0.8241087
-      inSlope: 3.8940902
-      outSlope: 3.8940902
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.108260155
-    - serializedVersion: 3
-      time: 1.000004
-      value: 1.0023576
-      inSlope: 0.4009928
-      outSlope: 0.4009928
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   currentLevelTime: 0
+--- !u!114 &1020581538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020581535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88cf98a3be6b1684f9ca71cd80c10b17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubbleGenerationActive: 0
+  bubbleRadiusMin: 0.3
+  bubbleRadiusMax: 1.8
+  bubbleTimeIntervalMin: 2.5
+  bubbleTimeIntervalMax: 6
+  waterTransform: {fileID: 1020581536}
+  bubbleGenerationXMin: -10.6
+  bubbleGenerationXMax: 10.6
+  bubbleToSpawn: {fileID: 3418371823060575228, guid: cf9f706933b91184f92b8ffebea0e582, type: 3}
+  dangerIconToSpawn: {fileID: 3529574999748888021, guid: de97e195f1d8f22429cf71131fc14996, type: 3}
+  timeBetweenDangerAndBubble: 2
+  timeBeforeFirstBubble: 5
 --- !u!1001 &1029029317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23069,7 +23067,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24419,8 +24417,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25829983, y: -3.5293503, z: 0}
-    m_Extent: {x: 19.580898, y: 11.77135, z: 0}
+    m_Center: {x: 0.25720024, y: -3.5285501, z: 0}
+    m_Extent: {x: 19.5791, y: 11.77345, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -25191,7 +25189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -25352,7 +25350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -27437,7 +27435,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -27494,7 +27492,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2466009821745864630, guid: d0a62e2e695f992418371280661b7d1e, type: 3}
       propertyPath: m_LocalPosition.x
