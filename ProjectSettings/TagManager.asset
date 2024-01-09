@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Particels
+    uniqueID: 3476317739
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

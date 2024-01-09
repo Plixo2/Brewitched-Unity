@@ -121,7 +121,7 @@ namespace assets.code
             // If the Item is the cauldron change its height so its not in character
             if (this.name.Equals("cauldron"))
             {
-                this.transform.position = this.transform.position + new Vector3(0, 1, 0);
+            //    this.transform.position = this.transform.position + new Vector3(0, 1, 0);
             }
         }
 
@@ -167,7 +167,7 @@ namespace assets.code
             {
                 case "cauldron":
                 {
-                    return false;
+                    return true;
                 }
                 default:
                 {

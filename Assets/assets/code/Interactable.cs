@@ -23,6 +23,7 @@ namespace assets.code
         /// </summary>
         public void Start()
         {
+            print("Registering Interactable");
             States.AddInteractable(this);
         }
 

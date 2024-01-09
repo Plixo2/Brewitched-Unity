@@ -1,66 +1,79 @@
 #nullable enable
+using System.Collections;
+using assets.images.mage2;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace assets.code
 {
     /// <summary>
     /// Main player movement and interaction script
     /// </summary>
+    [RequireComponent(typeof(Rigidbody2D), typeof(PlayerSound), typeof(PlayerAnimator))]
     public class Player : MonoBehaviour
     {
-        private Rigidbody2D _rigidbody2D;
+        [HideInInspector] public Rigidbody2D rigidbody2D;
+        private PlayerSound _playerSound;
+        private PlayerAnimator _playerAnimator;
+
         private float _currentSpeed = 0;
         private int _jumpCount = 1;
+        private bool _canMove = true;
+        private float lastJumpTime = -10;
+        private float lastGroundTime = -10;
+        private DelayAction _dropTimer = new();
+        [HideInInspector] public Vector3 lastGroundedPosition;
+        [HideInInspector] public Vector3 lastFixedPosition;
+        [HideInInspector] public Vector3 fixedPosition;
 
         public GameObject _camera;
         private CamFollow camFollow;
+        private SpriteRenderer _spriteRenderer;
 
-        [SerializeField] private Vector2 groundOffset = new Vector2(0, 0);
+        [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
+        [SerializeField] private bool groundRectangle = true;
+        [SerializeField] private LayerMask groundMask;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
-        private bool canMove = true;
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
-
-        private DelayAction _dropTimer = new();
-
-        [SerializeField] private LayerMask groundMask;
-        
-        [SerializeField] AudioSource? jumpSound;
-        [SerializeField] AudioSource? bottleSound;
-        [SerializeField] AudioSource? dropSound;
-        [SerializeField] AudioSource? pickSound;
-
-        private SpriteRenderer _spriteRenderer;
-
-        [HideInInspector] public Vector3 lastGroundedPosition;
+        [SerializeField] private float jumpDelay = 0.2f;
+        [SerializeField] private float jumpBuffer = 0.2f;
+        [SerializeField] private float coyoteTime = 0.2f;
 
         void Start()
         {
-            _rigidbody2D = GetComponent<Rigidbody2D>();
+            rigidbody2D = GetComponent<Rigidbody2D>();
+            _playerSound = GetComponent<PlayerSound>();
+            _playerAnimator = GetComponent<PlayerAnimator>();
+
             camFollow = _camera.GetComponent<CamFollow>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+
             lastGroundedPosition = transform.position;
         }
 
         private void FixedUpdate()
         {
-            if (canMove)
+            if (_canMove)
             {
                 var moveInput = Input.GetAxisRaw("Horizontal");
                 Move(moveInput);
             }
+
+            lastFixedPosition = new Vector3(fixedPosition.x, fixedPosition.y, fixedPosition.z);
+            fixedPosition = transform.position;
         }
 
         private void Move(float target)
         {
             _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
-            var dx = _currentSpeed * movementSpeed;
+            // var dx = _currentSpeed * movementSpeed;
             // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
-            _rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, _rigidbody2D.velocity.y);
+            rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, rigidbody2D.velocity.y);
         }
 
         void Update()
@@ -81,39 +94,47 @@ namespace assets.code
             if (isGrounded)
             {
                 lastGroundedPosition = transform.position;
+                lastGroundTime = Time.time;
             }
 
-
-            if (Input.GetKeyDown(KeyCode.Space) && canMove)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (isGrounded || (doubleJumpEnabled && _jumpCount > 0))
+                lastJumpTime = Time.time;
+            }
+
+            var lastJumpDelta = Time.time - lastJumpTime;
+            var isJumping = lastJumpDelta <= jumpBuffer;
+            var lastGroundDelta = Time.time - lastGroundTime;
+            var isCoyote = lastGroundDelta <= coyoteTime;
+            if (isJumping && _canMove)
+            {
+                if (isCoyote || (doubleJumpEnabled && _jumpCount > 0))
                 {
-                    if (jumpSound != null)
-                    {
-                        jumpSound.Play();
-                    }
-                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.y, this.jumpHeight);
-                    if (doubleJumpEnabled)
-                    {
-                        _jumpCount--;
-                    }
+                    lastGroundTime = 0;
+                    lastJumpTime = 0;
+                    Jump();
                 }
             }
 
-            float velocityX = _rigidbody2D.velocity.x;
-            bool playerNotMoving = Mathf.Abs(velocityX) < 0.001f;
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && playerNotMoving)
+            float velocityX = rigidbody2D.velocity.x;
+            bool playerMoving = Mathf.Abs(velocityX) > 0.1f;
+            if (playerMoving && isGrounded)
+            {
+                _playerSound.PlayStep(Time.deltaTime);
+            }
+
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
-                canMove = false;
+                _canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && playerNotMoving)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;
-                canMove = false;
+                _canMove = false;
             }
 
 
@@ -121,14 +142,14 @@ namespace assets.code
             {
                 camFollow.offset.y -= camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = false;
-                canMove = true;
+                _canMove = true;
             }
 
             if (Input.GetKeyUp(KeyCode.J) && camFollow.cameraLowered)
             {
                 camFollow.offset.y += camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = false;
-                canMove = true;
+                _canMove = true;
             }
 
             if (isGrounded && doubleJumpEnabled)
@@ -159,14 +180,30 @@ namespace assets.code
             {
                 if (HasHandItem())
                 {
-                    if (dropSound != null)
-                    {
-                        dropSound.Play();
-                    }
+                    _playerSound.PlayDrop();
                     DropHandItem();
                 }
             }
         }
+
+        public void Jump()
+        {
+            _playerAnimator.OnJump();
+            StartCoroutine(JumpInX(jumpDelay));
+
+            IEnumerator JumpInX(float secs)
+            {
+                yield return new WaitForSeconds(secs);
+                _playerSound.PlayJump();
+                rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.y, jumpHeight);
+
+                if (doubleJumpEnabled)
+                {
+                    _jumpCount--;
+                }
+            }
+        }
+
 
         public void EnableDoubleJump()
         {
@@ -187,11 +224,7 @@ namespace assets.code
                 {
                     if (hand != null)
                     {
-                        if (pickSound != null)
-                        {
-                            pickSound.Play();
-                        }
-
+                        _playerSound.PlayPick();
                         DeleteHandItem();
                     }
 
@@ -205,33 +238,27 @@ namespace assets.code
 
                 if (result)
                 {
-                    if (bottleSound != null)
-                    {
-                        bottleSound.Play();
-                    }
+                    _playerSound.PlayBottle();
                     DeleteHandItem();
                     return;
                 }
             }
 
-            if (HasHandItem())
-            {
-                var handItem = GetHandItem()!;
-
-                var currentCauldron = States.CurrentCauldron();
-                if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
-                {
-                    if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
-                    {
-                        if (bottleSound != null)
-                        {
-                            bottleSound.Play();
-                        }
-                        currentCauldron.Add(handItem);
-                        DeleteHandItem();
-                    }
-                }
-            }
+            // if (HasHandItem())
+            // {
+            //     var handItem = GetHandItem()!;
+            //
+            //     var currentCauldron = States.CurrentCauldron();
+            //     if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
+            //     {
+            //         if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
+            //         {
+            //             _playerSound.PlayBottle();
+            //             currentCauldron.Add(handItem);
+            //             DeleteHandItem();
+            //         }
+            //     }
+            // }
         }
 
         /// <summary>
@@ -249,10 +276,7 @@ namespace assets.code
                     !point.HasItem());
                 if (connectionPoint != null && handItem.canConnect())
                 {
-                    if (dropSound != null)
-                    {
-                        dropSound.Play();
-                    }
+                    _playerSound.PlayDrop();
                     DropHandItem();
                     handItem.Connect(connectionPoint);
                 }
@@ -268,23 +292,18 @@ namespace assets.code
                 if (freeItemNotCauldron != null)
                 {
                     PickItem(freeItemNotCauldron);
-                    return;
                 }
                 else if (freeItemCauldron != null)
                 {
                     PickItem(freeItemCauldron);
-                    return;
                 }
                 else if (connectedItem != null)
                 {
                     connectedItem.Disconnect();
                     PickItem(connectedItem);
-                    return;
                 }
-                if (pickSound != null)
-                {
-                    pickSound.Play();
-                }
+
+                _playerSound.PlayPick();
             }
         }
 
@@ -372,11 +391,19 @@ namespace assets.code
         /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
         /// </summary>
         /// <returns>if the player is grounded</returns>
-        private bool IsGrounded()
+        public bool IsGrounded()
         {
             var position = this.transform.position;
             var pos = new Vector2(position.x, position.y);
-            return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+            if (groundRectangle)
+            {
+                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                    groundMask);
+            }
+            else
+            {
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+            }
         }
 
         /// <summary>
@@ -390,9 +417,19 @@ namespace assets.code
                 Gizmos.color = Color.red;
             }
 
+
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
-            Gizmos.DrawSphere(this.transform.position + down,
-                groundRadius);
+
+            if (groundRectangle)
+            {
+                Gizmos.DrawCube(this.transform.position + down,
+                    new Vector2(groundRadius, 0.05f));
+            }
+            else
+            {
+                Gizmos.DrawSphere(this.transform.position + down,
+                    groundRadius);
+            }
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(this.transform.position,

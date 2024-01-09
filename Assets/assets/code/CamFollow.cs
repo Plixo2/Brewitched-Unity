@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace assets.code
 {
@@ -22,21 +23,21 @@ namespace assets.code
         [HideInInspector] public bool cameraLowered = false;
 
         private Vector3 _velocity = Vector3.zero;
-        private Camera _camera;
+       [HideInInspector] public Camera camera;
 
         private void Start()
         {
-            _camera = GetComponent<Camera>();
+            camera = GetComponent<Camera>();
         }
 
         private void FixedUpdate()
         {
-            var cameraScale = _camera.orthographicSize;
+            var cameraScale = camera.orthographicSize;
             var pos = target.lastGroundedPosition + offset;
             var currentPos = transform.position;
-            
+
             var diff = pos - currentPos;
-            var horizontalDistance = Mathf.Sqrt(diff.x * diff.x + diff.y * diff.y); 
+            var horizontalDistance = Mathf.Sqrt(diff.x * diff.x + diff.y * diff.y);
             if (horizontalDistance < deadZone)
             {
                 pos = currentPos;

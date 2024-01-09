@@ -9,7 +9,7 @@ namespace assets.code
         [SerializeField] private float disableCollisionTime = 0.5f; 
         private HashSet<GameObject> currentOneWayPlatforms = new HashSet<GameObject>();
 
-        [SerializeField] private CapsuleCollider2D playerCollider;
+        [SerializeField] private Collider2D playerCollider;
 
         private void Update()
         {

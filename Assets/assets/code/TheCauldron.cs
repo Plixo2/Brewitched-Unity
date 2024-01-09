@@ -16,20 +16,31 @@ namespace assets.code
     /// The Player can add Ingredients by calling 'Add'.
     /// The Script then checks for valid recipes
     /// </summary>
-    public class TheCauldron : MonoBehaviour
+    public class TheCauldron : Interactable
     {
         [SerializeField] private GameObject? dropParticleSystem;
         [SerializeField] private GameObject? idleParticleSystem;
         [SerializeField] private GameObject? itemPrefab;
+        [SerializeField] private float brewingTime = 5f;
+
+        private float _brewingTimeLeft = -1;
+        private String? _itemBrewing;
+
         private SpriteRenderer _spriteRenderer;
 
-        private List<string> _currentItems = new();
+        private List<string> _currentItems;
+        private Item _item;
 
         private void Start()
         {
-            States.AddCauldron(this);
+            base.Start();
+            _currentItems = new List<string>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            
+            _item = GetComponent<Item>();
+            if (_item == null)
+            {
+                Debug.LogError("The Cauldron needs an Item script");
+            }
         }
 
         /// <summary>
@@ -37,13 +48,50 @@ namespace assets.code
         /// </summary>
         private void Update()
         {
+            var brewing = isBrewing();
+
+            if (this._item._connectionPoint == null || !this._item._connectionPoint.isFireplace)
+            {
+                brewing = false;
+            }
+
+            if (brewing)
+            {
+                _brewingTimeLeft -= Time.deltaTime;
+                if (!isBrewing() && _itemBrewing != null)
+                {
+                    NewItem(_itemBrewing);
+                    _itemBrewing = null;
+                }
+            }
+
             if (idleParticleSystem != null)
             {
-                idleParticleSystem.SetActive(_currentItems.Count != 0);
+                idleParticleSystem.SetActive(brewing);
             }
 
             // The cauldron will always be in the background
-            this._spriteRenderer.sortingOrder = 5;
+            // this._spriteRenderer.sortingOrder = 5;
+        }
+
+        public override bool Interact(Item? item)
+        {
+            if (item != null)
+            {
+                if (item.isCauldron())
+                {
+                    return false;
+                }
+
+                if (this._item._connectionPoint == null || !this._item._connectionPoint.isFireplace)
+                {
+                    return false;
+                }
+
+                return Add(item);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -51,8 +99,14 @@ namespace assets.code
         /// If an item is found the Cauldron will spit it out and play particle effects
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void Add(Item item)
+        /// <returns>if the item was added</returns>
+        private bool Add(Item item)
         {
+            if (isBrewing())
+            {
+                return false;
+            }
+
             var random = new Random();
 
             _currentItems.Add(item.itemName);
@@ -63,15 +117,18 @@ namespace assets.code
                 _currentItems.Clear();
                 foreach (var _ in findRecipeResult.Ingredients)
                 {
-                    var color = Color.HSVToRGB((float)random.NextDouble(), 0.8f, 0.8f);
+                    var color = Color.HSVToRGB((float)random.NextDouble(), 1f, 1f);
                     SpawnParticle(color);
                 }
 
-                NewItem(findRecipeResult.Result);
+                _brewingTimeLeft = brewingTime;
+                _itemBrewing = findRecipeResult.Result;
             }
 
-            SpawnParticle(Color.HSVToRGB((float)random.NextDouble(), 0.8f, 0.8f));
-            // else 
+            SpawnParticle(Color.HSVToRGB((float)random.NextDouble(), 1f, 1f));
+
+
+            return true;
         }
 
         /// <summary>
@@ -132,14 +189,12 @@ namespace assets.code
                 var component = obj.GetComponent<Item>();
                 component.itemName = name;
                 component.UpdateImage();
-
-                // New Items will fly above the cauldron when they spawn
-                // var componentRigidbody = component.GetComponent<Rigidbody2D>();
-                // componentRigidbody.bodyType = RigidbodyType2D.Kinematic;
-
             }
         }
-    
+
+        public bool isBrewing()
+        {
+            return _brewingTimeLeft > 0;
+        }
     }
-    
 }
