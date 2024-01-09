@@ -591,7 +591,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.04
+      scalar: 0.06
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5350,6 +5350,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: apple
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &59092859
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5878,6 +5879,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: water
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &145212868
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -6017,6 +6019,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: feather
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &149172838
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16326,6 +16329,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: scroll
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &273637660
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -17086,7 +17090,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 332152655}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.14, z: 0}
+  m_LocalPosition: {x: 0, y: -9.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22245,6 +22249,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: water
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &708333505
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -33421,7 +33426,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835353161}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.497, y: 3.698, z: 0}
+  m_LocalPosition: {x: -6.08, y: -4.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33446,7 +33451,7 @@ MonoBehaviour:
   lastGroundedPosition: {x: 0, y: 0, z: 0}
   lastFixedPosition: {x: 0, y: 0, z: 0}
   fixedPosition: {x: 0, y: 0, z: 0}
-  camFollow: {fileID: 0}
+  _camera: {fileID: 0}
   groundOffset: {x: 0, y: -0.69}
   groundRadius: 0.8
   groundRectangle: 1
@@ -34694,9 +34699,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6340507243584237092, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6340507243584237095, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
       propertyPath: itemName
-      value: water
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
@@ -34881,13 +34890,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1020581536}
   - component: {fileID: 1020581537}
+  - component: {fileID: 1020581538}
   m_Layer: 0
   m_Name: water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1020581536
 Transform:
   m_ObjectHideFlags: 0
@@ -34918,12 +34928,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelHeights:
-  - -6
+  - -7
   - 24
   - 20
   - 30
   levelTimes:
-  - 800
+  - 150
   - 10
   - 20
   currentLevel: 0
@@ -34940,8 +34950,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.44953948
-      value: 0.13085638
+      time: 0.2537026
+      value: 0.2820315
       inSlope: 0.25486052
       outSlope: 0.25486052
       tangentMode: 0
@@ -34949,8 +34959,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.91180724
     - serializedVersion: 3
-      time: 0.69102836
-      value: 0.37696368
+      time: 0.54103446
+      value: 0.34153277
       inSlope: 1.1403961
       outSlope: 1.1403961
       tangentMode: 0
@@ -34958,14 +34968,23 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.84807
-      value: 0.8241087
+      time: 0.6314038
+      value: 0.6044646
       inSlope: 3.8940902
       outSlope: 3.8940902
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.108260155
+    - serializedVersion: 3
+      time: 0.80982256
+      value: 0.71024084
+      inSlope: 2.7222283
+      outSlope: 2.7222283
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1.000004
       value: 1.0023576
@@ -34979,6 +34998,30 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   currentLevelTime: 0
+--- !u!114 &1020581538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020581535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88cf98a3be6b1684f9ca71cd80c10b17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubbleGenerationActive: 0
+  bubbleRadiusMin: 1
+  bubbleRadiusMax: 1.8
+  bubbleTimeIntervalMin: 2.5
+  bubbleTimeIntervalMax: 6
+  waterTransform: {fileID: 1020581536}
+  bubbleGenerationXMin: -10.6
+  bubbleGenerationXMax: 10.6
+  bubbleToSpawn: {fileID: 3418371823060575228, guid: cf9f706933b91184f92b8ffebea0e582, type: 3}
+  dangerIconToSpawn: {fileID: 3529574999748888021, guid: de97e195f1d8f22429cf71131fc14996, type: 3}
+  timeBetweenDangerAndBubble: 2
+  timeBeforeFirstBubble: 5
 --- !u!1001 &1029029317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35142,7 +35185,7 @@ MonoBehaviour:
   dropParticleSystem: {fileID: 133087887}
   idleParticleSystem: {fileID: 481354889}
   itemPrefab: {fileID: 6340507243584237092, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
-  brewingTime: 30
+  brewingTime: 20
 --- !u!50 &1032573186
 Rigidbody2D:
   serializedVersion: 4
@@ -35179,6 +35222,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: cauldron
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!60 &1032573188
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -36087,6 +36131,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: ash
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1144684889
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -36307,6 +36352,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: scroll
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1159283564
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -38071,7 +38117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c56ee9a7054db47a84ec5514204caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2.23
+  speed: 1.8
   amplitude: 0.15
   phase: 1.81
   posOffset: 0
@@ -39364,6 +39410,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: apple
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1441031870
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -65308,6 +65355,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: key
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1519980269
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -66037,6 +66085,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: potion_frog
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1615364629
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -66367,7 +66416,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.04
+      scalar: 0.06
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -71006,6 +71055,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: water
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1618360509
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -71473,6 +71523,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: coal
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1650186432
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -72013,6 +72064,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: upgrade
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!1001 &1698521969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72271,7 +72323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6340507243584237095, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
       propertyPath: itemName
-      value: 
+      value: water
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7eb89b5d19b9f44d8cea646190945a4, type: 3}
@@ -73645,8 +73697,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.24945068, y: -3.527, z: 0}
-    m_Extent: {x: 19.58095, y: 11.775101, z: 0}
+    m_Center: {x: 0.25360012, y: -3.5332003, z: 0}
+    m_Extent: {x: 19.576302, y: 11.7649, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -74213,6 +74265,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: double_Jump_Potion
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!1 &1904713987
 GameObject:
   m_ObjectHideFlags: 0
@@ -74341,6 +74394,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: potion_fire
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &1904738852
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -80762,6 +80816,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: feather
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!58 &2022165785
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -81107,7 +81162,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.04
+      scalar: 0.06
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -86295,7 +86350,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.04
+      scalar: 0.06
       minScalar: 5
       maxCurve:
         serializedVersion: 2

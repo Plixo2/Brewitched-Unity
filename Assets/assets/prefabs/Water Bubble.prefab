@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b8c5a2544078064fa5ddfbbba75f782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleRiseVelocity: 1
-  waterSpeedFactorOnBubbleSpeed: 0.6
+  bubbleRiseVelocity: 5
+  waterSpeedFactorOnBubbleSpeed: 3
   bubbleVelocityMax: 2.5
   currentLevelMaxY: 23
 --- !u!58 &-6968137319747324177
