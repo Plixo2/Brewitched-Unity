@@ -33456,7 +33456,7 @@ MonoBehaviour:
   jumpHeight: 12
   movementSpeed: 4.7
   acceleration: 0.21
-  reach: 1.11
+  reach: 1.1
   doubleJumpEnabled: 0
   jumpDelay: 0
   jumpBuffer: 0.1
