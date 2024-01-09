@@ -13,7 +13,7 @@ namespace assets.code
     [RequireComponent(typeof(Rigidbody2D), typeof(PlayerSound), typeof(PlayerAnimator))]
     public class Player : MonoBehaviour
     {
-        public Rigidbody2D rigidbody2D;
+        [HideInInspector] public Rigidbody2D rigidbody2D;
         private PlayerSound _playerSound;
         private PlayerAnimator _playerAnimator;
 
@@ -29,6 +29,7 @@ namespace assets.code
 
         public GameObject _camera;
         private CamFollow camFollow;
+        private SpriteRenderer _spriteRenderer;
 
         [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
