@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/assets/ui-main-menu/menu.uss?fileID=7433441132597879392&amp;guid=fdaac0568b7b9ee4f88c78a7f9e67b8f&amp;type=3#menu" />
+    <ui:VisualElement name="Container" style="align-items: center; background-color: rgba(56, 56, 56, 0); width: 100%; height: 100%; justify-content: center; -unity-font: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=f56d2b98c8764734088828d2654c44a4&amp;type=3#NotInter-Regular&apos;); -unity-font-definition: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/NotInter-Regular%20SDF.asset?fileID=11400000&amp;guid=4f72ab39eacfb334db4f6b4ddf049989&amp;type=2#NotInter-Regular SDF&apos;);">
+        <ui:VisualElement name="Title" style="padding-top: 100px; padding-right: 100px; padding-bottom: 75px; padding-left: 100px;">
+            <ui:Label text="Brewitched" display-tooltip-when-elided="true" name="TitleLabel" style="-unity-font: url(&apos;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=f56d2b98c8764734088828d2654c44a4&amp;type=3#NotInter-Regular&apos;); font-size: 36px; color: rgb(255, 255, 255);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Start" style="-unity-text-outline-color: rgb(183, 183, 183);">
+            <ui:Button text="Start Game" display-tooltip-when-elided="true" name="StartButton" class="start-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
