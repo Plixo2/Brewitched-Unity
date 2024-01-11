@@ -1,6 +1,7 @@
 #nullable enable
 using System.Collections;
 using assets.images.mage2;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -384,10 +385,17 @@ namespace assets.code
         }
 
         void OnTriggerEnter2D(Collider2D other)
-        {
+        {   
             if (other.gameObject.CompareTag("WaterBubble"))
-            {
-                this.Kill();
+            {   
+                if(jesusPotionEnabled)
+                {
+                    Destroy(other.gameObject);
+                }
+                else 
+                {
+                    this.Kill();
+                }
             }
         }
 
