@@ -22339,7 +22339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _connectionPoint: {fileID: 0}
-  itemName: Jesus_Potion
+  itemName: jesus_Potion
   rigidbody: {fileID: 0}
   _spriteRenderer: {fileID: 0}
 --- !u!58 &698548230
@@ -74129,8 +74129,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25820065, y: -3.5203, z: 0}
-    m_Extent: {x: 19.5778, y: 11.7696, z: 0}
+    m_Center: {x: 0.24580002, y: -3.52415, z: 0}
+    m_Extent: {x: 19.5838, y: 11.76585, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
