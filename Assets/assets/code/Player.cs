@@ -192,21 +192,20 @@ namespace assets.code
                 }
             }
 
-            if(fireResistanceEnabled)
+            if (fireResistanceEnabled)
             {
                 fireResistanceTimer -= Time.deltaTime;
 
-                if(fireResistanceTimer <= 0.0f)
+                if (fireResistanceTimer <= 0.0f)
                 {
                     fireResistanceEnabled = false;
-                    fireResistanceTimer = fireResistanceDuration;
                 }
             }
 
-            if(inFire && !fireResistanceEnabled)
+            if (inFire && !fireResistanceEnabled)
             {
                 fireDeathTimer -= Time.deltaTime;
-                if(fireDeathTimer <= 0.0f)
+                if (fireDeathTimer <= 0.0f)
                 {
                     this.Kill();
                 }
