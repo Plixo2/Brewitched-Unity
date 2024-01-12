@@ -25,7 +25,7 @@ namespace assets.code
         private float lastGroundTime = -10;
         private DelayAction _dropTimer = new();
         private bool inFire = false;
-        private float inFireTimer;
+        private float fireResistanceTimer = 0.0f;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
@@ -44,10 +44,11 @@ namespace assets.code
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
         [SerializeField] private bool fireResistanceEnabled = false;
+        [SerializeField] private float fireResistanceDuration = 20.0f;
+        [SerializeField] private float fireDeathTimer = 5.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
-        [SerializeField] private float fireDeathTimer = 1.5f;
 
         void Start()
         {
@@ -60,7 +61,6 @@ namespace assets.code
 
             lastGroundedPosition = transform.position;
 
-            inFireTimer = fireDeathTimer;
         }
 
         private void FixedUpdate()
@@ -192,10 +192,21 @@ namespace assets.code
                 }
             }
 
+            if(fireResistanceEnabled)
+            {
+                fireResistanceTimer -= Time.deltaTime;
+
+                if(fireResistanceTimer <= 0.0f)
+                {
+                    fireResistanceEnabled = false;
+                    fireResistanceTimer = fireResistanceDuration;
+                }
+            }
+
             if(inFire && !fireResistanceEnabled)
             {
-                inFireTimer -= Time.deltaTime;
-                if(inFireTimer <= 0.0f)
+                fireDeathTimer -= Time.deltaTime;
+                if(fireDeathTimer <= 0.0f)
                 {
                     this.Kill();
                 }
@@ -228,6 +239,7 @@ namespace assets.code
         public void EnableFireResistance()
         {
             this.fireResistanceEnabled = true;
+            fireResistanceTimer = fireResistanceDuration;
         }
 
         /// <summary>
