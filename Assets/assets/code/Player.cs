@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Xml.Serialization;
 using assets.images.mage2;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -192,15 +193,15 @@ namespace assets.code
                 }
             }
 
-            if (fireResistanceEnabled)
-            {
-                fireResistanceTimer -= Time.deltaTime;
+            // if (fireResistanceEnabled)
+            // {
+            //     fireResistanceTimer -= Time.deltaTime;
 
-                if (fireResistanceTimer <= 0.0f)
-                {
-                    fireResistanceEnabled = false;
-                }
-            }
+            //     if (fireResistanceTimer <= 0.0f)
+            //     {
+            //         fireResistanceEnabled = false;
+            //     }
+            // }
 
             if (inFire && !fireResistanceEnabled)
             {
@@ -239,7 +240,23 @@ namespace assets.code
         {
             this.fireResistanceEnabled = true;
             fireResistanceTimer = fireResistanceDuration;
+
+            StartCoroutine(PotionTimerCoroutine(fireResistanceDuration, new System.Action<bool>(result => this.fireResistanceEnabled = result)));
         }
+
+
+        public IEnumerator PotionTimerCoroutine(float potionDuration, System.Action<bool> setResult)
+        {
+            float timer = potionDuration;
+
+            while (timer > 0.0f)
+            {
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+            setResult(false);
+        }
+
 
         /// <summary>
         /// Secondary Interaction for interacting with the World and using items 
@@ -411,7 +428,7 @@ namespace assets.code
             {
                 this.Kill();
             }
-            else if (other.gameObject.CompareTag("DeadlyFire"))
+            else if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled)
             {
                 inFire = true;
             }
