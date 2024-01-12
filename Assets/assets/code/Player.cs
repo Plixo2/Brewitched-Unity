@@ -24,6 +24,7 @@ namespace assets.code
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
         private DelayAction _dropTimer = new();
+        private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
@@ -43,7 +44,8 @@ namespace assets.code
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
-        [SerializeField] private bool jesusPotionEnabled = true;
+        [SerializeField] private bool jesusPotionEnabled = false;
+        [SerializeField] private float jesusPotionDuration = 20.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
@@ -188,6 +190,16 @@ namespace assets.code
                     DropHandItem();
                 }
             }
+
+            if(jesusPotionEnabled)
+            {
+                jesusPotionTimer -= Time.deltaTime;
+
+                if(jesusPotionTimer <= 0.0f)
+                {
+                    jesusPotionEnabled = false;
+                }
+            }
         }
 
         public void Jump()
@@ -217,7 +229,8 @@ namespace assets.code
         public void EnableJesusPotion()
         {
             this.jesusPotionEnabled = true;
-            waterCollider.enabled = true;                        
+            waterCollider.enabled = true; 
+            jesusPotionTimer = jesusPotionDuration;                       
         }
 
         /// <summary>
