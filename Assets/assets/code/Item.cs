@@ -64,6 +64,11 @@ namespace assets.code
                     player.EnableDoubleJump();
                     return true;
                 }
+                case "fire_Resistance_Potion":
+                {
+                    player.EnableFireResistance();
+                    return true;
+                }
                 default:
                 {
                     return false;

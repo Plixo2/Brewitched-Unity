@@ -6,6 +6,7 @@ TagManager:
   tags:
   - OneWayPlatform
   - WaterBubble
+  - DeadlyFire
   layers:
   - Default
   - TransparentFX

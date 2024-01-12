@@ -16,7 +16,8 @@ namespace assets.recipes
             // Add("ash, bottle, phoenix_feather -> potion_fire_resistant");   
             Add("water, feather -> double_Jump_Potion");   
             Add("water, apple -> potion_fire");   
-            Add("potion_fire, scroll -> key");   
+            Add("potion_fire, scroll -> key");
+            Add("dimaond, gunpowder -> fire_Resistance_Potion");   
         }
 
         /// <summary>

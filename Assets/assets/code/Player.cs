@@ -1,5 +1,6 @@
 #nullable enable
 using System.Collections;
+using System.Xml.Serialization;
 using assets.images.mage2;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,6 +24,8 @@ namespace assets.code
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
         private DelayAction _dropTimer = new();
+        private bool inFire = false;
+        private float inFireTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
@@ -40,9 +43,11 @@ namespace assets.code
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
+        [SerializeField] private bool fireResistanceEnabled = false;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
+        [SerializeField] private float fireDeathTimer = 1.5f;
 
         void Start()
         {
@@ -54,6 +59,8 @@ namespace assets.code
             _spriteRenderer = GetComponent<SpriteRenderer>();
 
             lastGroundedPosition = transform.position;
+
+            inFireTimer = fireDeathTimer;
         }
 
         private void FixedUpdate()
@@ -184,6 +191,15 @@ namespace assets.code
                     DropHandItem();
                 }
             }
+
+            if(inFire && !fireResistanceEnabled)
+            {
+                inFireTimer -= Time.deltaTime;
+                if(inFireTimer <= 0.0f)
+                {
+                    this.Kill();
+                }
+            }
         }
 
         public void Jump()
@@ -208,6 +224,10 @@ namespace assets.code
         public void EnableDoubleJump()
         {
             this.doubleJumpEnabled = true;
+        }
+        public void EnableFireResistance()
+        {
+            this.fireResistanceEnabled = true;
         }
 
         /// <summary>
@@ -379,6 +399,10 @@ namespace assets.code
             if (other.gameObject.CompareTag("WaterBubble"))
             {
                 this.Kill();
+            }
+            else if (other.gameObject.CompareTag("DeadlyFire"))
+            {
+                inFire = true;
             }
         }
 
