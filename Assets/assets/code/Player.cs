@@ -191,13 +191,14 @@ namespace assets.code
                 }
             }
 
-            if(jesusPotionEnabled)
+            if (jesusPotionEnabled)
             {
                 jesusPotionTimer -= Time.deltaTime;
 
-                if(jesusPotionTimer <= 0.0f)
+                if (jesusPotionTimer <= 0.0f)
                 {
                     jesusPotionEnabled = false;
+                    waterCollider.enabled = false;
                 }
             }
         }
@@ -229,8 +230,8 @@ namespace assets.code
         public void EnableJesusPotion()
         {
             this.jesusPotionEnabled = true;
-            waterCollider.enabled = true; 
-            jesusPotionTimer = jesusPotionDuration;                       
+            waterCollider.enabled = true;
+            jesusPotionTimer = jesusPotionDuration;
         }
 
         /// <summary>
@@ -398,14 +399,14 @@ namespace assets.code
         }
 
         void OnTriggerEnter2D(Collider2D other)
-        {   
+        {
             if (other.gameObject.CompareTag("WaterBubble"))
-            {   
-                if(jesusPotionEnabled)
+            {
+                if (jesusPotionEnabled)
                 {
                     Destroy(other.gameObject);
                 }
-                else 
+                else
                 {
                     this.Kill();
                 }
@@ -435,7 +436,7 @@ namespace assets.code
             }
             else
             {
-                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask) 
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask)
                 || Physics2D.OverlapCircle(pos + groundOffset, groundRadius, waterMask);
             }
         }
