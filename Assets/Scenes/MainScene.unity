@@ -5527,6 +5527,67 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3020801031705491211, guid: c0b847560cc50c542b9c8c94508e64f8, type: 3}
   m_PrefabInstance: {fileID: 1701048747}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &72888939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 72888941}
+  - component: {fileID: 72888940}
+  - component: {fileID: 72888942}
+  m_Layer: 0
+  m_Name: PauseMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &72888940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72888939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 3a2792f62c727234aa40869993ea2948, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 46096df0d71c25148860b3b64834ea5f, type: 3}
+  m_SortingOrder: 1
+--- !u!4 &72888941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72888939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.13645832, y: -0.24936958, z: -0.046487078}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &72888942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72888939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e10203b6cd09949b780b76a6f73330, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &78415650
 GameObject:
   m_ObjectHideFlags: 0
@@ -18305,6 +18366,8 @@ MonoBehaviour:
   normalE: {fileID: 21300000, guid: 0f607aea3b50d49469bc16458d0fe4e6, type: 3}
   pressedF: {fileID: 21300000, guid: eaed7cf92a366cf478eec1830bea7d10, type: 3}
   normalF: {fileID: 21300000, guid: bae121a604bd5a548a1d078eca138096, type: 3}
+  pressedEsc: {fileID: 21300000, guid: 792199891ae4edd458db03974bc7d1df, type: 3}
+  normalEsc: {fileID: 21300000, guid: 0f607aea3b50d49469bc16458d0fe4e6, type: 3}
   bookOpen: {fileID: 21300000, guid: 949f9ad39a13a0c4e9716365049753db, type: 3}
   bookClosed: {fileID: 21300000, guid: f3c715808038dc84c81005a4bd33fe3f, type: 3}
 --- !u!1001 &426619992
@@ -73956,8 +74019,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25180054, y: -3.5241003, z: 0}
-    m_Extent: {x: 19.5851, y: 11.7669, z: 0}
+    m_Center: {x: 0.25730038, y: -3.5288, z: 0}
+    m_Extent: {x: 19.589, y: 11.7623, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

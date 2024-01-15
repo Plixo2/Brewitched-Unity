@@ -12,6 +12,9 @@ public class HUD : MonoBehaviour
 
     [SerializeField] private Sprite pressedF;
     [SerializeField] private Sprite normalF;
+
+    [SerializeField] private Sprite pressedEsc;
+    [SerializeField] private Sprite normalEsc;
     
     [SerializeField] private Sprite bookOpen;
     [SerializeField] private Sprite bookClosed;
@@ -45,13 +48,16 @@ public class HUD : MonoBehaviour
         
         var keyE = _rootVisualElement.Q<VisualElement>("key0");
         var keyF = _rootVisualElement.Q<VisualElement>("key1");
+        var keyEsc = _rootVisualElement.Q<VisualElement>("key2");
         
         
         var targetE = Input.GetKey(KeyCode.E) ? pressedE : normalE;
         var targetF = Input.GetKey(KeyCode.F) ? pressedF : normalF;
+        var targetEsc = Input.GetKey(KeyCode.Escape) ? pressedEsc : normalEsc;
 
         keyE.style.backgroundImage = new StyleBackground(targetE);
         keyF.style.backgroundImage = new StyleBackground(targetF);
+        keyEsc.style.backgroundImage = new StyleBackground(targetEsc);
         
         var targetBook = isBookOpen ? bookOpen : bookClosed;
         var book = _rootVisualElement.Q<Button>("book");
