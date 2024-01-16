@@ -33705,6 +33705,9 @@ MonoBehaviour:
   jumpDelay: 0
   jumpBuffer: 0.1
   coyoteTime: 0.1
+  dashingPower: 10
+  dashingTime: 0.3
+  dashingCooldown: 1
 --- !u!114 &835353168
 MonoBehaviour:
   m_ObjectHideFlags: 0
