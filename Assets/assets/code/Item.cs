@@ -64,6 +64,11 @@ namespace assets.code
                     player.EnableDoubleJump();
                     return true;
                 }
+                case "jesus_Potion":
+                {
+                    player.EnableJesusPotion();
+                    return true;
+                }
                 default:
                 {
                     return false;

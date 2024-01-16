@@ -1,6 +1,7 @@
 #nullable enable
 using System.Collections;
 using assets.images.mage2;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -23,6 +24,7 @@ namespace assets.code
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
         private DelayAction _dropTimer = new();
+        private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
@@ -35,11 +37,15 @@ namespace assets.code
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private bool groundRectangle = true;
         [SerializeField] private LayerMask groundMask;
+        [SerializeField] private LayerMask waterMask;
+        [SerializeField] private BoxCollider2D waterCollider;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
         [SerializeField] private bool doubleJumpEnabled = false;
+        [SerializeField] private bool jesusPotionEnabled = false;
+        [SerializeField] private float jesusPotionDuration = 20.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
@@ -79,7 +85,7 @@ namespace assets.code
         void Update()
         {
             var waterManager = States.GetWaterManager();
-            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y && !jesusPotionEnabled)
             {
                 this.Kill();
             }
@@ -184,6 +190,17 @@ namespace assets.code
                     DropHandItem();
                 }
             }
+
+            if (jesusPotionEnabled)
+            {
+                jesusPotionTimer -= Time.deltaTime;
+
+                if (jesusPotionTimer <= 0.0f)
+                {
+                    jesusPotionEnabled = false;
+                    waterCollider.enabled = false;
+                }
+            }
         }
 
         public void Jump()
@@ -208,6 +225,13 @@ namespace assets.code
         public void EnableDoubleJump()
         {
             this.doubleJumpEnabled = true;
+        }
+
+        public void EnableJesusPotion()
+        {
+            this.jesusPotionEnabled = true;
+            waterCollider.enabled = true;
+            jesusPotionTimer = jesusPotionDuration;
         }
 
         /// <summary>
@@ -378,7 +402,14 @@ namespace assets.code
         {
             if (other.gameObject.CompareTag("WaterBubble"))
             {
-                this.Kill();
+                if (jesusPotionEnabled)
+                {
+                    Destroy(other.gameObject);
+                }
+                else
+                {
+                    this.Kill();
+                }
             }
         }
 
@@ -398,11 +429,15 @@ namespace assets.code
             if (groundRectangle)
             {
                 return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
-                    groundMask);
+                    groundMask) || Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                    waterMask);
+
+
             }
             else
             {
-                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask)
+                || Physics2D.OverlapCircle(pos + groundOffset, groundRadius, waterMask);
             }
         }
 

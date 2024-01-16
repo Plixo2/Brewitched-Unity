@@ -17,6 +17,7 @@ namespace assets.recipes
             Add("water, feather -> double_Jump_Potion");   
             Add("water, apple -> potion_fire");   
             Add("potion_fire, scroll -> key");   
+            Add("wine, bread -> jesus_Potion");
         }
 
         /// <summary>
