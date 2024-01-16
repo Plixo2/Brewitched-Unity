@@ -20,6 +20,7 @@ namespace assets.code
 
         public SpriteRenderer? _spriteRenderer;
         private List<Collider2D> _collider2Ds = new();
+        private Potions potions;
 
         /// <summary>
         /// Registers the Item so it can be found.
@@ -48,6 +49,8 @@ namespace assets.code
             {
                 ImageRegister.RegisterSprite(this.itemName, _spriteRenderer.sprite);
             }
+            
+            potions = this.GetComponent<Potions>();
         }
 
 
@@ -57,27 +60,14 @@ namespace assets.code
         /// <returns>if the item should be deleted after use</returns>
         public virtual bool Interact(Player player)
         {
-            switch (itemName)
+            if(itemName.Contains("Potion"))
             {
-                case "double_Jump_Potion":
-                {
-                    player.EnableDoubleJump();
-                    return true;
-                }
-                case "fire_Resistance_Potion":
-                {
-                    player.EnableFireResistance();
-                    return true;
-                }
-                case "jesus_Potion":
-                {
-                    player.EnableJesusPotion();
-                    return true;
-                }
-                default:
-                {
-                    return false;
-                }
+                potions.EnablePotion();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

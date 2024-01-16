@@ -33972,10 +33972,8 @@ MonoBehaviour:
   reach: 1.1
   doubleJumpEnabled: 0
   fireResistanceEnabled: 0
-  fireResistanceDuration: 20
-  fireDeathTimer: 0.1
   jesusPotionEnabled: 0
-  jesusPotionDuration: 20
+  fireDeathTimer: 0.1
   jumpDelay: 0
   jumpBuffer: 0.1
   coyoteTime: 0.1
@@ -35396,6 +35394,7 @@ GameObject:
   - component: {fileID: 995397231}
   - component: {fileID: 995397230}
   - component: {fileID: 995397229}
+  - component: {fileID: 995397233}
   m_Layer: 8
   m_Name: Jesus_Potion (1)
   m_TagString: Untagged
@@ -35523,6 +35522,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &995397233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 995397227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 835353166}
+  potionType: 1
+  potionDuration: 5
+  potionTimer: 0
 --- !u!1001 &999786506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74837,8 +74852,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25115013, y: -3.52555, z: 0}
-    m_Extent: {x: 19.58195, y: 11.76775, z: 0}
+    m_Center: {x: 0.24655056, y: -3.5224, z: 0}
+    m_Extent: {x: 19.583351, y: 11.7698, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
