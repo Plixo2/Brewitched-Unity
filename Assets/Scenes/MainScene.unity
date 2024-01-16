@@ -33560,6 +33560,9 @@ MonoBehaviour:
   jumpDelay: 0
   jumpBuffer: 0.1
   coyoteTime: 0.1
+  dashingPower: 10
+  dashingTime: 0.3
+  dashingCooldown: 1
 --- !u!114 &835353168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73956,8 +73959,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25180054, y: -3.5241003, z: 0}
-    m_Extent: {x: 19.5851, y: 11.7669, z: 0}
+    m_Center: {x: 0.2606001, y: -3.5186, z: 0}
+    m_Extent: {x: 19.5808, y: 11.768499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0

@@ -1,6 +1,7 @@
 #nullable enable
 using System.Collections;
 using assets.images.mage2;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -44,6 +45,15 @@ namespace assets.code
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
 
+        private bool canDash = true;
+        private bool isDashing;
+        [SerializeField] private float dashingPower = 10f;
+        [SerializeField] private float dashingTime = 0.5f;
+        [SerializeField] private float dashingCooldown =  1f;
+        
+
+
+
         void Start()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
@@ -58,6 +68,10 @@ namespace assets.code
 
         private void FixedUpdate()
         {
+            if(isDashing)
+            {
+                return;
+            }
             if (_canMove)
             {
                 var moveInput = Input.GetAxisRaw("Horizontal");
@@ -78,6 +92,11 @@ namespace assets.code
 
         void Update()
         {
+
+            if(isDashing)
+            {
+                return;
+            }
             var waterManager = States.GetWaterManager();
             if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
             {
@@ -95,6 +114,7 @@ namespace assets.code
             {
                 lastGroundedPosition = transform.position;
                 lastGroundTime = Time.time;
+                canDash = true;
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
@@ -184,6 +204,10 @@ namespace assets.code
                     DropHandItem();
                 }
             }
+            if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+            {  
+                StartCoroutine(Dash());
+            }
         }
 
         public void Jump()
@@ -208,6 +232,18 @@ namespace assets.code
         public void EnableDoubleJump()
         {
             this.doubleJumpEnabled = true;
+        }
+
+        private IEnumerator Dash()
+        {
+            canDash =false;
+            isDashing = true;
+            float originalGravity = rigidbody2D.gravityScale;
+            rigidbody2D.gravityScale = 0f;
+            rigidbody2D.velocity = new Vector2(transform.localScale.x * dashingPower, 0.0f);
+            yield return new WaitForSecondsRealtime(dashingTime);
+            rigidbody2D.gravityScale = originalGravity;
+            isDashing = false;
         }
 
         /// <summary>
