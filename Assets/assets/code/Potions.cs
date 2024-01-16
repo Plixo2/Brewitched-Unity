@@ -9,8 +9,9 @@ public class Potions : MonoBehaviour
     private enum PotionType
     {
         double_jump,
-        jesus,
         fire_resistance,
+        jesus,
+        dash,
         reverse
     }
 
@@ -78,6 +79,11 @@ public class Potions : MonoBehaviour
                     StartCoroutine(EnableJesusPotion());
                     break;
                 }
+                case PotionType.dash:
+                {
+                    StartCoroutine(EnableDashPotion());
+                    break;
+                }
             }
             potionEnabled = true;
     }
@@ -101,5 +107,10 @@ public class Potions : MonoBehaviour
             player.jesusPotionEnabled = false;
             player.waterCollider.enabled = false;
         }
-
+    public IEnumerator EnableDashPotion()
+        {
+            player.dashPotionEnabled = true;
+            yield return new WaitForSecondsRealtime(potionDuration);
+            player.dashPotionEnabled = false;
+        }
 }

@@ -51,6 +51,7 @@ namespace assets.code
         [SerializeField] public bool doubleJumpEnabled = false;
         [SerializeField] public bool fireResistanceEnabled = false;
         [SerializeField] public bool jesusPotionEnabled = false;
+        [SerializeField] public bool dashPotionEnabled = false;
         [SerializeField] private float fireDeathTimer = 5.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
@@ -216,7 +217,7 @@ namespace assets.code
                     DropHandItem();
                 }
             }
-            if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
+            if(Input.GetKeyDown(KeyCode.LeftShift) && canDash && dashPotionEnabled)
             {  
                 StartCoroutine(Dash());
             }
