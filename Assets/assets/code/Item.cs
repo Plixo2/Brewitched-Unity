@@ -69,6 +69,11 @@ namespace assets.code
                     player.EnableFireResistance();
                     return true;
                 }
+                case "jesus_Potion":
+                {
+                    player.EnableJesusPotion();
+                    return true;
+                }
                 default:
                 {
                     return false;

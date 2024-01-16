@@ -18,6 +18,7 @@ namespace assets.recipes
             Add("water, apple -> potion_fire");   
             Add("potion_fire, scroll -> key");
             Add("dimaond, gunpowder -> fire_Resistance_Potion");   
+            Add("wine, bread -> jesus_Potion");
         }
 
         /// <summary>

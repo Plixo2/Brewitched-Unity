@@ -3,6 +3,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using assets.images.mage2;
 using UnityEditor.ShaderGraph;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -27,6 +28,7 @@ namespace assets.code
         private DelayAction _dropTimer = new();
         private bool inFire = false;
         private float fireResistanceTimer = 0.0f;
+        private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
@@ -39,6 +41,8 @@ namespace assets.code
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private bool groundRectangle = true;
         [SerializeField] private LayerMask groundMask;
+        [SerializeField] private LayerMask waterMask;
+        [SerializeField] private BoxCollider2D waterCollider;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
         [SerializeField] private float acceleration = 0.1f;
@@ -47,6 +51,8 @@ namespace assets.code
         [SerializeField] private bool fireResistanceEnabled = false;
         [SerializeField] private float fireResistanceDuration = 20.0f;
         [SerializeField] private float fireDeathTimer = 5.0f;
+        [SerializeField] private bool jesusPotionEnabled = false;
+        [SerializeField] private float jesusPotionDuration = 20.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
@@ -87,7 +93,7 @@ namespace assets.code
         void Update()
         {
             var waterManager = States.GetWaterManager();
-            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y)
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y && !jesusPotionEnabled)
             {
                 this.Kill();
             }
@@ -193,22 +199,23 @@ namespace assets.code
                 }
             }
 
-            // if (fireResistanceEnabled)
-            // {
-            //     fireResistanceTimer -= Time.deltaTime;
-
-            //     if (fireResistanceTimer <= 0.0f)
-            //     {
-            //         fireResistanceEnabled = false;
-            //     }
-            // }
-
             if (inFire && !fireResistanceEnabled)
             {
                 fireDeathTimer -= Time.deltaTime;
                 if (fireDeathTimer <= 0.0f)
                 {
                     this.Kill();
+                }
+            }
+
+            if (jesusPotionEnabled)
+            {
+                jesusPotionTimer -= Time.deltaTime;
+
+                if (jesusPotionTimer <= 0.0f)
+                {
+                    jesusPotionEnabled = false;
+                    waterCollider.enabled = false;
                 }
             }
         }
@@ -257,6 +264,13 @@ namespace assets.code
             setResult(false);
         }
 
+
+        public void EnableJesusPotion()
+        {
+            this.jesusPotionEnabled = true;
+            waterCollider.enabled = true;
+            jesusPotionTimer = jesusPotionDuration;
+        }
 
         /// <summary>
         /// Secondary Interaction for interacting with the World and using items 
@@ -426,7 +440,14 @@ namespace assets.code
         {
             if (other.gameObject.CompareTag("WaterBubble"))
             {
-                this.Kill();
+                if (jesusPotionEnabled)
+                {
+                    Destroy(other.gameObject);
+                }
+                else
+                {
+                    this.Kill();
+                }
             }
             else if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled)
             {
@@ -450,11 +471,15 @@ namespace assets.code
             if (groundRectangle)
             {
                 return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
-                    groundMask);
+                    groundMask) || Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                    waterMask);
+
+
             }
             else
             {
-                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask)
+                || Physics2D.OverlapCircle(pos + groundOffset, groundRadius, waterMask);
             }
         }
 
