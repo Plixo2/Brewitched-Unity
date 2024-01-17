@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections;
 using System.Xml.Serialization;
 using assets.images.mage2;
@@ -26,23 +27,22 @@ namespace assets.code
         private bool _canMove = true;
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
+        private float _lastHitTime = -10;
         private DelayAction _dropTimer = new();
-        private bool inFire = false;
-        private float fireResistanceTimer = 0.0f;
         private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
+        public int health;
 
         public GameObject _camera;
         private CamFollow camFollow;
-        private SpriteRenderer _spriteRenderer;
+        [SerializeField] SpriteRenderer _spriteRenderer;
 
         [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private bool groundRectangle = true;
         [SerializeField] private LayerMask groundMask;
-        [SerializeField] private LayerMask waterMask;
         [SerializeField] private BoxCollider2D waterCollider;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
@@ -57,106 +57,110 @@ namespace assets.code
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
+        [SerializeField] private float damageCooldown = 0.5f;
+        [SerializeField] private float impactFrameTime = 0.5f;
+        [SerializeField] private Color32 impactFrameColor = Color.red;
 
-        private bool canDash = true;
-        private bool isDashing;
+        [SerializeField] [Range(0, 16)] private int maxHealth = 6;
+
+        public bool allowDash = true;
+        public bool isDashing;
         [SerializeField] private float dashingPower = 10f;
         [SerializeField] private float dashingTime = 0.5f;
-        [SerializeField] private float dashingCooldown =  1f;
-        
-
+        [SerializeField] private bool dashGravity = true;
 
 
         void Start()
         {
+            health = maxHealth;
             rigidbody2D = GetComponent<Rigidbody2D>();
             _playerSound = GetComponent<PlayerSound>();
             _playerAnimator = GetComponent<PlayerAnimator>();
-
             camFollow = _camera.GetComponent<CamFollow>();
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-
             lastGroundedPosition = transform.position;
-
         }
+
+        #region Update
 
         private void FixedUpdate()
         {
-            if(isDashing)
+            if (isDashing)
             {
                 return;
             }
+
             if (_canMove)
             {
-                var moveInput = Input.GetAxisRaw("Horizontal");
-                Move(moveInput);
+                var target = Input.GetAxisRaw("Horizontal");
+                _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
+                // var dx = _currentSpeed * movementSpeed;
+                // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
+                rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, rigidbody2D.velocity.y);
             }
 
             lastFixedPosition = new Vector3(fixedPosition.x, fixedPosition.y, fixedPosition.z);
             fixedPosition = transform.position;
         }
 
-        private void Move(float target)
-        {
-            _currentSpeed = Mathf.Lerp(_currentSpeed, target, acceleration);
-            // var dx = _currentSpeed * movementSpeed;
-            // _rigidbody2D.AddForce(new Vector2(dx, 0), ForceMode2D.Impulse);
-            rigidbody2D.velocity = new Vector2(_currentSpeed * movementSpeed, rigidbody2D.velocity.y);
-        }
-
         void Update()
         {
+            // if (isDashing)
+            // {
+            //     return;
+            // }
 
-            if(isDashing)
-            {
-                return;
-            }
-            var waterManager = States.GetWaterManager();
-            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y && !jesusPotionEnabled)
-            {
-                this.Kill();
-            }
-
-            {
-                var scaleX = this.gameObject.transform.localScale.x;
-                var target = _currentSpeed < 0 ? -1 : 1;
-                this.gameObject.transform.localScale =
-                    new Vector3(Mathf.Lerp(scaleX, target, Time.deltaTime * 16), 1, 1);
-            }
             var isGrounded = IsGrounded();
-            if (isGrounded)
-            {
-                lastGroundedPosition = transform.position;
-                lastGroundTime = Time.time;
-                canDash = true;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                lastJumpTime = Time.time;
-            }
-
-            var lastJumpDelta = Time.time - lastJumpTime;
-            var isJumping = lastJumpDelta <= jumpBuffer;
-            var lastGroundDelta = Time.time - lastGroundTime;
-            var isCoyote = lastGroundDelta <= coyoteTime;
-            if (isJumping && _canMove)
-            {
-                if (isCoyote || (doubleJumpEnabled && _jumpCount > 0))
-                {
-                    lastGroundTime = 0;
-                    lastJumpTime = 0;
-                    Jump();
-                }
-            }
-
             float velocityX = rigidbody2D.velocity.x;
             bool playerMoving = Mathf.Abs(velocityX) > 0.1f;
+            HandlePlayerImpactFrame();
+            HandleWaterInteraction();
+            HandleFlipAnimation();
+            HandleJump(isGrounded, playerMoving);
+            HandleInput(isGrounded, playerMoving);
+            HandleStepSounds(isGrounded, playerMoving);
+        }
+
+        private void HandlePlayerImpactFrame()
+        {
+            var timeSinceLastHit = Time.time - _lastHitTime;
+            var normalColor = Color.white;
+            var impactColor = impactFrameColor;
+            var fade = ((impactFrameTime - Math.Min(timeSinceLastHit, impactFrameTime)) / impactFrameTime);
+            var color = Color.Lerp(normalColor, impactColor, fade);
+            if (_spriteRenderer != null)
+            {
+                _spriteRenderer.color = color;
+            }
+        }
+
+        private void HandleWaterInteraction()
+        {
+            var waterManager = States.GetWaterManager();
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y &&
+                !jesusPotionEnabled)
+            {
+                this.Damage();
+            }
+        }
+
+        private void HandleFlipAnimation()
+        {
+            var scaleX = this.gameObject.transform.localScale.x;
+            var target = _currentSpeed < 0 ? -1 : 1;
+            this.gameObject.transform.localScale =
+                new Vector3(Mathf.Lerp(scaleX, target, Time.deltaTime * 16), 1, 1);
+        }
+
+        private void HandleStepSounds(bool isGrounded, bool playerMoving)
+        {
             if (playerMoving && isGrounded)
             {
                 _playerSound.PlayStep(Time.deltaTime);
             }
+        }
 
+        private void HandleInput(bool isGrounded, bool playerMoving)
+        {
             if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
@@ -218,18 +222,10 @@ namespace assets.code
                     DropHandItem();
                 }
             }
-            if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-            {  
-                StartCoroutine(Dash());
-            }
-
-            if (inFire && !fireResistanceEnabled)
+            
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && allowDash)
             {
-                fireDeathTimer -= Time.deltaTime;
-                if (fireDeathTimer <= 0.0f)
-                {
-                    this.Kill();
-                }
+                StartCoroutine(Dash());
             }
 
             if (jesusPotionEnabled)
@@ -243,6 +239,38 @@ namespace assets.code
                 }
             }
         }
+
+        private void HandleJump(bool isGrounded, bool playerMoving)
+        {
+            if (isGrounded)
+            {
+                lastGroundedPosition = transform.position;
+                lastGroundTime = Time.time;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                lastJumpTime = Time.time;
+            }
+
+            var lastJumpDelta = Time.time - lastJumpTime;
+            var isJumping = lastJumpDelta <= jumpBuffer;
+            var lastGroundDelta = Time.time - lastGroundTime;
+            var isCoyote = lastGroundDelta <= coyoteTime;
+            if (isJumping && _canMove)
+            {
+                if (isCoyote || (doubleJumpEnabled && _jumpCount > 0))
+                {
+                    lastGroundTime = 0;
+                    lastJumpTime = 0;
+                    Jump();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Movement
 
         public void Jump()
         {
@@ -270,43 +298,42 @@ namespace assets.code
 
         private IEnumerator Dash()
         {
-            canDash =false;
+            _playerAnimator.onDash();
             isDashing = true;
             float originalGravity = rigidbody2D.gravityScale;
-            rigidbody2D.gravityScale = 0f;
-            rigidbody2D.velocity = new Vector2(transform.localScale.x * dashingPower, 0.0f);
+            if (!dashGravity)
+            {
+                rigidbody2D.gravityScale = 0f;
+            }
+
+            rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * dashingPower, 0.0f);
             yield return new WaitForSecondsRealtime(dashingTime);
             rigidbody2D.gravityScale = originalGravity;
             isDashing = false;
         }
-        public void EnableFireResistance()
+
+        /// <summary>
+        /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
+        /// </summary>
+        /// <returns>if the player is grounded</returns>
+        public bool IsGrounded()
         {
-            this.fireResistanceEnabled = true;
-            fireResistanceTimer = fireResistanceDuration;
-
-            StartCoroutine(PotionTimerCoroutine(fireResistanceDuration, new System.Action<bool>(result => this.fireResistanceEnabled = result)));
-        }
-
-
-        public IEnumerator PotionTimerCoroutine(float potionDuration, System.Action<bool> setResult)
-        {
-            float timer = potionDuration;
-
-            while (timer > 0.0f)
+            var position = this.transform.position;
+            var pos = new Vector2(position.x, position.y);
+            if (groundRectangle)
             {
-                timer -= Time.deltaTime;
-                yield return null;
+                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                    groundMask);
             }
-            setResult(false);
+            else
+            {
+                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
+            }
         }
 
+        #endregion
 
-        public void EnableJesusPotion()
-        {
-            this.jesusPotionEnabled = true;
-            waterCollider.enabled = true;
-            jesusPotionTimer = jesusPotionDuration;
-        }
+        #region Interact
 
         /// <summary>
         /// Secondary Interaction for interacting with the World and using items 
@@ -341,22 +368,6 @@ namespace assets.code
                     return;
                 }
             }
-
-            // if (HasHandItem())
-            // {
-            //     var handItem = GetHandItem()!;
-            //
-            //     var currentCauldron = States.CurrentCauldron();
-            //     if (currentCauldron != null && !handItem.itemName.Equals("cauldron"))
-            //     {
-            //         if (Vector3.Distance(currentCauldron.transform.position, transform.position) < reach)
-            //         {
-            //             _playerSound.PlayBottle();
-            //             currentCauldron.Add(handItem);
-            //             DeleteHandItem();
-            //         }
-            //     }
-            // }
         }
 
         /// <summary>
@@ -404,6 +415,40 @@ namespace assets.code
                 _playerSound.PlayPick();
             }
         }
+
+        public void EnableFireResistance()
+        {
+            this.fireResistanceEnabled = true;
+
+            StartCoroutine(PotionTimerCoroutine(fireResistanceDuration,
+                new System.Action<bool>(result => this.fireResistanceEnabled = result)));
+        }
+
+
+        public IEnumerator PotionTimerCoroutine(float potionDuration, System.Action<bool> setResult)
+        {
+            float timer = potionDuration;
+
+            while (timer > 0.0f)
+            {
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+
+            setResult(false);
+        }
+
+
+        public void EnableJesusPotion()
+        {
+            this.jesusPotionEnabled = true;
+            waterCollider.enabled = true;
+            jesusPotionTimer = jesusPotionDuration;
+        }
+
+        #endregion
+
+        #region Items
 
         /// <summary>
         /// Tests if the player is holding an item
@@ -472,22 +517,24 @@ namespace assets.code
             return null;
         }
 
-        void OnTriggerEnter2D(Collider2D other)
+        #endregion
+
+        #region Damage
+
+        public void Damage()
         {
-            if (other.gameObject.CompareTag("WaterBubble"))
+            var deltaTime = Time.time - _lastHitTime;
+            if (deltaTime > damageCooldown)
             {
-                if (jesusPotionEnabled)
-                {
-                    Destroy(other.gameObject);
-                }
-                else
-                {
-                    this.Kill();
-                }
+                health -= 1;
+                _lastHitTime = Time.time;
+                print($"Health :{health}");
             }
-            else if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled)
+
+            if (health <= 0)
             {
-                inFire = true;
+                this.Kill();
+                this.health = 0;
             }
         }
 
@@ -496,28 +543,9 @@ namespace assets.code
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        /// <summary>
-        /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
-        /// </summary>
-        /// <returns>if the player is grounded</returns>
-        public bool IsGrounded()
-        {
-            var position = this.transform.position;
-            var pos = new Vector2(position.x, position.y);
-            if (groundRectangle)
-            {
-                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
-                    groundMask) || Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
-                    waterMask);
+        #endregion
 
-
-            }
-            else
-            {
-                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask)
-                || Physics2D.OverlapCircle(pos + groundOffset, groundRadius, waterMask);
-            }
-        }
+        #region UnityBuildins
 
         /// <summary>
         /// Draws a debug circle to display the ground check, if the GameObject is selected  
@@ -548,5 +576,30 @@ namespace assets.code
             Gizmos.DrawWireSphere(this.transform.position,
                 reach);
         }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("WaterBubble"))
+            {
+                if (jesusPotionEnabled)
+                {
+                    Destroy(other.gameObject);
+                }
+                else
+                {
+                    this.Damage();
+                }
+            }
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled)
+            {
+                this.Damage();
+            }
+        }
+
+        #endregion
     }
 }

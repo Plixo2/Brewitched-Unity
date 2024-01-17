@@ -87,7 +87,6 @@ namespace assets.code
             currentLevelTime = 0;
             return currentLevel += 1;
         }
-
         /// <summary>
         /// Calculates slope of the water curve plot at call time and returns it to be used as a value proportionate to speed
         /// </summary>

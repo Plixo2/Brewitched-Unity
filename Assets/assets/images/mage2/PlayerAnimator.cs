@@ -6,11 +6,12 @@ namespace assets.images.mage2
     public class PlayerAnimator : MonoBehaviour
     {
         private Player _player;
-        [SerializeField] private float veloThreshold = 0.25f; 
+        [SerializeField] private float veloThreshold = 0.25f;
 
         [SerializeField] private Animator animator;
 
         private bool rising = false;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -41,7 +42,9 @@ namespace assets.images.mage2
                 animator.SetBool("Sneaking", pressingSneak);
                 animator.SetBool("Falling", velocity < -veloThreshold);
                 animator.SetBool("Rising", rising);
+                animator.SetBool("dashing", _player.isDashing);
             }
+
             if (velocity < -veloThreshold)
             {
                 rising = false;
@@ -53,8 +56,17 @@ namespace assets.images.mage2
             if (animator != null)
             {
                 rising = true;
-                 animator.SetTrigger("OnJump");
-              animator.Play("Base Layer.idle", 0);
+                animator.SetTrigger("OnJump");
+                animator.Play("Base Layer.idle", 0);
+            }
+        }
+
+
+        public void onDash()
+        {
+            if (animator != null)
+            {
+                animator.SetTrigger("Dash");
             }
         }
     }

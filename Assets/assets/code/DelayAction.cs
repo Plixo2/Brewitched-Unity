@@ -9,7 +9,7 @@ namespace assets.code
     /// </summary>
     public class DelayAction
     {
-        private float _triggerTime = 0;
+        public float _triggerTime = 0;
         private float _lastTriggerTime = 0;
         
         

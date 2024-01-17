@@ -13,7 +13,7 @@ namespace assets.code
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
             {
                 StartCoroutine(DisableCollision());
             }
