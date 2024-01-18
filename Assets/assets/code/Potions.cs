@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using assets.code;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class Potions : MonoBehaviour
     [SerializeField] private float potionDuration = 5f;
 
     private bool potionEnabled = false;
-    [SerializeField] private float potionTimer;
+    private float potionTimer;
     void Start()
     {
         potionTimer += potionDuration;
@@ -29,77 +30,67 @@ public class Potions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (potionEnabled)
-            {
-                potionTimer -= Time.deltaTime;
+        // if (potionEnabled)
+        //     {
+        //         potionTimer -= Time.deltaTime;
 
-                if (potionTimer <= 0.0f)
-                {   
-                    // switch (potionType)
-                    // {
-                    //     case PotionType.double_jump:
-                    //     {
-                    //         player.doubleJumpEnabled = false;
-                    //         break;
-                    //     }
-                    //     case PotionType.fire_resistance:
-                    //     {
-                    //         player.fireResistanceEnabled = false;
-                    //         break;
-                    //     }
-                    //     case  PotionType.jesus:
-                    //     {
-                    //         player.jesusPotionEnabled = false;
-                    //         player.waterCollider.enabled = false;
-                    //         break;
-                    //     }
-                    // }
-                    potionEnabled = false;
-                    Destroy(this.gameObject);
-                }
-            }
+        //         if (potionTimer <= 0.0f)
+        //         {   
+        //             potionEnabled = false;
+        //             Destroy(this.gameObject);
+        //         }
+        //     }
     }
-
-    public void EnablePotion()
+    /// <summary>
+    /// Start the coroutine for the potion Effect based on the enum type and destroys the gameObejct afterwards
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator EnablePotion()
     {
         switch (potionType)
             {
                 case PotionType.double_jump:
                 {
-                    StartCoroutine(EnableDoubleJump());
+                    yield return StartCoroutine(EnableDoubleJump());
                     break;
                 }
                 case PotionType.fire_resistance:
                 {
-                    StartCoroutine(EnableFireResistance());
+                    yield return StartCoroutine(EnableFireResistance());
                     break;
                 }
                 case  PotionType.jesus:
                 {
-                    StartCoroutine(EnableJesusPotion());
+                    yield return StartCoroutine(EnableJesusPotion());
                     break;
                 }
                 case PotionType.dash:
                 {
-                    StartCoroutine(EnableDashPotion());
+                    yield return StartCoroutine(EnableDashPotion());
+                    break;
+                }
+                case PotionType.reverse:
+                {
+                    yield return StartCoroutine(EnableReversePotion());
                     break;
                 }
             }
-            potionEnabled = true;
+            //potionEnabled = true;
+            Destroy(this.gameObject);
     }
-    public IEnumerator EnableDoubleJump()
+    private IEnumerator EnableDoubleJump()
         {
             player.doubleJumpEnabled = true;
             yield return new WaitForSecondsRealtime(potionDuration);
             player.doubleJumpEnabled = false;
         }
-    public IEnumerator EnableFireResistance()
+    private IEnumerator EnableFireResistance()
     {
         player.fireResistanceEnabled = true;
         yield return new WaitForSecondsRealtime(potionDuration);
         player.fireResistanceEnabled = false;
     }
-    public IEnumerator EnableJesusPotion()
+    private IEnumerator EnableJesusPotion()
         {
             player.jesusPotionEnabled = true;
             player.waterCollider.enabled = true;
@@ -107,10 +98,17 @@ public class Potions : MonoBehaviour
             player.jesusPotionEnabled = false;
             player.waterCollider.enabled = false;
         }
-    public IEnumerator EnableDashPotion()
+    private IEnumerator EnableDashPotion()
         {
             player.dashPotionEnabled = true;
             yield return new WaitForSecondsRealtime(potionDuration);
             player.dashPotionEnabled = false;
+        }
+    private IEnumerator EnableReversePotion()
+        {
+            var waterManager = States.GetWaterManager();
+            waterManager.timeScale = -1;
+            yield return new WaitForSeconds(potionDuration);
+            waterManager.timeScale = 1;
         }
 }

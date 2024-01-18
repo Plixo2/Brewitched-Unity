@@ -49,8 +49,6 @@ namespace assets.code
             {
                 ImageRegister.RegisterSprite(this.itemName, _spriteRenderer.sprite);
             }
-            
-            potions = this.GetComponent<Potions>();
         }
 
 
@@ -62,7 +60,8 @@ namespace assets.code
         {
             if(itemName.Contains("Potion"))
             {
-                potions.EnablePotion();
+                potions = this.GetComponent<Potions>();
+                StartCoroutine(potions.EnablePotion());
                 return true;
             }
             else

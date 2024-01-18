@@ -37,6 +37,8 @@ namespace assets.code
         // Time of the current level
         [SerializeField] private float currentLevelTime = 0;
 
+        [SerializeField] public float timeScale = 1; 
+
         private void Start()
         {
             States.setWaterManager(this);
@@ -44,7 +46,7 @@ namespace assets.code
 
         void Update()
         {
-            currentLevelTime += Time.deltaTime;
+            currentLevelTime += Time.deltaTime * timeScale;
             var yLvl = GetCurrentWaterLevel();
             var position = this.transform.position;
             this.transform.position = new Vector3(position.x, yLvl, position.z);

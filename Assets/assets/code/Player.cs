@@ -255,7 +255,7 @@ namespace assets.code
             isDashing = true;
             float originalGravity = rigidbody2D.gravityScale;
             rigidbody2D.gravityScale = 0f;
-            rigidbody2D.velocity = new Vector2(transform.localScale.x * dashingPower, 0.0f);
+            rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * dashingPower, 0.0f);
             yield return new WaitForSecondsRealtime(dashingTime);
             rigidbody2D.gravityScale = originalGravity;
             isDashing = false;

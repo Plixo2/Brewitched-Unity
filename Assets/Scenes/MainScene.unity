@@ -33973,6 +33973,7 @@ MonoBehaviour:
   doubleJumpEnabled: 0
   fireResistanceEnabled: 0
   jesusPotionEnabled: 0
+  dashPotionEnabled: 0
   fireDeathTimer: 0.1
   jumpDelay: 0
   jumpBuffer: 0.1
@@ -35535,7 +35536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 835353166}
-  potionType: 1
+  potionType: 3
   potionDuration: 5
   potionTimer: 0
 --- !u!1001 &999786506
@@ -74852,8 +74853,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.24655056, y: -3.5224, z: 0}
-    m_Extent: {x: 19.583351, y: 11.7698, z: 0}
+    m_Center: {x: 0.25175, y: -3.5275002, z: 0}
+    m_Extent: {x: 19.584751, y: 11.7681, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
