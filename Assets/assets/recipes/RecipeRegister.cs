@@ -19,6 +19,8 @@ namespace assets.recipes
             Add("potion_fire, scroll -> key");
             Add("dimaond, gunpowder -> fire_Resistance_Potion");   
             Add("wine, bread -> jesus_Potion");
+            Add("feather, stone -> dash_Potion");
+            Add("stopwatch, sand -> reverse_Potion");
         }
 
         /// <summary>
