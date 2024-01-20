@@ -62,9 +62,5 @@ public class HUD : MonoBehaviour
         var targetBook = isBookOpen ? bookOpen : bookClosed;
         var book = _rootVisualElement.Q<Button>("book");
         book.style.backgroundImage = new StyleBackground(targetBook);
-        book.clicked += () =>
-        {
-            isBookOpen = !isBookOpen;
-        };
     }
 }
