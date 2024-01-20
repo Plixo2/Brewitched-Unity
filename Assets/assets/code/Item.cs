@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace assets.code
@@ -45,9 +46,9 @@ namespace assets.code
                 Connect(connectionPoint);
             }
 
-            if (_spriteRenderer.sprite != null && this.itemName.Length != 0)
+            if (this.gameObject != null && this.itemName.Length != 0)
             {
-                ImageRegister.RegisterSprite(this.itemName, _spriteRenderer.sprite);
+                ImageRegister.RegisterGameObject(this.itemName, this.gameObject);
             }
         }
 
@@ -130,18 +131,6 @@ namespace assets.code
         private void OnDestroy()
         {
             States.RemoveItem(this);
-        }
-
-
-        /// <summary>
-        /// Updated the Image with the current 'itemName'
-        /// The Sprite has to be registered in the 'ImageRegister' class
-        /// </summary>
-        public void UpdateImage()
-        {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            var sprite = ImageRegister.GetByItemName(this.itemName);
-            _spriteRenderer.sprite = sprite;
         }
 
         private void Update()

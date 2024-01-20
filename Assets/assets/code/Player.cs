@@ -404,7 +404,7 @@ namespace assets.code
             {
                 handItem.GetComponent<CircleCollider2D>().enabled = false;
                 handItem.GetComponent<SpriteRenderer>().enabled = false;
-
+                handItem.rigidbody.bodyType = RigidbodyType2D.Static;
             }
             else if (handItem != null)
             {

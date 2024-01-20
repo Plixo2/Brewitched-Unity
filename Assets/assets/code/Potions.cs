@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using assets.code;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Potions : MonoBehaviour
 {
-    // Start is called before the first frame update
     private enum PotionType
     {
         double_jump,
@@ -20,27 +20,6 @@ public class Potions : MonoBehaviour
     [SerializeField] private PotionType potionType;
     [SerializeField] private float potionDuration = 5f;
 
-    private bool potionEnabled = false;
-    private float potionTimer;
-    void Start()
-    {
-        potionTimer += potionDuration;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // if (potionEnabled)
-        //     {
-        //         potionTimer -= Time.deltaTime;
-
-        //         if (potionTimer <= 0.0f)
-        //         {   
-        //             potionEnabled = false;
-        //             Destroy(this.gameObject);
-        //         }
-        //     }
-    }
     /// <summary>
     /// Start the coroutine for the potion Effect based on the enum type and destroys the gameObejct afterwards
     /// </summary>
@@ -75,7 +54,6 @@ public class Potions : MonoBehaviour
                     break;
                 }
             }
-            //potionEnabled = true;
             Destroy(this.gameObject);
     }
     private IEnumerator EnableDoubleJump()
