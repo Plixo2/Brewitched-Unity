@@ -27,6 +27,7 @@ public class MainMenuController : MonoBehaviour
     {
         print("Scene");
         SceneManager.LoadScene("MainScene", LoadSceneMode.Single);
+        Time.timeScale = 1;
     }
 
     private void OnExitButtonClicked()
