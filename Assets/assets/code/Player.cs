@@ -44,6 +44,8 @@ namespace assets.code
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
 
+        public int health = 5;
+
         void Start()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
@@ -183,6 +185,18 @@ namespace assets.code
                     _playerSound.PlayDrop();
                     DropHandItem();
                 }
+            }
+
+
+
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                health = health > 0 ? health-1 : health;
+            }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                health = health < 5 ? health+1 : health;
             }
         }
 
