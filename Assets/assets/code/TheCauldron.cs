@@ -182,13 +182,11 @@ namespace assets.code
         /// <param name="name">name and id of the item</param>
         private void NewItem(string name)
         {
-            if (itemPrefab != null)
+            if (ImageRegister.GetGameObjectByItemName(name) != null)
             {
-                var obj = Instantiate(itemPrefab);
+                var obj = Instantiate(ImageRegister.GetGameObjectByItemName(name));
                 obj.transform.position = this.transform.position + new Vector3(0, 1, 0);
-                var component = obj.GetComponent<Item>();
-                component.itemName = name;
-                component.UpdateImage();
+                obj.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }
 

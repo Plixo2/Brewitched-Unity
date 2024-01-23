@@ -14,21 +14,21 @@ namespace assets.code
         private static ImageRegister _instance = new();
 
         private Dictionary<string, Sprite> _dictionary = new();
-        public static Sprite GetByItemName(string name)
+        private Dictionary<string, GameObject> _GameObjectDictionary = new();
+        public static GameObject GetGameObjectByItemName(string name)
         {
-            if (!_instance._dictionary.ContainsKey(name.ToLower()))
+            if (!_instance._GameObjectDictionary.ContainsKey(name.ToLower()))
             {
-                Debug.LogError($"cant find sprite for item called {name}");
+                Debug.LogError($"cant find gameObject for item called {name}");
                 return null;
             }
 
-            var sprite = _instance._dictionary[name.ToLower()];
-            return sprite;
+            var obj = _instance._GameObjectDictionary[name.ToLower()];
+            return obj;
         }
-
-        public static void RegisterSprite(string name, Sprite sprite)
+        public static void RegisterGameObject(string name, GameObject obj)
         {
-            _instance._dictionary[name.ToLower()] = sprite;
+            _instance._GameObjectDictionary[name.ToLower()] = obj;
         }
     }
 }

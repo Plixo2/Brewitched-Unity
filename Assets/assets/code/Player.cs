@@ -43,17 +43,16 @@ namespace assets.code
         [SerializeField] private float groundRadius = 0.2f;
         [SerializeField] private bool groundRectangle = true;
         [SerializeField] private LayerMask groundMask;
-        [SerializeField] private BoxCollider2D waterCollider;
+        [SerializeField] public BoxCollider2D waterCollider;
         [SerializeField] private float jumpHeight = 9;
         [SerializeField] private float movementSpeed = 5;
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
-        [SerializeField] private bool doubleJumpEnabled = false;
-        [SerializeField] private bool fireResistanceEnabled = false;
-        [SerializeField] private float fireResistanceDuration = 20.0f;
+        [SerializeField] public bool doubleJumpEnabled = false;
+        [SerializeField] public bool fireResistanceEnabled = false;
+        [SerializeField] public bool jesusPotionEnabled = false;
+        [SerializeField] public bool dashPotionEnabled = false;
         [SerializeField] private float fireDeathTimer = 5.0f;
-        [SerializeField] private bool jesusPotionEnabled = false;
-        [SerializeField] private float jesusPotionDuration = 20.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
         [SerializeField] private float coyoteTime = 0.2f;
@@ -118,6 +117,11 @@ namespace assets.code
             HandleJump(isGrounded, playerMoving);
             HandleInput(isGrounded, playerMoving);
             HandleStepSounds(isGrounded, playerMoving);
+            
+            if(isGrounded)
+            {
+                allowDash = true;
+            }
         }
 
         private void HandlePlayerImpactFrame()
@@ -223,20 +227,10 @@ namespace assets.code
                 }
             }
             
-            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && allowDash)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && allowDash && dashPotionEnabled)
             {
                 StartCoroutine(Dash());
-            }
-
-            if (jesusPotionEnabled)
-            {
-                jesusPotionTimer -= Time.deltaTime;
-
-                if (jesusPotionTimer <= 0.0f)
-                {
-                    jesusPotionEnabled = false;
-                    waterCollider.enabled = false;
-                }
+                allowDash = false;
             }
         }
 
@@ -289,13 +283,6 @@ namespace assets.code
                 }
             }
         }
-
-
-        public void EnableDoubleJump()
-        {
-            this.doubleJumpEnabled = true;
-        }
-
         private IEnumerator Dash()
         {
             _playerAnimator.onDash();
@@ -416,36 +403,6 @@ namespace assets.code
             }
         }
 
-        public void EnableFireResistance()
-        {
-            this.fireResistanceEnabled = true;
-
-            StartCoroutine(PotionTimerCoroutine(fireResistanceDuration,
-                new System.Action<bool>(result => this.fireResistanceEnabled = result)));
-        }
-
-
-        public IEnumerator PotionTimerCoroutine(float potionDuration, System.Action<bool> setResult)
-        {
-            float timer = potionDuration;
-
-            while (timer > 0.0f)
-            {
-                timer -= Time.deltaTime;
-                yield return null;
-            }
-
-            setResult(false);
-        }
-
-
-        public void EnableJesusPotion()
-        {
-            this.jesusPotionEnabled = true;
-            waterCollider.enabled = true;
-            jesusPotionTimer = jesusPotionDuration;
-        }
-
         #endregion
 
         #region Items
@@ -492,7 +449,13 @@ namespace assets.code
         {
             var handItem = GetHandItem();
             DropHandItem();
-            if (handItem != null)
+            if (handItem != null && handItem.itemName.Contains("Potion"))
+            {
+                handItem.GetComponent<CircleCollider2D>().enabled = false;
+                handItem.GetComponent<SpriteRenderer>().enabled = false;
+                handItem.rigidbody.bodyType = RigidbodyType2D.Static;
+            }
+            else if (handItem != null)
             {
                 Destroy(handItem.gameObject);
             }

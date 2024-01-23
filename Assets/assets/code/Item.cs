@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace assets.code
@@ -20,6 +21,7 @@ namespace assets.code
 
         public SpriteRenderer? _spriteRenderer;
         private List<Collider2D> _collider2Ds = new();
+        private Potions potions;
 
         /// <summary>
         /// Registers the Item so it can be found.
@@ -44,9 +46,9 @@ namespace assets.code
                 Connect(connectionPoint);
             }
 
-            if (_spriteRenderer.sprite != null && this.itemName.Length != 0)
+            if (this.gameObject != null && this.itemName.Length != 0)
             {
-                ImageRegister.RegisterSprite(this.itemName, _spriteRenderer.sprite);
+                ImageRegister.RegisterGameObject(this.itemName, this.gameObject);
             }
         }
 
@@ -57,27 +59,15 @@ namespace assets.code
         /// <returns>if the item should be deleted after use</returns>
         public virtual bool Interact(Player player)
         {
-            switch (itemName)
+            if(itemName.Contains("Potion"))
             {
-                case "double_Jump_Potion":
-                {
-                    player.EnableDoubleJump();
-                    return true;
-                }
-                case "fire_Resistance_Potion":
-                {
-                    player.EnableFireResistance();
-                    return true;
-                }
-                case "jesus_Potion":
-                {
-                    player.EnableJesusPotion();
-                    return true;
-                }
-                default:
-                {
-                    return false;
-                }
+                potions = this.GetComponent<Potions>();
+                StartCoroutine(potions.EnablePotion());
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -141,18 +131,6 @@ namespace assets.code
         private void OnDestroy()
         {
             States.RemoveItem(this);
-        }
-
-
-        /// <summary>
-        /// Updated the Image with the current 'itemName'
-        /// The Sprite has to be registered in the 'ImageRegister' class
-        /// </summary>
-        public void UpdateImage()
-        {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            var sprite = ImageRegister.GetByItemName(this.itemName);
-            _spriteRenderer.sprite = sprite;
         }
 
         private void Update()
