@@ -11,7 +11,7 @@ public class WaterBubble : MonoBehaviour
     [SerializeField] float bubbleRiseVelocity = 1.0f; // Base Bubble Upward Rise Velocity
     [SerializeField] float waterSpeedFactorOnBubbleSpeed = 0.6f; // Factor to scale water speed's effect on bubble speed
     [SerializeField] float bubbleVelocityMax = 2.5f;
-    [SerializeField] int currentLevelMaxY = 23; // Highest tile coordinate (ceiling) of the current level for the bubble to hit and be destroyed
+    [SerializeField] int currentLevelMaxY = 120; // Highest tile coordinate (ceiling) of the current level for the bubble to hit and be destroyed
     
 
     void Start()

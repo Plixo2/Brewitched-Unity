@@ -101,7 +101,7 @@ MonoBehaviour:
   bubbleRiseVelocity: 5
   waterSpeedFactorOnBubbleSpeed: 3
   bubbleVelocityMax: 2.5
-  currentLevelMaxY: 23
+  currentLevelMaxY: 120
 --- !u!58 &-6968137319747324177
 CircleCollider2D:
   m_ObjectHideFlags: 0
