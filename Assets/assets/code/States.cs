@@ -19,12 +19,15 @@ namespace assets.code
         private List<ConnectionPoint> _connectionPoints = new();
         private List<Item> _items = new();
         private List<Interactable> _interactables = new();
+        private List<Valve> _valves = new();
+        public static bool allValvesClosedOnce = false;
         
         private WaterAsset? _waterManager; 
 
         private void Awake()
         {
             _instance = this;
+            allValvesClosedOnce = false;
         }
 
         
@@ -39,6 +42,10 @@ namespace assets.code
         public static void AddInteractable(Interactable interactable)
         {
             _instance._interactables.Add(interactable);
+        }
+        public static void AddValve(Valve valve)
+        {
+            _instance._valves.Add(valve);
         }
         public static void setWaterManager(WaterAsset asset)
         {
@@ -67,6 +74,11 @@ namespace assets.code
             }
 
             return bestPoint;
+        }
+
+        public static List<Valve> getValves()
+        {
+            return _instance._valves;
         }
         public static ConnectionPoint? GetPoint(Vector3 position, float range, Predicate<ConnectionPoint> predicate)
         {
