@@ -7,6 +7,7 @@ TagManager:
   - OneWayPlatform
   - WaterBubble
   - DeadlyFire
+  - Valve
   layers:
   - Default
   - TransparentFX

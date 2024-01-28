@@ -68,6 +68,9 @@ namespace assets.code
         [SerializeField] private float dashingTime = 0.5f;
         [SerializeField] private bool dashGravity = true;
 
+        private float valveInteractionDelay = 3.0f;
+        private bool canRotateValve = true;
+
 
         void Start()
         {
@@ -342,6 +345,15 @@ namespace assets.code
 
                     return;
                 }
+
+                bool allValvesClosedOnce = States.allValvesClosedOnce;
+                if (!interacted && interactable.CompareTag("Valve") && canRotateValve && !allValvesClosedOnce)
+                {
+                    canRotateValve = false;
+                    StartCoroutine(enableValveInteraction());
+                    // _playerSound.PlayValve(); // Play Valve Rotation Sound
+                    ((Valve)interactable).toggleValve();
+                }
             }
 
             if (hand != null)
@@ -355,6 +367,12 @@ namespace assets.code
                     return;
                 }
             }
+        }
+
+        private IEnumerator enableValveInteraction()
+        {
+            yield return new WaitForSeconds(valveInteractionDelay);
+            canRotateValve = true;
         }
 
         /// <summary>
