@@ -11,6 +11,7 @@ public class Bubble : MonoBehaviour
     public float range = 5;
     public float animationSpeed = 5f;
     public bool delete = true;
+    public bool isRecipe = false;
 
     private bool wasInRange = false;
     private bool isDeleting = false;
@@ -39,6 +40,20 @@ public class Bubble : MonoBehaviour
         {
             var distance = Vector3.Distance(player.transform.position, transform.position);
             var inrange = distance <= range;
+            if (isRecipe)
+            {
+                this.transform.localScale = Vector3.one;
+                if (inrange)
+                {
+                    GetComponentInChildren<Animator>().enabled = true;
+                    foreach (var componentsInChild in GetComponentsInChildren<SpriteRenderer>())
+                    {
+                        componentsInChild.enabled = true;
+                    }
+                }
+                
+                return;
+            }
             if (inrange)
             {
                 wasInRange = true;
