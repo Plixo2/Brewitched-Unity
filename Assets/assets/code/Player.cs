@@ -9,6 +9,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using TMPro;
+using System.Linq;
 
 namespace assets.code
 {
@@ -67,6 +69,8 @@ namespace assets.code
         [SerializeField] private float dashingPower = 10f;
         [SerializeField] private float dashingTime = 0.5f;
         [SerializeField] private bool dashGravity = true;
+
+        [SerializeField] private TextMeshProUGUI text;
 
 
         void Start()
@@ -388,15 +392,18 @@ namespace assets.code
                 if (freeItemNotCauldron != null)
                 {
                     PickItem(freeItemNotCauldron);
+                    StartCoroutine(ShowItemName(freeItemNotCauldron));
                 }
                 else if (freeItemCauldron != null)
                 {
                     PickItem(freeItemCauldron);
+                    StartCoroutine(ShowItemName(freeItemCauldron));
                 }
                 else if (connectedItem != null)
                 {
                     connectedItem.Disconnect();
                     PickItem(connectedItem);
+                    StartCoroutine(ShowItemName(connectedItem));
                 }
 
                 _playerSound.PlayPick();
@@ -478,6 +485,16 @@ namespace assets.code
             }
 
             return null;
+        }
+
+        private IEnumerator ShowItemName(Item item)
+        {
+            string itemName = item.itemName.Replace("_", " ");
+            itemName = itemName.FirstCharacterToUpper();
+            text.text = itemName;
+            text.enabled=true;
+            yield return new WaitForSeconds(2);
+            text.enabled = false;
         }
 
         #endregion
