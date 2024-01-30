@@ -23,7 +23,7 @@ namespace assets.code
         private PlayerAnimator _playerAnimator;
 
         private float _currentSpeed = 0;
-        private int _jumpCount = 1;
+        [SerializeField] private int _jumpCount = 1;
         private bool _canMove = true;
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
@@ -277,7 +277,7 @@ namespace assets.code
                 _playerSound.PlayJump();
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.y, jumpHeight);
 
-                if (doubleJumpEnabled)
+                if (doubleJumpEnabled && !IsGrounded())
                 {
                     _jumpCount--;
                 }
