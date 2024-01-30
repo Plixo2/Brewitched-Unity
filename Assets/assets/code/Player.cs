@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using assets.images.mage2;
 using JetBrains.Annotations;
@@ -59,6 +60,8 @@ namespace assets.code
         [SerializeField] private float damageCooldown = 0.5f;
         [SerializeField] private float impactFrameTime = 0.5f;
         [SerializeField] private Color32 impactFrameColor = Color.red;
+
+        public List<Potions> activePotions = new List<Potions>();
 
         [SerializeField] [Range(0, 16)] private int maxHealth = 6;
 

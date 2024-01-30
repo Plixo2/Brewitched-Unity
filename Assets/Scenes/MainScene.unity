@@ -16240,6 +16240,7 @@ GameObject:
   - component: {fileID: 425949744}
   - component: {fileID: 425949746}
   - component: {fileID: 425949747}
+  - component: {fileID: 425949748}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -16313,6 +16314,24 @@ MonoBehaviour:
   health: 0
   emptyHeart: {fileID: 680416649, guid: 73a9c6608d62ddb4bb17ae30b0e6a9d3, type: 3}
   fullHeart: {fileID: 39843807, guid: 73a9c6608d62ddb4bb17ae30b0e6a9d3, type: 3}
+  player: {fileID: 835353166}
+--- !u!114 &425949748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425949743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9389f7c9bd068d94ba6bbb4021fdbaba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doubleJumpPotion: {fileID: 21300000, guid: 7647ce48f2149df4f85f3dcfb30a03bd, type: 3}
+  fireResistancePotion: {fileID: 21300000, guid: ae9856b0f5eff51478f8d8d985600f56, type: 3}
+  jesusPotion: {fileID: 21300000, guid: e869824cb071978448feac09d598fdc8, type: 3}
+  dashPotion: {fileID: 21300000, guid: 2776d99a79e1a9e4f8d72ba486a7751b, type: 3}
+  reverseTimePotion: {fileID: 21300000, guid: fe0c4fc58d701284bb8868c8f7217581, type: 3}
   player: {fileID: 835353166}
 --- !u!1 &432229632
 GameObject:
@@ -22174,9 +22193,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  potionType: 0
+  player: {fileID: 835353166}
+  potionType: 4
   potionDuration: 5
+  remainingDuration: 0
 --- !u!114 &546496386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23902,9 +23922,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 835353166}
   potionType: 0
-  potionDuration: 5
+  potionDuration: 30
+  remainingDuration: 0
 --- !u!114 &619809708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24816,9 +24837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  potionType: 0
+  player: {fileID: 835353166}
+  potionType: 1
   potionDuration: 5
+  remainingDuration: 0
 --- !u!1001 &708265751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35431,7 +35453,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 80
-  waterCollider: {fileID: 0}
+  waterCollider: {fileID: 1020581539}
   jumpHeight: 12
   movementSpeed: 4.7
   acceleration: 0.21
@@ -35449,6 +35471,7 @@ MonoBehaviour:
   impactFrameColor:
     serializedVersion: 2
     rgba: 4278190335
+  activePotions: []
   maxHealth: 5
   allowDash: 1
   isDashing: 0
@@ -36504,9 +36527,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  potionType: 0
+  player: {fileID: 835353166}
+  potionType: 2
   potionDuration: 5
+  remainingDuration: 0
 --- !u!1 &1020581535
 GameObject:
   m_ObjectHideFlags: 0
@@ -72351,8 +72375,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.2527504, y: -3.5301003, z: 0}
-    m_Extent: {x: 19.57625, y: 11.77, z: 0}
+    m_Center: {x: 0.25475025, y: -3.52145, z: 0}
+    m_Extent: {x: 19.586449, y: 11.76355, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -72702,9 +72726,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 835353166}
   potionType: 0
   potionDuration: 5
+  remainingDuration: 0
 --- !u!1 &1904738849
 GameObject:
   m_ObjectHideFlags: 0
@@ -78593,9 +78618,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e835687008b6c09f8a1aa7aa3c072656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  potionType: 0
+  player: {fileID: 835353166}
+  potionType: 3
   potionDuration: 5
+  remainingDuration: 0
 --- !u!1001 &2004147243
 PrefabInstance:
   m_ObjectHideFlags: 0
