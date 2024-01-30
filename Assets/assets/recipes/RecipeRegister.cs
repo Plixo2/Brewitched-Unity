@@ -14,13 +14,11 @@ namespace assets.recipes
         static RecipeRegister()
         {
             // Add("ash, bottle, phoenix_feather -> potion_fire_resistant");   
-            Add("water, feather -> double_Jump_Potion");   
-            Add("water, apple -> potion_fire");   
-            Add("potion_fire, scroll -> key");
-            Add("dimaond, gunpowder -> fire_Resistance_Potion");   
             Add("wine, bread -> jesus_Potion");
-            Add("feather, stone -> dash_Potion");
-            Add("stopwatch, sand -> reverse_Potion");
+            Add("diamond, dragon -> fire_Resistance_Potion");   
+            Add("slime, choco -> dash_Potion");
+            Add("iron, eye -> extra_Life_Potion");
+            Add("water, feather -> double_Jump_Potion");   
         }
 
         /// <summary>

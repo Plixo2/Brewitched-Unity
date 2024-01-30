@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace assets.code
 {
@@ -469,9 +470,10 @@ namespace assets.code
             DropHandItem();
             if (handItem != null && handItem.itemName.Contains("Potion"))
             {
-                handItem.GetComponent<CircleCollider2D>().enabled = false;
+                handItem.GetComponent<Collider2D>().enabled = false;
                 handItem.GetComponent<SpriteRenderer>().enabled = false;
                 handItem.rigidbody.bodyType = RigidbodyType2D.Static;
+                States.RemoveItem(handItem);
             }
             else if (handItem != null)
             {

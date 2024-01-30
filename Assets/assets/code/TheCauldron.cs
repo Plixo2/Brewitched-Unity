@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = System.Random;
 
 
@@ -64,6 +65,35 @@ namespace assets.code
                     _itemBrewing = null;
                 }
             }
+            else
+            {
+                if (_currentItems.Count > 0 && _item._connectionPoint != null &&
+                    _item._connectionPoint.isFireplace)
+                {
+                    var findRecipeResult = FindRecipeResult(_currentItems);
+
+                    if (findRecipeResult != null)
+                    {
+                        var random = new Random();
+                        var copy = new List<string>(_currentItems);
+                        foreach (var s in copy)
+                        {
+                            if (findRecipeResult.Ingredients.Contains(s))
+                            {
+                                _currentItems.Remove(s);
+                                var color = Color.HSVToRGB((float)random.NextDouble(), 1f, 1f);
+                                SpawnParticle(color);
+                            }
+                        }
+
+                        _brewingTimeLeft = brewingTime;
+                        _itemBrewing = findRecipeResult.Result;
+                    }
+
+                    DropAll();
+                    
+                }
+            }
 
             if (idleParticleSystem != null)
             {
@@ -74,6 +104,15 @@ namespace assets.code
             // this._spriteRenderer.sortingOrder = 5;
         }
 
+        private void DropAll()
+        {
+            foreach (var currentItem in _currentItems)
+            {
+                NewItem(currentItem);
+            }
+            _currentItems.Clear();
+        }
+
         public override bool Interact(Item? item)
         {
             if (item != null)
@@ -82,12 +121,6 @@ namespace assets.code
                 {
                     return false;
                 }
-
-                if (this._item._connectionPoint == null || !this._item._connectionPoint.isFireplace)
-                {
-                    return false;
-                }
-
                 return Add(item);
             }
 
@@ -108,22 +141,7 @@ namespace assets.code
             }
 
             var random = new Random();
-
             _currentItems.Add(item.itemName);
-            var findRecipeResult = FindRecipeResult(_currentItems);
-
-            if (findRecipeResult != null)
-            {
-                _currentItems.Clear();
-                foreach (var _ in findRecipeResult.Ingredients)
-                {
-                    var color = Color.HSVToRGB((float)random.NextDouble(), 1f, 1f);
-                    SpawnParticle(color);
-                }
-
-                _brewingTimeLeft = brewingTime;
-                _itemBrewing = findRecipeResult.Result;
-            }
 
             SpawnParticle(Color.HSVToRGB((float)random.NextDouble(), 1f, 1f));
 
@@ -185,6 +203,7 @@ namespace assets.code
             if (ImageRegister.GetGameObjectByItemName(name) != null)
             {
                 var obj = Instantiate(ImageRegister.GetGameObjectByItemName(name));
+                obj.SetActive(true);
                 obj.transform.position = this.transform.position + new Vector3(0, 1, 0);
                 obj.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
