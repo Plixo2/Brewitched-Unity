@@ -69,7 +69,7 @@ namespace assets.code
         [SerializeField] private float dashingTime = 0.5f;
         [SerializeField] private bool dashGravity = true;
 
-        private float valveInteractionDelay = 3.0f;
+        [SerializeField] private float valveInteractionDelay = 1.0f;
         private bool canRotateValve = true;
 
 
@@ -313,7 +313,7 @@ namespace assets.code
             var pos = new Vector2(position.x, position.y);
             if (groundRectangle)
             {
-                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.2f), 0,
                     groundMask);
             }
             else
@@ -547,7 +547,7 @@ namespace assets.code
             if (groundRectangle)
             {
                 Gizmos.DrawCube(this.transform.position + down,
-                    new Vector2(groundRadius, 0.05f));
+                    new Vector2(groundRadius, 0.2f));
             }
             else
             {
