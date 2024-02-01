@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 0
+  isFireplace: 0
 --- !u!50 &3420645040831023390
 Rigidbody2D:
   serializedVersion: 4

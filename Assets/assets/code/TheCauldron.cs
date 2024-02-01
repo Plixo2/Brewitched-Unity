@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Random = System.Random;
+using UnityEngine.UI;
 
 
 namespace assets.code
@@ -22,6 +23,8 @@ namespace assets.code
         [SerializeField] private GameObject? dropParticleSystem;
         [SerializeField] private GameObject? idleParticleSystem;
         [SerializeField] private GameObject? itemPrefab;
+        [SerializeField] public Image progressBarImage;
+        [SerializeField] public Image fillImage;
         [SerializeField] private float brewingTime = 5f;
 
         private float _brewingTimeLeft = -1;
@@ -58,11 +61,18 @@ namespace assets.code
 
             if (brewing)
             {
+                float fillImageScale = 1 - _brewingTimeLeft / brewingTime;
+                progressBarImage.enabled = true;
+                fillImage.enabled = true;
+                fillImage.rectTransform.transform.localScale = new Vector3(fillImageScale, 1, 1);
+                
                 _brewingTimeLeft -= Time.deltaTime;
                 if (!isBrewing() && _itemBrewing != null)
                 {
                     NewItem(_itemBrewing);
                     _itemBrewing = null;
+                    progressBarImage.enabled = false;
+                    fillImage.enabled = false;
                 }
             }
             else
