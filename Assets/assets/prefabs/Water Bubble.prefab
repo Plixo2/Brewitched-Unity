@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3418371823060575228
+--- !u!1 &5291731022827389765
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4526359799950629017}
-  - component: {fileID: 940904483820631290}
-  - component: {fileID: 1791446688797807}
-  - component: {fileID: -6968137319747324177}
+  - component: {fileID: 6399793305069697056}
+  - component: {fileID: 7714312115930207299}
+  - component: {fileID: 7351602012526834902}
+  - component: {fileID: 8740442740638160470}
+  - component: {fileID: 9035826215768825612}
   m_Layer: 0
   m_Name: Water Bubble
   m_TagString: WaterBubble
@@ -19,28 +20,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4526359799950629017
+--- !u!4 &6399793305069697056
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418371823060575228}
+  m_GameObject: {fileID: 5291731022827389765}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.88, y: -4, z: 0}
+  m_LocalPosition: {x: -26.300846, y: 3.6113636, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &940904483820631290
+--- !u!212 &7714312115930207299
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418371823060575228}
+  m_GameObject: {fileID: 5291731022827389765}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -75,8 +76,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.10588236, g: 0.43921572, b: 0.9803922, a: 1}
+  m_Sprite: {fileID: -1936727005, guid: 561e261bf623875468ee1378d943f071, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -86,35 +87,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1791446688797807
+--- !u!114 &7351602012526834902
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418371823060575228}
+  m_GameObject: {fileID: 5291731022827389765}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b8c5a2544078064fa5ddfbbba75f782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubbleRiseVelocity: 5
-  waterSpeedFactorOnBubbleSpeed: 3
-  bubbleVelocityMax: 2.5
+  bubbleRiseVelocity: 3
+  waterSpeedFactorOnBubbleSpeed: 2
+  bubbleVelocityMax: 7
   currentLevelMaxY: 10000
---- !u!58 &-6968137319747324177
+--- !u!58 &8740442740638160470
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3418371823060575228}
+  m_GameObject: {fileID: 5291731022827389765}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.15, y: -0.5}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!95 &9035826215768825612
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5291731022827389765}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9ec079901daa69d41a46a131b4e018ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

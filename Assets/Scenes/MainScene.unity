@@ -33030,7 +33030,7 @@ MonoBehaviour:
   waterTransform: {fileID: 1020581536}
   bubbleGenerationXMin: -10.6
   bubbleGenerationXMax: 10.6
-  bubbleToSpawn: {fileID: 3418371823060575228, guid: cf9f706933b91184f92b8ffebea0e582, type: 3}
+  bubbleToSpawn: {fileID: 5291731022827389765, guid: 5e760f2e93ef041428ca9af277b06d55, type: 3}
   dangerIconToSpawn: {fileID: 3529574999748888021, guid: de97e195f1d8f22429cf71131fc14996, type: 3}
   timeBetweenDangerAndBubble: 2
   timeBeforeFirstBubble: 5
@@ -65421,8 +65421,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25664997, y: -3.51965, z: 0}
-    m_Extent: {x: 19.589352, y: 11.76935, z: 0}
+    m_Center: {x: 0.24994946, y: -3.52115, z: 0}
+    m_Extent: {x: 19.57875, y: 11.770149, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
