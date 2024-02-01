@@ -564,13 +564,15 @@ namespace assets.code
         {
             if (other.gameObject.CompareTag("WaterBubble"))
             {
+                WaterBubble bubble = other.GetComponent<WaterBubble>();
                 if (jesusPotionEnabled)
                 {
-                    Destroy(other.gameObject);
+                    bubble.destroyBubble();
                 }
                 else
                 {
                     this.Damage();
+                    bubble.destroyBubble();
                 }
             }
         }
