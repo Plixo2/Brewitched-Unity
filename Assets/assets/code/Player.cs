@@ -528,6 +528,7 @@ namespace assets.code
             {
                 health -= 1;
                 _lastHitTime = Time.time;
+                _playerSound.PlayDamage();
                 print($"Health :{health}");
             }
 

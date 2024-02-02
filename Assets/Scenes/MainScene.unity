@@ -35047,11 +35047,15 @@ MonoBehaviour:
   bottleSound: {fileID: 8300000, guid: 805100e60eef34fe594c0452b991a44b, type: 3}
   dropSound: {fileID: 8300000, guid: 347cce82183854b1a8a04ae691726faa, type: 3}
   pickSound: {fileID: 8300000, guid: ae74f888de1654a8bb7450fe0f6e1164, type: 3}
-  jumpSound: {fileID: 0}
+  jumpSound: {fileID: 8300000, guid: ece832217f38748fd98fb82a4f6b90fc, type: 3}
   stepSounds:
   - {fileID: 8300000, guid: 4544cd1f9b0d00a498e3602ecfffcacc, type: 3}
   - {fileID: 8300000, guid: 6154d2d90f91ac743a30a16a58f9fa32, type: 3}
   stepDelay: 0.3
+  gameOver: {fileID: 8300000, guid: b5e1ec142143c4d34ab3773981abe8bd, type: 3}
+  winLevel: {fileID: 8300000, guid: 6650ebeaf13b64b64811f0f50c5bb0b0, type: 3}
+  damageSound: {fileID: 8300000, guid: 7b08a2453cf124121946bec27eb1d8e4, type: 3}
+  finishBrewing: {fileID: 8300000, guid: 2ce350c50c33144729f6c0aaeab17ac8, type: 3}
 --- !u!114 &835353170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38499,7 +38503,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 0ae1296e295ae46a4b049d87d6dc8b9f, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -71435,6 +71439,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: -8435245712485981826, guid: af99b6aae8ab4b74d8a0a2641e26b85a, type: 3}
+--- !u!1 &1784871399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1784871401}
+  - component: {fileID: 1784871400}
+  m_Layer: 0
+  m_Name: BackgroundMusic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1784871400
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784871399}
+  m_Enabled: 1
+--- !u!4 &1784871401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1784871399}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1323795, y: -7.206631, z: -0.4120493}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1793674506
 GameObject:
   m_ObjectHideFlags: 0
@@ -71886,8 +71930,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.2546997, y: -3.53125, z: 0}
-    m_Extent: {x: 19.5755, y: 11.77055, z: 0}
+    m_Center: {x: 0.2493, y: -3.5292, z: 0}
+    m_Extent: {x: 19.5807, y: 11.7651005, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
