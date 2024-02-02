@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 
@@ -69,6 +70,9 @@ namespace assets.code
         [SerializeField] private float dashingPower = 10f;
         [SerializeField] private float dashingTime = 0.5f;
         [SerializeField] private bool dashGravity = true;
+
+        [SerializeField] private float valveInteractionDelay = 1.0f;
+        private bool canRotateValve = true;
 
         [SerializeField] private TextMeshProUGUI text;
 
@@ -168,15 +172,20 @@ namespace assets.code
         }
 
         private void HandleInput(bool isGrounded, bool playerMoving)
-        {
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving)
+        {  
+            if(camFollow.cameraRaised || camFollow.cameraLowered)
+            {
+                rigidbody2D.velocity = Vector3.zero;
+            }
+            
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving && isGrounded)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 _canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving && isGrounded)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;
@@ -313,7 +322,7 @@ namespace assets.code
             var pos = new Vector2(position.x, position.y);
             if (groundRectangle)
             {
-                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.05f), 0,
+                return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.2f), 0,
                     groundMask);
             }
             else
@@ -333,6 +342,19 @@ namespace assets.code
         {
             var hand = GetHandItem();
             var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
+            
+            if (hand != null)
+            {
+                var result = hand.Interact(this);
+
+                if (result)
+                {
+                    _playerSound.PlayBottle();
+                    DeleteHandItem();
+                    return;
+                }
+            }
+            
             if (interactable != null)
             {
                 var interacted = interactable.Interact(hand);
@@ -346,19 +368,23 @@ namespace assets.code
 
                     return;
                 }
-            }
 
-            if (hand != null)
-            {
-                var result = hand.Interact(this);
-
-                if (result)
+                bool allValvesClosedOnce = States.allValvesClosedOnce;
+                if (!interacted && interactable.CompareTag("Valve") && canRotateValve && !allValvesClosedOnce)
                 {
-                    _playerSound.PlayBottle();
-                    DeleteHandItem();
-                    return;
+                    canRotateValve = false;
+                    StartCoroutine(enableValveInteraction());
+                    // _playerSound.PlayValve(); // Play Valve Rotation Sound
+                    ((Valve)interactable).toggleValve();
                 }
             }
+
+        }
+
+        private IEnumerator enableValveInteraction()
+        {
+            yield return new WaitForSeconds(valveInteractionDelay);
+            canRotateValve = true;
         }
 
         /// <summary>
@@ -458,9 +484,10 @@ namespace assets.code
             DropHandItem();
             if (handItem != null && handItem.itemName.Contains("Potion"))
             {
-                handItem.GetComponent<CircleCollider2D>().enabled = false;
+                handItem.GetComponent<Collider2D>().enabled = false;
                 handItem.GetComponent<SpriteRenderer>().enabled = false;
                 handItem.rigidbody.bodyType = RigidbodyType2D.Static;
+                States.RemoveItem(handItem);
             }
             else if (handItem != null)
             {
@@ -544,7 +571,7 @@ namespace assets.code
             if (groundRectangle)
             {
                 Gizmos.DrawCube(this.transform.position + down,
-                    new Vector2(groundRadius, 0.05f));
+                    new Vector2(groundRadius, 0.2f));
             }
             else
             {
@@ -561,13 +588,15 @@ namespace assets.code
         {
             if (other.gameObject.CompareTag("WaterBubble"))
             {
+                WaterBubble bubble = other.GetComponent<WaterBubble>();
                 if (jesusPotionEnabled)
                 {
-                    Destroy(other.gameObject);
+                    bubble.destroyBubble();
                 }
                 else
                 {
                     this.Damage();
+                    bubble.destroyBubble();
                 }
             }
         }

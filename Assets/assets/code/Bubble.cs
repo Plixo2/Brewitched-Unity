@@ -10,6 +10,11 @@ public class Bubble : MonoBehaviour
 {
     public float range = 5;
     public float animationSpeed = 5f;
+    public bool delete = true;
+    public bool isRecipe = false;
+
+    private bool wasInRange = false;
+    private bool isDeleting = false;
 
     [TextAreaAttribute] public string text;
 
@@ -22,7 +27,10 @@ public class Bubble : MonoBehaviour
     void Start()
     {
         textMeshPro = GetComponentInChildren<TMP_Text>();
-        textMeshPro.text = text;
+        if (textMeshPro != null)
+        {
+            textMeshPro.text = text;
+        }
     }
 
     // Update is called once per frame
@@ -31,7 +39,33 @@ public class Bubble : MonoBehaviour
         if (player != null)
         {
             var distance = Vector3.Distance(player.transform.position, transform.position);
-            var target = distance <= range ? Vector3.one : Vector3.zero;
+            var inrange = distance <= range;
+            if (isRecipe)
+            {
+                this.transform.localScale = Vector3.one;
+                if (inrange)
+                {
+                    GetComponentInChildren<Animator>().enabled = true;
+                    foreach (var componentsInChild in GetComponentsInChildren<SpriteRenderer>())
+                    {
+                        componentsInChild.enabled = true;
+                    }
+                }
+                
+                return;
+            }
+            if (inrange)
+            {
+                wasInRange = true;
+            }
+            else if (wasInRange && delete)
+            {
+                isDeleting = true;
+                Destroy(gameObject, 10);
+            }
+
+            var target = (inrange && !isDeleting) ? Vector3.one : Vector3.zero;
+
             this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, target,
                 Time.deltaTime * animationSpeed);
         }

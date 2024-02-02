@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace assets.code
 {
@@ -28,6 +29,8 @@ namespace assets.code
         }
         public static void RegisterGameObject(string name, GameObject obj)
         {
+            obj = Object.Instantiate(obj);
+            obj.SetActive(false);
             _instance._GameObjectDictionary[name.ToLower()] = obj;
         }
     }

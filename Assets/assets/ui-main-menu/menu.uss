@@ -1,0 +1,18 @@
+.start-button {
+    font-size: 18px;
+    width: 125px;
+    height: 30px;
+    -unity-font-definition: url('project://database/Assets/UI%20Toolkit/UnityThemes/NotInter-Regular%20SDF.asset?fileID=11400000&guid=4f72ab39eacfb334db4f6b4ddf049989&type=2#NotInter-Regular SDF');
+    -unity-font: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=f56d2b98c8764734088828d2654c44a4&type=3#NotInter-Regular');
+    -unity-font-style: normal;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out-elastic;
+}
+
+.start-button:hover {
+    scale: 1.1 1.1;
+}
+
+.start-button:active {
+    background-color: rgb(128, 128, 128);
+}
