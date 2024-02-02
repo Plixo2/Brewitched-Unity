@@ -168,15 +168,20 @@ namespace assets.code
         }
 
         private void HandleInput(bool isGrounded, bool playerMoving)
-        {
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving)
+        {  
+            if(camFollow.cameraRaised || camFollow.cameraLowered)
+            {
+                rigidbody2D.velocity = Vector3.zero;
+            }
+            
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving && isGrounded)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 _canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving && isGrounded)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;
@@ -333,6 +338,19 @@ namespace assets.code
         {
             var hand = GetHandItem();
             var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
+            
+            if (hand != null)
+            {
+                var result = hand.Interact(this);
+
+                if (result)
+                {
+                    _playerSound.PlayBottle();
+                    DeleteHandItem();
+                    return;
+                }
+            }
+            
             if (interactable != null)
             {
                 var interacted = interactable.Interact(hand);
@@ -357,17 +375,6 @@ namespace assets.code
                 }
             }
 
-            if (hand != null)
-            {
-                var result = hand.Interact(this);
-
-                if (result)
-                {
-                    _playerSound.PlayBottle();
-                    DeleteHandItem();
-                    return;
-                }
-            }
         }
 
         private IEnumerator enableValveInteraction()
