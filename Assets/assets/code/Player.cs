@@ -338,6 +338,19 @@ namespace assets.code
         {
             var hand = GetHandItem();
             var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
+            
+            if (hand != null)
+            {
+                var result = hand.Interact(this);
+
+                if (result)
+                {
+                    _playerSound.PlayBottle();
+                    DeleteHandItem();
+                    return;
+                }
+            }
+            
             if (interactable != null)
             {
                 var interacted = interactable.Interact(hand);
@@ -362,17 +375,6 @@ namespace assets.code
                 }
             }
 
-            if (hand != null)
-            {
-                var result = hand.Interact(this);
-
-                if (result)
-                {
-                    _playerSound.PlayBottle();
-                    DeleteHandItem();
-                    return;
-                }
-            }
         }
 
         private IEnumerator enableValveInteraction()
