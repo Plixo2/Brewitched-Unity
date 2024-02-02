@@ -168,15 +168,20 @@ namespace assets.code
         }
 
         private void HandleInput(bool isGrounded, bool playerMoving)
-        {
-            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving)
+        {  
+            if(camFollow.cameraRaised || camFollow.cameraLowered)
+            {
+                rigidbody2D.velocity = Vector3.zero;
+            }
+            
+            if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving && isGrounded)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
                 camFollow.cameraRaised = true;
                 _canMove = false;
             }
 
-            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving)
+            if (Input.GetKey(KeyCode.J) && !camFollow.cameraLowered && !playerMoving && isGrounded)
             {
                 camFollow.offset.y -= camFollow.cameraLowerAmount;
                 camFollow.cameraLowered = true;

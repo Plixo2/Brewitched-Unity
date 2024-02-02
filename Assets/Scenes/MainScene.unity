@@ -32401,6 +32401,7 @@ GameObject:
   - component: {fileID: 835353169}
   - component: {fileID: 835353170}
   - component: {fileID: 835353171}
+  - component: {fileID: 835353172}
   m_Layer: 7
   m_Name: player
   m_TagString: Untagged
@@ -32571,6 +32572,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8304353, y: 1.2853255}
   m_EdgeRadius: 0
+--- !u!114 &835353172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835353161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e0e5f52585082143aaf2f5d3a477a09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 519420031}
+  player: {fileID: 835353166}
+  forceStart: 2
+  forceLimit: 10
+  force: 2
+  chargeSpeed: 3
 --- !u!4 &850355538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2259787899284559648, guid: 67127293b0ddef249ae0d2d736cb111f, type: 3}
@@ -65421,8 +65440,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.24994946, y: -3.52115, z: 0}
-    m_Extent: {x: 19.57875, y: 11.770149, z: 0}
+    m_Center: {x: 0.25080013, y: -3.52565, z: 0}
+    m_Extent: {x: 19.581299, y: 11.76415, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
