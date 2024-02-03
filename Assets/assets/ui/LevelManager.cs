@@ -6,8 +6,11 @@ public static class LevelManager
 {
     private static List<string> levels = new List<string>
     {
-        "MainMenu",
-        "MainScene"
+        "MainScene",
+        "SemihScene",
+        "PlixoScene",
+        "LarsScene",
+        "lvl6"
     };
 
     private static int currentLevel;

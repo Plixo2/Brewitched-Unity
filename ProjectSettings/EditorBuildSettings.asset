@@ -11,4 +11,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/LarsScene.unity
+    guid: 64702ba0571296391a3a617a6731b76f
+  - enabled: 1
+    path: Assets/Scenes/lvl6.unity
+    guid: acb1c50c0c027dd4198d8da856772300
+  - enabled: 1
+    path: Assets/Scenes/PlixoScene.unity
+    guid: 2f16178205b80d040a5f6adea7507f4c
+  - enabled: 1
+    path: Assets/Scenes/SemihScene.unity
+    guid: 8524207c4aac98a43a54847621d2ff34
   m_configObjects: {}
