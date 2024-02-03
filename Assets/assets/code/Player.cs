@@ -26,12 +26,16 @@ namespace assets.code
         private PlayerSound _playerSound;
         private PlayerAnimator _playerAnimator;
 
+        private Music _music;
+
         private float _currentSpeed = 0;
         [SerializeField] private int _jumpCount = 1;
         private bool _canMove = true;
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
         private float _lastHitTime = -10;
+        private float killTimer = float.PositiveInfinity;
+        private bool firstPlay = true;
         private DelayAction _dropTimer = new();
         private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
@@ -543,6 +547,7 @@ namespace assets.code
             if (deltaTime > damageCooldown)
             {
                 health -= 1;
+                _playerSound.PlayDamage();
                 _lastHitTime = Time.time;
                 print($"Health :{health}");
             }
@@ -552,6 +557,7 @@ namespace assets.code
                 this.health = 0;
                 if (States.GetPlayerAlive() && !wasKilled)
                 {
+                    _playerSound.PlayDeath();
                     wasKilled = true;
                     States.SetPlayerAlive(false);
                 }

@@ -11,6 +11,8 @@ namespace assets.code
         [SerializeField] private AudioClip? dropSound;
         [SerializeField] private AudioClip? pickSound;
         [SerializeField] private AudioClip? jumpSound;
+        [SerializeField] private AudioClip? damageSound;
+        [SerializeField] private AudioClip? gameOver;
         [SerializeField] private List<AudioClip> stepSounds = new();
         [SerializeField] private float stepDelay = 0.5f;
         private int _stepIndex = 0;
@@ -47,6 +49,22 @@ namespace assets.code
             if (source != null && bottleSound != null)
             {
                 source.PlayOneShot(bottleSound);
+            }
+        }
+
+        public void PlayDamage()
+        {
+            if (source != null && damageSound != null)
+            {
+                source.PlayOneShot(damageSound);
+            }
+        }
+
+        public void PlayDeath()
+        {
+            if (source != null && damageSound != null)
+            {
+                source.PlayOneShot(gameOver);
             }
         }
 
