@@ -516,6 +516,10 @@ namespace assets.code
 
         private IEnumerator ShowItemName(Item item)
         {
+            if (text == null)
+            {
+                yield return false; 
+            }
             string itemName = item.itemName.Replace("_", " ");
             itemName = itemName.FirstCharacterToUpper();
             text.text = itemName;
