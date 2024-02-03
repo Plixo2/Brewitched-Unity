@@ -539,7 +539,7 @@ namespace assets.code
         public void Damage()
         {
             var deltaTime = Time.time - _lastHitTime;
-            if (deltaTime > damageCooldown && health > 0)
+            if (deltaTime > damageCooldown)
             {
                 health -= 1;
                 _playerSound.PlayDamage();
@@ -549,21 +549,9 @@ namespace assets.code
 
             if (health <= 0)
             {
-                if(firstPlay)
-                {
-                    _playerSound.PlayDeath();
-                    // eigentlich sollte das _music.PlayGameOver(); sein aber da kommt die exception
-                    firstPlay = false;
-                    killTimer = Time.time + 5f;
-                }
-                
-                if(Time.time > killTimer) 
-                {
-                    this.Kill();
-                    this.health = 0;
-                    firstPlay = true;
-                }
-                
+                _playerSound.PlayDeath();
+                this.Kill();
+                this.health = 0;                
             }
         }
 

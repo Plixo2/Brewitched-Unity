@@ -32573,6 +32573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody2D: {fileID: 0}
+  _jumpCount: 1
   lastGroundedPosition: {x: 0, y: 0, z: 0}
   lastFixedPosition: {x: 0, y: 0, z: 0}
   fixedPosition: {x: 0, y: 0, z: 0}
@@ -32610,6 +32611,7 @@ MonoBehaviour:
   dashingTime: 0.5
   dashGravity: 1
   valveInteractionDelay: 1
+  text: {fileID: 0}
 --- !u!114 &835353168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32642,6 +32644,7 @@ MonoBehaviour:
   pickSound: {fileID: 8300000, guid: ae74f888de1654a8bb7450fe0f6e1164, type: 3}
   jumpSound: {fileID: 8300000, guid: 830868e9ea4154a1c9b40df85fe9b439, type: 3}
   damageSound: {fileID: 8300000, guid: 7eb7c02b584ef4ef1a969a76cc3c988f, type: 3}
+  gameOver: {fileID: 0}
   stepSounds:
   - {fileID: 8300000, guid: 4544cd1f9b0d00a498e3602ecfffcacc, type: 3}
   - {fileID: 8300000, guid: 6154d2d90f91ac743a30a16a58f9fa32, type: 3}
@@ -65572,8 +65575,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25360012, y: -3.5275998, z: 0}
-    m_Extent: {x: 19.5808, y: 11.774099, z: 0}
+    m_Center: {x: 0.25475025, y: -3.52595, z: 0}
+    m_Extent: {x: 19.588451, y: 11.75795, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -65624,13 +65627,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab3ca726c24cb4f819d24882dc61702a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainSoundtrack: {fileID: 1868145185}
-  beginSoundtrack: {fileID: 1868145184}
-  fastSoundtrack1: {fileID: 1868145183}
-  fastSoundtrack2: {fileID: 1868145182}
-  gameOver: {fileID: 1868145181}
-  winGame: {fileID: 1868145180}
-  finishBrewing: {fileID: 1868145179}
+  musicSource: {fileID: 1868145185}
+  interactionSource: {fileID: 1450479595}
+  mainSoundtrack: {fileID: 8300000, guid: fbcd08e7ef26f490bb15e51ad355f37d, type: 3}
+  beginSoundtrack: {fileID: 8300000, guid: 498587ec8361248a193919d7f09da271, type: 3}
+  fastSoundtrack1: {fileID: 8300000, guid: 766f0c74cbd054a438cb4a2d5634d21d, type: 3}
+  fastSoundtrack2: {fileID: 8300000, guid: c59b21443bffc470db80dc772e6a77fc, type: 3}
+  gameOver: {fileID: 8300000, guid: 6d1693f5848c84793aeca7441391c0ec, type: 3}
+  winGame: {fileID: 8300000, guid: 08bc7c7c6c46f4a94a9d408501d4644b, type: 3}
+  finishBrewing: {fileID: 8300000, guid: a1723ff07292748d1939d484b1ec97bc, type: 3}
 --- !u!4 &1868145178
 Transform:
   m_ObjectHideFlags: 0
@@ -65658,7 +65663,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a1723ff07292748d1939d484b1ec97bc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -65754,7 +65759,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 08bc7c7c6c46f4a94a9d408501d4644b, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -65850,7 +65855,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6d1693f5848c84793aeca7441391c0ec, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -65946,7 +65951,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c59b21443bffc470db80dc772e6a77fc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -66042,7 +66047,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 766f0c74cbd054a438cb4a2d5634d21d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -66138,7 +66143,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 498587ec8361248a193919d7f09da271, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -66234,7 +66239,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fbcd08e7ef26f490bb15e51ad355f37d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
