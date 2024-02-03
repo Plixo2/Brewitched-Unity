@@ -79,6 +79,7 @@ namespace assets.code
 
         [SerializeField] private TextMeshProUGUI text;
 
+        private bool wasKilled;
 
         void Start()
         {
@@ -88,6 +89,7 @@ namespace assets.code
             _playerAnimator = GetComponent<PlayerAnimator>();
             camFollow = _camera.GetComponent<CamFollow>();
             lastGroundedPosition = transform.position;
+            wasKilled = false;
         }
 
         #region Update
@@ -547,14 +549,13 @@ namespace assets.code
 
             if (health <= 0)
             {
-                this.Kill();
                 this.health = 0;
+                if (States.GetPlayerAlive() && !wasKilled)
+                {
+                    wasKilled = true;
+                    States.SetPlayerAlive(false);
+                }
             }
-        }
-
-        public void Kill()
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         #endregion
