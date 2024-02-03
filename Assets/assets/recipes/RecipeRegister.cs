@@ -18,7 +18,8 @@ namespace assets.recipes
             Add("diamond, dragon -> fire_Resistance_Potion");   
             Add("slime, choco -> dash_Potion");
             Add("iron, eye -> extra_Life_Potion");
-            Add("water, feather -> double_Jump_Potion");   
+            Add("water, feather -> double_Jump_Potion");
+            Add("eye, dragon -> reverse_potion");   
         }
 
         /// <summary>
