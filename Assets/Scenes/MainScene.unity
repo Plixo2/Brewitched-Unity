@@ -32644,7 +32644,7 @@ MonoBehaviour:
   pickSound: {fileID: 8300000, guid: ae74f888de1654a8bb7450fe0f6e1164, type: 3}
   jumpSound: {fileID: 8300000, guid: 830868e9ea4154a1c9b40df85fe9b439, type: 3}
   damageSound: {fileID: 8300000, guid: 7eb7c02b584ef4ef1a969a76cc3c988f, type: 3}
-  gameOver: {fileID: 0}
+  gameOver: {fileID: 8300000, guid: 6d1693f5848c84793aeca7441391c0ec, type: 3}
   stepSounds:
   - {fileID: 8300000, guid: 4544cd1f9b0d00a498e3602ecfffcacc, type: 3}
   - {fileID: 8300000, guid: 6154d2d90f91ac743a30a16a58f9fa32, type: 3}
@@ -65575,8 +65575,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25475025, y: -3.52595, z: 0}
-    m_Extent: {x: 19.588451, y: 11.75795, z: 0}
+    m_Center: {x: 0.25405025, y: -3.5284, z: 0}
+    m_Extent: {x: 19.576649, y: 11.767599, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
