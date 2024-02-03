@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class PlayerPotionThrowing : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerPotionThrowing : MonoBehaviour
     [SerializeField] private float forceLimit;
     [SerializeField] private float force;
     [SerializeField] private float chargeSpeed;
+    [SerializeField] public Image progressBarImage;
+    [SerializeField] public Image fillImage;
 
 
     void Start(){
@@ -25,12 +28,20 @@ public class PlayerPotionThrowing : MonoBehaviour
 
             if(Input.GetMouseButton(0)){
                 
+                float fillImageScale = (force - forceStart) / (forceLimit - forceStart);
+                progressBarImage.enabled = true;
+                fillImage.enabled = true;
+                fillImage.rectTransform.transform.localScale = new Vector3(fillImageScale, 1, 1);
+                
                 if(force <= forceLimit){
                     force += Time.deltaTime * chargeSpeed;
                 }
             }
 
             if(Input.GetMouseButtonUp(0)){
+                    progressBarImage.enabled = false;
+                    fillImage.enabled = false;
+                    
                     Item handItem = player.GetHandItem();
                     throwItem(handItem);
 

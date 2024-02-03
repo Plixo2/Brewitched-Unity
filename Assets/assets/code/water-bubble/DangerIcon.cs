@@ -47,15 +47,16 @@ public class DangerIcon : MonoBehaviour
     private void adjustY()
     {
         float waterY = waterObject.transform.position.y;
-        float distance = Math.Abs(cameraPositionY - waterY);
+        float halfHeight = this.transform.localScale.y / 2;
+        float distance = Math.Abs(cameraPositionY - (waterY + halfHeight));
         Vector3 newPosition = this.transform.position;
         if(distance > 6)
         {
-            newPosition.y = cameraPositionY - 5.5f;
+            newPosition.y = cameraPositionY - 6f + halfHeight - 0.1f;
         }
         else
         {
-            newPosition.y = waterY;
+            newPosition.y = waterY + halfHeight - 0.3f;
         }
         this.transform.position = newPosition;
     }
