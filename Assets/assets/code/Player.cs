@@ -25,12 +25,16 @@ namespace assets.code
         private PlayerSound _playerSound;
         private PlayerAnimator _playerAnimator;
 
+        private Music _music;
+
         private float _currentSpeed = 0;
         [SerializeField] private int _jumpCount = 1;
         private bool _canMove = true;
         private float lastJumpTime = -10;
         private float lastGroundTime = -10;
         private float _lastHitTime = -10;
+        private float killTimer = float.PositiveInfinity;
+        private bool firstPlay = true;
         private DelayAction _dropTimer = new();
         private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
@@ -535,17 +539,31 @@ namespace assets.code
         public void Damage()
         {
             var deltaTime = Time.time - _lastHitTime;
-            if (deltaTime > damageCooldown)
+            if (deltaTime > damageCooldown && health > 0)
             {
                 health -= 1;
+                _playerSound.PlayDamage();
                 _lastHitTime = Time.time;
                 print($"Health :{health}");
             }
 
             if (health <= 0)
             {
-                this.Kill();
-                this.health = 0;
+                if(firstPlay)
+                {
+                    _playerSound.PlayDeath();
+                    // eigentlich sollte das _music.PlayGameOver(); sein aber da kommt die exception
+                    firstPlay = false;
+                    killTimer = Time.time + 5f;
+                }
+                
+                if(Time.time > killTimer) 
+                {
+                    this.Kill();
+                    this.health = 0;
+                    firstPlay = true;
+                }
+                
             }
         }
 
