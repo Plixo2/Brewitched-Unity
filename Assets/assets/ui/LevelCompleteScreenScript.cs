@@ -23,17 +23,6 @@ public class LevelCompleteScreenScript: MonoBehaviour
         levelCompleteScreen = root.Q<VisualElement>("level-complete-screen");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        // TODO remove, trigger FinishLevel on closing all Valves
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            FinishLevel();
-        }
-    }
-
     private string getTimeString(float time)
     {
         var milliseconds = (int)(time * 100) % 100;
