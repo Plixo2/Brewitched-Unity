@@ -2,50 +2,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using assets.images.mage2;
-using JetBrains.Annotations;
-using UnityEditor.ShaderGraph;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using TMPro;
-using System.Linq;
 
 namespace assets.code
 {
     /// <summary>
-    /// Main player movement and interaction script
+    ///     Main player movement and interaction script
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D), typeof(PlayerSound), typeof(PlayerAnimator))]
     public class Player : MonoBehaviour
     {
         [HideInInspector] public Rigidbody2D rigidbody2D;
-        private PlayerSound _playerSound;
-        private PlayerAnimator _playerAnimator;
-
-        private Music _music;
-
-        private float _currentSpeed = 0;
         [SerializeField] private int _jumpCount = 1;
-        private bool _canMove = true;
-        private float lastJumpTime = -10;
-        private float lastGroundTime = -10;
-        private float _lastHitTime = -10;
-        private float killTimer = float.PositiveInfinity;
-        private bool firstPlay = true;
-        private DelayAction _dropTimer = new();
-        private float jesusPotionTimer;
         [HideInInspector] public Vector3 lastGroundedPosition;
         [HideInInspector] public Vector3 lastFixedPosition;
         [HideInInspector] public Vector3 fixedPosition;
         public int health;
 
         public GameObject _camera;
-        private CamFollow camFollow;
-        [SerializeField] SpriteRenderer _spriteRenderer;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
 
         [SerializeField] private Vector2 groundOffset = new(0, 0);
         [SerializeField] private float groundRadius = 0.2f;
@@ -56,10 +34,10 @@ namespace assets.code
         [SerializeField] private float movementSpeed = 5;
         [SerializeField] private float acceleration = 0.1f;
         [SerializeField] private float reach = 1f;
-        [SerializeField] public bool doubleJumpEnabled = false;
-        [SerializeField] public bool fireResistanceEnabled = false;
-        [SerializeField] public bool jesusPotionEnabled = false;
-        [SerializeField] public bool dashPotionEnabled = false;
+        [SerializeField] public bool doubleJumpEnabled;
+        [SerializeField] public bool fireResistanceEnabled;
+        [SerializeField] public bool jesusPotionEnabled;
+        [SerializeField] public bool dashPotionEnabled;
         [SerializeField] private float fireDeathTimer = 5.0f;
         [SerializeField] private float jumpDelay = 0.2f;
         [SerializeField] private float jumpBuffer = 0.2f;
@@ -68,7 +46,7 @@ namespace assets.code
         [SerializeField] private float impactFrameTime = 0.5f;
         [SerializeField] private Color32 impactFrameColor = Color.red;
 
-        public List<Potions> activePotions = new List<Potions>();
+        public List<Potions> activePotions = new();
 
         [SerializeField] [Range(0, 16)] private int maxHealth = 6;
 
@@ -79,12 +57,30 @@ namespace assets.code
         [SerializeField] private bool dashGravity = true;
 
         [SerializeField] private float valveInteractionDelay = 1.0f;
-        private bool canRotateValve = true;
 
         [SerializeField] private TextMeshProUGUI text;
+
+        [SerializeField] private AudioSource _finishPlayer;
+        private bool _canMove = true;
+
+        private float _currentSpeed;
+        private readonly DelayAction _dropTimer = new();
+        private float _lastHitTime = -10;
+
+
+        private Music _music;
+        private PlayerAnimator _playerAnimator;
+        private PlayerSound _playerSound;
+        private CamFollow camFollow;
+        private bool canRotateValve = true;
+        private bool firstPlay = true;
+        private float jesusPotionTimer;
+        private float killTimer = float.PositiveInfinity;
+        private float lastGroundTime = -10;
+        private float lastJumpTime = -10;
         private bool wasKilled;
 
-        void Start()
+        private void Start()
         {
             health = maxHealth;
             rigidbody2D = GetComponent<Rigidbody2D>();
@@ -95,14 +91,38 @@ namespace assets.code
             wasKilled = false;
         }
 
+        #region Damage
+
+        public void Damage()
+        {
+            var deltaTime = Time.time - _lastHitTime;
+            if (deltaTime > damageCooldown)
+            {
+                health -= 1;
+                _playerSound.PlayDamage();
+                _lastHitTime = Time.time;
+                print($"Health :{health}");
+            }
+
+            if (health <= 0)
+            {
+                health = 0;
+                if (States.GetPlayerAlive() && !wasKilled)
+                {
+                    _playerSound.PlayDeath();
+                    wasKilled = true;
+                    States.SetPlayerAlive(false);
+                }
+            }
+        }
+
+        #endregion
+
         #region Update
 
         private void FixedUpdate()
         {
-            if (isDashing)
-            {
-                return;
-            }
+            if (isDashing) return;
 
             if (_canMove)
             {
@@ -117,7 +137,7 @@ namespace assets.code
             fixedPosition = transform.position;
         }
 
-        void Update()
+        private void Update()
         {
             // if (isDashing)
             // {
@@ -125,19 +145,16 @@ namespace assets.code
             // }
 
             var isGrounded = IsGrounded();
-            float velocityX = rigidbody2D.velocity.x;
-            bool playerMoving = Mathf.Abs(velocityX) > 0.1f;
+            var velocityX = rigidbody2D.velocity.x;
+            var playerMoving = Mathf.Abs(velocityX) > 0.1f;
             HandlePlayerImpactFrame();
             HandleWaterInteraction();
             HandleFlipAnimation();
             HandleJump(isGrounded, playerMoving);
             HandleInput(isGrounded, playerMoving);
             HandleStepSounds(isGrounded, playerMoving);
-            
-            if(isGrounded)
-            {
-                allowDash = true;
-            }
+
+            if (isGrounded) allowDash = true;
         }
 
         private void HandlePlayerImpactFrame()
@@ -145,47 +162,36 @@ namespace assets.code
             var timeSinceLastHit = Time.time - _lastHitTime;
             var normalColor = Color.white;
             var impactColor = impactFrameColor;
-            var fade = ((impactFrameTime - Math.Min(timeSinceLastHit, impactFrameTime)) / impactFrameTime);
+            var fade = (impactFrameTime - Math.Min(timeSinceLastHit, impactFrameTime)) / impactFrameTime;
             var color = Color.Lerp(normalColor, impactColor, fade);
-            if (_spriteRenderer != null)
-            {
-                _spriteRenderer.color = color;
-            }
+            if (_spriteRenderer != null) _spriteRenderer.color = color;
         }
 
         private void HandleWaterInteraction()
         {
             var waterManager = States.GetWaterManager();
-            if (waterManager != null && waterManager.GetCurrentWaterLevel() > this.transform.position.y &&
+            if (waterManager != null && waterManager.GetCurrentWaterLevel() > transform.position.y &&
                 !jesusPotionEnabled)
-            {
-                this.Damage();
-            }
+                Damage();
         }
 
         private void HandleFlipAnimation()
         {
-            var scaleX = this.gameObject.transform.localScale.x;
+            var scaleX = gameObject.transform.localScale.x;
             var target = _currentSpeed < 0 ? -1 : 1;
-            this.gameObject.transform.localScale =
+            gameObject.transform.localScale =
                 new Vector3(Mathf.Lerp(scaleX, target, Time.deltaTime * 16), 1, 1);
         }
 
         private void HandleStepSounds(bool isGrounded, bool playerMoving)
         {
-            if (playerMoving && isGrounded)
-            {
-                _playerSound.PlayStep(Time.deltaTime);
-            }
+            if (playerMoving && isGrounded) _playerSound.PlayStep(Time.deltaTime);
         }
 
         private void HandleInput(bool isGrounded, bool playerMoving)
-        {  
-            if(camFollow.cameraRaised || camFollow.cameraLowered)
-            {
-                rigidbody2D.velocity = Vector3.zero;
-            }
-            
+        {
+            if (camFollow.cameraRaised || camFollow.cameraLowered) rigidbody2D.velocity = Vector3.zero;
+
             if (Input.GetKey(KeyCode.U) && !camFollow.cameraRaised && !playerMoving && isGrounded)
             {
                 camFollow.offset.y += camFollow.cameraRaiseAmount;
@@ -215,39 +221,24 @@ namespace assets.code
                 _canMove = true;
             }
 
-            if (isGrounded && doubleJumpEnabled)
-            {
-                _jumpCount = 1;
-            }
+            if (isGrounded && doubleJumpEnabled) _jumpCount = 1;
 
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                InteractPrimary();
-            }
+            if (Input.GetKeyDown(KeyCode.F)) InteractPrimary();
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                InteractSecondary();
-            }
+            if (Input.GetKeyDown(KeyCode.E)) InteractSecondary();
 
             if (Input.GetKey(KeyCode.F))
-            {
                 _dropTimer.Advance(Time.deltaTime);
-            }
             else
-            {
                 _dropTimer.Reset();
-            }
 
             if (_dropTimer.HasJustPassed(0.4f))
-            {
                 if (HasHandItem())
                 {
                     _playerSound.PlayDrop();
                     DropHandItem();
                 }
-            }
-            
+
             if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && allowDash && dashPotionEnabled)
             {
                 StartCoroutine(Dash());
@@ -263,24 +254,19 @@ namespace assets.code
                 lastGroundTime = Time.time;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                lastJumpTime = Time.time;
-            }
+            if (Input.GetKeyDown(KeyCode.Space)) lastJumpTime = Time.time;
 
             var lastJumpDelta = Time.time - lastJumpTime;
             var isJumping = lastJumpDelta <= jumpBuffer;
             var lastGroundDelta = Time.time - lastGroundTime;
             var isCoyote = lastGroundDelta <= coyoteTime;
             if (isJumping && _canMove)
-            {
                 if (isCoyote || (doubleJumpEnabled && _jumpCount > 0))
                 {
                     lastGroundTime = 0;
                     lastJumpTime = 0;
                     Jump();
                 }
-            }
         }
 
         #endregion
@@ -298,21 +284,16 @@ namespace assets.code
                 _playerSound.PlayJump();
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.y, jumpHeight);
 
-                if (doubleJumpEnabled && !IsGrounded())
-                {
-                    _jumpCount--;
-                }
+                if (doubleJumpEnabled && !IsGrounded()) _jumpCount--;
             }
         }
+
         private IEnumerator Dash()
         {
             _playerAnimator.onDash();
             isDashing = true;
-            float originalGravity = rigidbody2D.gravityScale;
-            if (!dashGravity)
-            {
-                rigidbody2D.gravityScale = 0f;
-            }
+            var originalGravity = rigidbody2D.gravityScale;
+            if (!dashGravity) rigidbody2D.gravityScale = 0f;
 
             rigidbody2D.velocity = new Vector2(Mathf.Sign(transform.localScale.x) * dashingPower, 0.0f);
             yield return new WaitForSecondsRealtime(dashingTime);
@@ -321,22 +302,17 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
+        ///     Performs a 'Physics2D.OverlapCircle' to test if the player is touching the ground
         /// </summary>
         /// <returns>if the player is grounded</returns>
         public bool IsGrounded()
         {
-            var position = this.transform.position;
+            var position = transform.position;
             var pos = new Vector2(position.x, position.y);
             if (groundRectangle)
-            {
                 return Physics2D.OverlapBox(pos + groundOffset, new Vector2(groundRadius, 0.2f), 0,
                     groundMask);
-            }
-            else
-            {
-                return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
-            }
+            return Physics2D.OverlapCircle(pos + groundOffset, groundRadius, groundMask);
         }
 
         #endregion
@@ -344,13 +320,13 @@ namespace assets.code
         #region Interact
 
         /// <summary>
-        /// Secondary Interaction for interacting with the World and using items 
+        ///     Secondary Interaction for interacting with the World and using items
         /// </summary>
         private void InteractSecondary()
         {
             var hand = GetHandItem();
-            var interactable = States.GetInteractable(transform.position, this.reach, _ => true);
-            
+            var interactable = States.GetInteractable(transform.position, reach, _ => true);
+
             if (hand != null)
             {
                 var result = hand.Interact(this);
@@ -362,7 +338,7 @@ namespace assets.code
                     return;
                 }
             }
-            
+
             if (interactable != null)
             {
                 var interacted = interactable.Interact(hand);
@@ -377,7 +353,7 @@ namespace assets.code
                     return;
                 }
 
-                bool allValvesClosedOnce = States.allValvesClosedOnce;
+                var allValvesClosedOnce = States.allValvesClosedOnce;
                 if (!interacted && interactable.CompareTag("Valve") && canRotateValve && !allValvesClosedOnce)
                 {
                     canRotateValve = false;
@@ -386,7 +362,6 @@ namespace assets.code
                     ((Valve)interactable).toggleValve();
                 }
             }
-
         }
 
         private IEnumerator enableValveInteraction()
@@ -396,8 +371,8 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Primary Interaction for picking/deposition items
-        /// and placing them in the cauldron
+        ///     Primary Interaction for picking/deposition items
+        ///     and placing them in the cauldron
         /// </summary>
         private void InteractPrimary()
         {
@@ -406,7 +381,7 @@ namespace assets.code
             {
                 var handItem = GetHandItem()!;
 
-                var connectionPoint = States.GetPoint(position, this.reach, point =>
+                var connectionPoint = States.GetPoint(position, reach, point =>
                     !point.HasItem());
                 if (connectionPoint != null && handItem.canConnect())
                 {
@@ -449,7 +424,7 @@ namespace assets.code
         #region Items
 
         /// <summary>
-        /// Tests if the player is holding an item
+        ///     Tests if the player is holding an item
         /// </summary>
         /// <returns>if the player is holding an item</returns>
         public bool HasHandItem()
@@ -458,7 +433,7 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Pick up an item, and set its properties
+        ///     Pick up an item, and set its properties
         /// </summary>
         /// <param name="item">item to pick up</param>
         private void PickItem(Item item)
@@ -466,25 +441,22 @@ namespace assets.code
             var handItem = HasHandItem();
             if (!handItem)
             {
-                item.transform.parent = this.transform;
+                item.transform.parent = transform;
                 item.Pickup();
             }
         }
 
         /// <summary>
-        /// Drops the current held item on the ground 
+        ///     Drops the current held item on the ground
         /// </summary>
         private void DropHandItem()
         {
             var handItem = GetHandItem();
-            if (handItem != null)
-            {
-                handItem.Disconnect();
-            }
+            if (handItem != null) handItem.Disconnect();
         }
 
         /// <summary>
-        /// removes the current held item from the world
+        ///     removes the current held item from the world
         /// </summary>
         private void DeleteHandItem()
         {
@@ -504,19 +476,16 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Searches for a item inside the children of the GameObject 
+        ///     Searches for a item inside the children of the GameObject
         /// </summary>
         /// <returns>A potential Item</returns>
         public Item? GetHandItem()
         {
-            for (int i = 0; i < this.transform.childCount; i++)
+            for (var i = 0; i < transform.childCount; i++)
             {
-                var child = this.transform.GetChild(i);
+                var child = transform.GetChild(i);
                 var item = child.gameObject.GetComponent<Item>();
-                if (item != null)
-                {
-                    return item;
-                }
+                if (item != null) return item;
             }
 
             return null;
@@ -524,43 +493,14 @@ namespace assets.code
 
         private IEnumerator ShowItemName(Item item)
         {
-            if (text == null)
-            {
-                yield return false; 
-            }
-            string itemName = item.itemName.Replace("_", " ");
+            if (text == null) yield return false;
+
+            var itemName = item.itemName.Replace("_", " ");
             itemName = itemName.FirstCharacterToUpper();
             text.text = itemName;
-            text.enabled=true;
+            text.enabled = true;
             yield return new WaitForSeconds(2);
             text.enabled = false;
-        }
-
-        #endregion
-
-        #region Damage
-
-        public void Damage()
-        {
-            var deltaTime = Time.time - _lastHitTime;
-            if (deltaTime > damageCooldown)
-            {
-                health -= 1;
-                _playerSound.PlayDamage();
-                _lastHitTime = Time.time;
-                print($"Health :{health}");
-            }
-
-            if (health <= 0)
-            {
-                this.health = 0;
-                if (States.GetPlayerAlive() && !wasKilled)
-                {
-                    _playerSound.PlayDeath();
-                    wasKilled = true;
-                    States.SetPlayerAlive(false);
-                }
-            }
         }
 
         #endregion
@@ -568,62 +508,54 @@ namespace assets.code
         #region UnityBuildins
 
         /// <summary>
-        /// Draws a debug circle to display the ground check, if the GameObject is selected  
+        ///     Draws a debug circle to display the ground check, if the GameObject is selected
         /// </summary>
-        void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.cyan;
-            if (IsGrounded())
-            {
-                Gizmos.color = Color.red;
-            }
+            if (IsGrounded()) Gizmos.color = Color.red;
 
 
             var down = new Vector3(groundOffset.x, groundOffset.y, 0);
 
             if (groundRectangle)
-            {
-                Gizmos.DrawCube(this.transform.position + down,
+                Gizmos.DrawCube(transform.position + down,
                     new Vector2(groundRadius, 0.2f));
-            }
             else
-            {
-                Gizmos.DrawSphere(this.transform.position + down,
+                Gizmos.DrawSphere(transform.position + down,
                     groundRadius);
-            }
 
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(this.transform.position,
+            Gizmos.DrawWireSphere(transform.position,
                 reach);
         }
 
-        void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("WaterBubble"))
             {
-                WaterBubble bubble = other.GetComponent<WaterBubble>();
+                var bubble = other.GetComponent<WaterBubble>();
                 if (jesusPotionEnabled)
                 {
                     bubble.destroyBubble();
                 }
                 else
                 {
-                    this.Damage();
+                    Damage();
                     bubble.destroyBubble();
                 }
             }
-            else if(other.gameObject.CompareTag("ExitDoor"))
+            else if (other.gameObject.CompareTag("ExitDoor"))
             {
+                if (_finishPlayer != null) _finishPlayer.Play();
+
                 LevelCompleteScreenScript.FinishLevel();
             }
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled)
-            {
-                this.Damage();
-            }
+            if (other.gameObject.CompareTag("DeadlyFire") && !fireResistanceEnabled) Damage();
         }
 
         #endregion

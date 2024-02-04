@@ -1,30 +1,28 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace assets.code
 {
     /// <summary>
-    /// Class to register connection points, items, cauldrons and interactables
-    /// Also used to keep track of the overall game progress, like waterlevel
+    ///     Class to register connection points, items, cauldrons and interactables
+    ///     Also used to keep track of the overall game progress, like waterlevel
     /// </summary>
     public class States : MonoBehaviour
     {
-        
         private static States _instance;
-
-        public int level = 0;
-        private List<ConnectionPoint> _connectionPoints = new();
-        private List<Item> _items = new();
-        private List<Interactable> _interactables = new();
-        private List<Valve> _valves = new();
-        public static bool allValvesClosedOnce = false;
-        
-        private WaterAsset? _waterManager;
+        public static bool allValvesClosedOnce;
 
         public static bool playerAlive = true;
+
+        public int level;
+        private readonly List<ConnectionPoint> _connectionPoints = new();
+        private readonly List<Interactable> _interactables = new();
+        private readonly List<Item> _items = new();
+        private readonly List<Valve> _valves = new();
+
+        private WaterAsset? _waterManager;
 
 
         private void Awake()
@@ -33,19 +31,22 @@ namespace assets.code
             allValvesClosedOnce = false;
         }
 
-        
+
         public static void AddConnectionPoint(ConnectionPoint connectionPoint)
         {
             _instance._connectionPoints.Add(connectionPoint);
         }
+
         public static void AddItem(Item item)
         {
             _instance._items.Add(item);
         }
+
         public static void AddInteractable(Interactable interactable)
         {
             _instance._interactables.Add(interactable);
         }
+
         public static void AddValve(Valve valve)
         {
             _instance._valves.Add(valve);
@@ -54,13 +55,10 @@ namespace assets.code
         public static void SetPlayerAlive(bool alive)
         {
             playerAlive = alive;
-            if(alive)
-            {
+            if (alive)
                 Time.timeScale = 1.0f;
-            } else
-            {
+            else
                 Time.timeScale = 0f;
-            }
         }
 
         public static bool GetPlayerAlive()
@@ -72,14 +70,15 @@ namespace assets.code
         {
             _instance._waterManager = asset;
         }
-        
+
         public static WaterAsset GetWaterManager()
         {
             return _instance._waterManager;
         }
 
-    
-        public static Interactable? GetInteractable(Vector3 position, float range, Predicate<Interactable> predicate)
+
+        public static Interactable? GetInteractable(Vector3 position, float range,
+            Predicate<Interactable> predicate)
         {
             var rangeMin = range;
             Interactable? bestPoint = null;
@@ -87,7 +86,7 @@ namespace assets.code
             {
                 var pos = point.transform.position;
                 var distSqr = Vector3.Distance(position, pos);
-                if ((distSqr-point.interactionRange) < rangeMin && predicate.Invoke(point))
+                if (distSqr - point.interactionRange < rangeMin && predicate.Invoke(point))
                 {
                     rangeMin = distSqr;
                     bestPoint = point;
@@ -101,7 +100,9 @@ namespace assets.code
         {
             return _instance._valves;
         }
-        public static ConnectionPoint? GetPoint(Vector3 position, float range, Predicate<ConnectionPoint> predicate)
+
+        public static ConnectionPoint? GetPoint(Vector3 position, float range,
+            Predicate<ConnectionPoint> predicate)
         {
             var rangeMin = range;
             ConnectionPoint? bestPoint = null;
@@ -118,6 +119,7 @@ namespace assets.code
 
             return bestPoint;
         }
+
         public static Item? GetItem(Vector3 position, float range)
         {
             var rangeMin = range;
@@ -135,6 +137,7 @@ namespace assets.code
 
             return bestPoint;
         }
+
         public static Item? GetItem(Vector3 position, float range, Predicate<Item> predicate)
         {
             var rangeMin = range;

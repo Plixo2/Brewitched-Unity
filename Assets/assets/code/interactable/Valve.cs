@@ -11,7 +11,7 @@ public class Valve : Interactable
 
     private bool isOpen = true;
 
-    new public void Start()
+    public new void Start()
     {
         States.AddValve(this);
         States.AddInteractable(this);
@@ -24,20 +24,14 @@ public class Valve : Interactable
         //playRotateAnimation();   // To be coded later!!
         if (isOpen)
         {
-            if (_particleSystem != null)
-            {
-                _particleSystem.gameObject.SetActive(false);
-            }
+            if (_particleSystem != null) _particleSystem.gameObject.SetActive(false);
 
             isOpen = !isOpen;
             onClosedAllValves();
         }
         else
         {
-            if (_particleSystem != null)
-            {
-                _particleSystem.gameObject.SetActive(true);
-            }
+            if (_particleSystem != null) _particleSystem.gameObject.SetActive(true);
 
             isOpen = !isOpen;
         }
@@ -45,13 +39,9 @@ public class Valve : Interactable
 
     private void onClosedAllValves()
     {
-        foreach (Valve valve in States.getValves())
-        {
+        foreach (var valve in States.getValves())
             if (valve.getOpen())
-            {
                 return;
-            }
-        }
 
         States.allValvesClosedOnce = true;
         print("Level Completed, All Valves Closed!!");

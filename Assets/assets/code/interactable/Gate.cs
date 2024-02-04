@@ -1,5 +1,4 @@
 #nullable enable
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace assets.code.interactable
@@ -9,11 +8,13 @@ namespace assets.code.interactable
         [SerializeField] private Sprite openSprite;
         [SerializeField] private string itemName = "key";
         private Collider2D _collider2D;
+
         public void Start()
         {
             _collider2D = GetComponent<Collider2D>();
             base.Start();
         }
+
         public override bool Interact(Item? item)
         {
             if (item != null && item.itemName.Equals(itemName))
