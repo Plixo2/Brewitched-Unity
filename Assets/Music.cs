@@ -16,13 +16,13 @@ namespace assets.code
         [SerializeField] private AudioClip? winGame;
         [SerializeField] private AudioClip? finishBrewing;
 
-        void Start()
+        /*void Start()
         {
             if(musicSource != null && mainSoundtrack != null)
             {
                 musicSource.PlayOneShot(mainSoundtrack);
             }
-        }
+        }*/
 
         public void PlayMainSoundtrack()
         {
