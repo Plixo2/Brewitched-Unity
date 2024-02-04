@@ -82,7 +82,6 @@ namespace assets.code
         private bool canRotateValve = true;
 
         [SerializeField] private TextMeshProUGUI text;
-
         private bool wasKilled;
 
         void Start()
@@ -612,6 +611,10 @@ namespace assets.code
                     this.Damage();
                     bubble.destroyBubble();
                 }
+            }
+            else if(other.gameObject.CompareTag("ExitDoor"))
+            {
+                LevelCompleteScreenScript.FinishLevel();
             }
         }
 

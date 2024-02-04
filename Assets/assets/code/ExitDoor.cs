@@ -8,10 +8,12 @@ namespace assets.code
         [SerializeField] Animator animator;
 
         bool isOpen = false;
+        private BoxCollider2D _collider;
 
         // Start is called before the first frame update
         void Start()
         {
+            _collider = this.GetComponent<BoxCollider2D>();
         }
 
         // Update is called once per frame
@@ -21,17 +23,10 @@ namespace assets.code
             if (shouldOpen && !isOpen)
             {
                 animator.SetTrigger("open");
-                Disable();
                 isOpen = true;
+                _collider.isTrigger = true;
             }
         }
 
-        void Disable()
-        {
-            foreach (var componentsInChild in GetComponentsInChildren<Collider2D>())
-            {
-                componentsInChild.enabled = false;
-            }
-        }
     }
 }
