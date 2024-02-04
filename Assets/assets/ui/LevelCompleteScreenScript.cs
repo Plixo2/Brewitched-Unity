@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelCompleteScreenScript: MonoBehaviour
 {
-    private VisualElement levelCompleteScreen;
-    Label completionTime;
-    Label successText;
-    Button continueButton;
+    private static VisualElement levelCompleteScreen;
+    static Label completionTime;
+    static Label successText;
+    static Button continueButton;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +23,7 @@ public class LevelCompleteScreenScript: MonoBehaviour
         levelCompleteScreen = root.Q<VisualElement>("level-complete-screen");
     }
 
-    private string getTimeString(float time)
+    private static string getTimeString(float time)
     {
         var milliseconds = (int)(time * 100) % 100;
         var seconds = (int)time % 60;
@@ -31,7 +31,7 @@ public class LevelCompleteScreenScript: MonoBehaviour
         return minutes + ":" + seconds + ":" + milliseconds;
     }
 
-    public void FinishLevel()
+    public static void FinishLevel()
     {
         completionTime.text = getTimeString(HUD.time);
 
