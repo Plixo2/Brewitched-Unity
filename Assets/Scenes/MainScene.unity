@@ -5403,6 +5403,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: ExitDoor
       objectReference: {fileID: 0}
+    - target: {fileID: 1160356261127867848, guid: 430450cba07c5874ab071113ffcdb352, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5a88f00385b0dc847a48590bd9037300, type: 2}
     - target: {fileID: 7878350319992209165, guid: 430450cba07c5874ab071113ffcdb352, type: 3}
       propertyPath: m_RootOrder
       value: 27
@@ -78702,8 +78706,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25094986, y: -3.53165, z: 0}
-    m_Extent: {x: 19.57645, y: 11.766451, z: 0}
+    m_Center: {x: 0.24979973, y: -3.5310998, z: 0}
+    m_Extent: {x: 19.5811, y: 11.768499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
