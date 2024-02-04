@@ -37806,8 +37806,8 @@ MonoBehaviour:
   maxHealth: 5
   allowDash: 1
   isDashing: 0
-  dashingPower: 10
-  dashingTime: 0.5
+  dashingPower: 15
+  dashingTime: 0.2
   dashGravity: 0
   valveInteractionDelay: 1
   text: {fileID: 1944606218}
@@ -78592,8 +78592,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25204945, y: -3.52735, z: 0}
-    m_Extent: {x: 19.578049, y: 11.76475, z: 0}
+    m_Center: {x: 0.26034927, y: -3.52135, z: 0}
+    m_Extent: {x: 19.58235, y: 11.77015, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
