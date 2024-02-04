@@ -7,10 +7,10 @@ public static class LevelManager
     private static List<string> levels = new List<string>
     {
         "MainScene",
-        "SemihScene",
         "PlixoScene",
+        "lvl6",
         "LarsScene",
-        "lvl6"
+        "SemihScene",
     };
 
     private static int currentLevel;
