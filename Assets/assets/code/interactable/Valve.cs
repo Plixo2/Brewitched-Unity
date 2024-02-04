@@ -5,7 +5,6 @@ public class Valve : Interactable
 {
     // public Transform _transform;
     public Animator Animator;
-    public LevelCompleteScreenScript levelCompleteScript;
 
     public ParticleSystem
         _particleSystem; // Drag the particle system to be controlled by this valve in Unity Inspector.
@@ -57,7 +56,6 @@ public class Valve : Interactable
         States.allValvesClosedOnce = true;
         print("Level Completed, All Valves Closed!!");
 
-        levelCompleteScript.FinishLevel();
         /*
 
         You can code here what happens when all valves are closed.
