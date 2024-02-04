@@ -8,12 +8,14 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
     private DropdownField _levelSelect;
+    private VisualElement _root;
+
     // Start is called before the first frame update
     void Start()
     {
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        _root = GetComponent<UIDocument>().rootVisualElement;
 
-        _levelSelect = root.Q<DropdownField>("LevelSelect");
+        _levelSelect = _root.Q<DropdownField>("LevelSelect");
         List<string> levels = new List<string>();
         for (int i = 1; i <= LevelManager.GetLevelCount(); i++)
         {
@@ -25,14 +27,14 @@ public class MainMenuController : MonoBehaviour
 
         _levelSelect.RegisterValueChangedCallback(level => OnSelectedLevelChanged(level.newValue));
 
-        var _startButton = root.Q<Button>("Start");
+        var _startButton = _root.Q<Button>("Start");
         _startButton.clicked += OnStartButtonClicked;
 
-        var _exitButton = root.Q<Button>("Exit");
+        var _exitButton = _root.Q<Button>("Exit");
         _exitButton.clicked += OnExitButtonClicked;
 
-       var _configButton = root.Q<Button>("Config");
-       _configButton.clicked += OnConfigButtonClicked;
+       var _levelButton = _root.Q<Button>("Level");
+        _levelButton.clicked += OnLevelButtonClicked;
     }
 
     private void OnStartButtonClicked()
@@ -48,9 +50,19 @@ public class MainMenuController : MonoBehaviour
         Application.Quit();
     }
 
-    private void OnConfigButtonClicked()
+    private void OnLevelButtonClicked()
     {
-        print("TODO config");
+        var levelSelect = _root.Q<DropdownField>("LevelSelect");
+        if(levelSelect.style.display == DisplayStyle.None)
+        {
+            levelSelect.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            levelSelect.style.display = DisplayStyle.None;
+        }
+        
+        print("LevelSelect");
     }
 
     private void OnSelectedLevelChanged(string level)
