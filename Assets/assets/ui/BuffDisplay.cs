@@ -45,7 +45,7 @@ public class BuffDisplay : MonoBehaviour
 
                 Label currentBuffTimer = buffs[i].Q<Label>("buff-timer-" + elementNumber);
                 var remainingDuration = activeBuffs[i].remainingDuration;
-                var seconds = (int)remainingDuration % 60;
+                var seconds = (int)remainingDuration;
                 currentBuffTimer.text = seconds + "s";
             } 
             else
