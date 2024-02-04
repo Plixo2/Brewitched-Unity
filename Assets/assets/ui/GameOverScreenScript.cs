@@ -33,6 +33,7 @@ public class GameOverScreenScript : MonoBehaviour
     {
         States.SetPlayerAlive(true);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        HUD.time = 0f;
     }
 
     private void BackToMainMenu()

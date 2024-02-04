@@ -42,7 +42,7 @@ public class LevelCompleteScreenScript: MonoBehaviour
         return minutes + ":" + seconds + ":" + milliseconds;
     }
 
-    private void FinishLevel()
+    public void FinishLevel()
     {
         completionTime.text = getTimeString(HUD.time);
 
@@ -59,6 +59,7 @@ public class LevelCompleteScreenScript: MonoBehaviour
     private void PlayNextLevel()
     {
         SceneManager.LoadScene(LevelManager.AdvanceLevel(), LoadSceneMode.Single);
+        HUD.time = 0f;
         Time.timeScale = 1f;
     }
 

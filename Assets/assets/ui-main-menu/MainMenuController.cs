@@ -41,6 +41,7 @@ public class MainMenuController : MonoBehaviour
     {
         print("Scene");
         SceneManager.LoadScene(LevelManager.GetSelectedSceneName(), LoadSceneMode.Single);
+        HUD.time = 0f;
         Time.timeScale = 1;
     }
 
