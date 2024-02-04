@@ -9,8 +9,8 @@ public static class LevelManager
         "MainScene",
         "PlixoScene",
         "lvl6",
-        "LarsScene",
         "SemihScene",
+        "LarsScene",
     };
 
     private static int currentLevel;
