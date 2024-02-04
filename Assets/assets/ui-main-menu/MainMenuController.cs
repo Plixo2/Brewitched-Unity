@@ -53,7 +53,7 @@ public class MainMenuController : MonoBehaviour
     private void OnLevelButtonClicked()
     {
         var levelSelect = _root.Q<DropdownField>("LevelSelect");
-        if(levelSelect.style.display == DisplayStyle.None)
+        if(levelSelect.style.display != DisplayStyle.Flex)
         {
             levelSelect.style.display = DisplayStyle.Flex;
         }
