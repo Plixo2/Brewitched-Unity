@@ -1,22 +1,17 @@
 #nullable enable
-using System;
 using System.Collections.Generic;
 using assets.recipes;
-using JetBrains.Annotations;
-using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
-using Random = System.Random;
 using UnityEngine.UI;
+using Random = System.Random;
 
 
 namespace assets.code
 {
     /// <summary>
-    /// Main cauldron code.
-    /// The Player can add Ingredients by calling 'Add'.
-    /// The Script then checks for valid recipes
+    ///     Main cauldron code.
+    ///     The Player can add Ingredients by calling 'Add'.
+    ///     The Script then checks for valid recipes
     /// </summary>
     public class TheCauldron : Interactable
     {
@@ -29,12 +24,12 @@ namespace assets.code
         [SerializeField] private AudioSource? finishBrewing;
 
         private float _brewingTimeLeft = -1;
-        private String? _itemBrewing;
-
-        private SpriteRenderer _spriteRenderer;
 
         private List<string> _currentItems;
         private Item _item;
+        private string? _itemBrewing;
+
+        private SpriteRenderer _spriteRenderer;
 
         private void Start()
         {
@@ -42,31 +37,25 @@ namespace assets.code
             _currentItems = new List<string>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _item = GetComponent<Item>();
-            if (_item == null)
-            {
-                Debug.LogError("The Cauldron needs an Item script");
-            }
+            if (_item == null) Debug.LogError("The Cauldron needs an Item script");
         }
 
         /// <summary>
-        /// activates the 'idleParticleSystem' if an item is inside to cauldron
+        ///     activates the 'idleParticleSystem' if an item is inside to cauldron
         /// </summary>
         private void Update()
         {
             var brewing = isBrewing();
 
-            if (this._item._connectionPoint == null || !this._item._connectionPoint.isFireplace)
-            {
-                brewing = false;
-            }
+            if (_item._connectionPoint == null || !_item._connectionPoint.isFireplace) brewing = false;
 
             if (brewing)
             {
-                float fillImageScale = 1 - _brewingTimeLeft / brewingTime;
+                var fillImageScale = 1 - _brewingTimeLeft / brewingTime;
                 progressBarImage.enabled = true;
                 fillImage.enabled = true;
                 fillImage.rectTransform.transform.localScale = new Vector3(fillImageScale, 1, 1);
-                
+
                 _brewingTimeLeft -= Time.deltaTime;
                 if (!isBrewing() && _itemBrewing != null)
                 {
@@ -89,28 +78,21 @@ namespace assets.code
                         var random = new Random();
                         var copy = new List<string>(_currentItems);
                         foreach (var s in copy)
-                        {
                             if (findRecipeResult.Ingredients.Contains(s))
                             {
                                 _currentItems.Remove(s);
                                 var color = Color.HSVToRGB((float)random.NextDouble(), 1f, 1f);
                                 SpawnParticle(color);
                             }
-                        }
 
                         _brewingTimeLeft = brewingTime;
                         _itemBrewing = findRecipeResult.Result;
                         DropAll();
                     }
-
-                    
                 }
             }
 
-            if (idleParticleSystem != null)
-            {
-                idleParticleSystem.SetActive(brewing);
-            }
+            if (idleParticleSystem != null) idleParticleSystem.SetActive(brewing);
 
             // The cauldron will always be in the background
             // this._spriteRenderer.sortingOrder = 5;
@@ -118,10 +100,7 @@ namespace assets.code
 
         private void DropAll()
         {
-            foreach (var currentItem in _currentItems)
-            {
-                NewItem(currentItem);
-            }
+            foreach (var currentItem in _currentItems) NewItem(currentItem);
             _currentItems.Clear();
         }
 
@@ -129,10 +108,7 @@ namespace assets.code
         {
             if (item != null)
             {
-                if (item.isCauldron())
-                {
-                    return false;
-                }
+                if (item.isCauldron()) return false;
                 return Add(item);
             }
 
@@ -140,17 +116,14 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Adds an item to the cauldron.
-        /// If an item is found the Cauldron will spit it out and play particle effects
+        ///     Adds an item to the cauldron.
+        ///     If an item is found the Cauldron will spit it out and play particle effects
         /// </summary>
         /// <param name="item">Item to add</param>
         /// <returns>if the item was added</returns>
         private bool Add(Item item)
         {
-            if (isBrewing())
-            {
-                return false;
-            }
+            if (isBrewing()) return false;
 
             var random = new Random();
             _currentItems.Add(item.itemName);
@@ -162,14 +135,14 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Creates a Particle Effect 
+        ///     Creates a Particle Effect
         /// </summary>
         /// <param name="color">The Color of the Particles</param>
         private void SpawnParticle(Color color)
         {
             if (dropParticleSystem != null)
             {
-                var obGameObject = Instantiate(dropParticleSystem, this.transform);
+                var obGameObject = Instantiate(dropParticleSystem, transform);
                 obGameObject.transform.localPosition = new Vector3();
                 var system = obGameObject.GetComponent<ParticleSystem>();
 
@@ -180,7 +153,7 @@ namespace assets.code
         }
 
         /// <summary>
-        /// Searches for a valid recipe 
+        ///     Searches for a valid recipe
         /// </summary>
         /// <param name="items">items to test</param>
         /// <returns>a potential Recipe</returns>
@@ -190,15 +163,9 @@ namespace assets.code
             foreach (var recipe in RecipeRegister.AllRecipes)
             {
                 var hashSet = new HashSet<string>(recipe.Ingredients);
-                foreach (var item in items)
-                {
-                    hashSet.Remove(item);
-                }
+                foreach (var item in items) hashSet.Remove(item);
 
-                if (hashSet.Count == 0)
-                {
-                    return recipe;
-                }
+                if (hashSet.Count == 0) return recipe;
             }
 
             return null;
@@ -206,8 +173,8 @@ namespace assets.code
 
 
         /// <summary>
-        /// Creates a new Item the the specified name.
-        /// Also updates the Image
+        ///     Creates a new Item the the specified name.
+        ///     Also updates the Image
         /// </summary>
         /// <param name="name">name and id of the item</param>
         private void NewItem(string name)
@@ -216,7 +183,7 @@ namespace assets.code
             {
                 var obj = Instantiate(ImageRegister.GetGameObjectByItemName(name));
                 obj.SetActive(true);
-                obj.transform.position = this.transform.position + new Vector3(0, 1, 0);
+                obj.transform.position = transform.position + new Vector3(0, 1, 0);
                 obj.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
         }

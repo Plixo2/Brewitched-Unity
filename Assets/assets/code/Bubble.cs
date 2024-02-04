@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using assets.code;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bubble : MonoBehaviour
@@ -11,30 +6,27 @@ public class Bubble : MonoBehaviour
     public float range = 5;
     public float animationSpeed = 5f;
     public bool delete = true;
-    public bool isRecipe = false;
-
-    private bool wasInRange = false;
-    private bool isDeleting = false;
+    public bool isRecipe;
 
     [TextAreaAttribute] public string text;
 
-    TMP_Text textMeshPro;
+    [SerializeField] private GameObject player;
+    private bool isDeleting;
 
-    [SerializeField] GameObject player;
+    private TMP_Text textMeshPro;
+
+    private bool wasInRange;
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         textMeshPro = GetComponentInChildren<TMP_Text>();
-        if (textMeshPro != null)
-        {
-            textMeshPro.text = text;
-        }
+        if (textMeshPro != null) textMeshPro.text = text;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (player != null)
         {
@@ -42,18 +34,17 @@ public class Bubble : MonoBehaviour
             var inrange = distance <= range;
             if (isRecipe)
             {
-                this.transform.localScale = Vector3.one;
+                transform.localScale = Vector3.one;
                 if (inrange)
                 {
                     GetComponentInChildren<Animator>().enabled = true;
                     foreach (var componentsInChild in GetComponentsInChildren<SpriteRenderer>())
-                    {
                         componentsInChild.enabled = true;
-                    }
                 }
-                
+
                 return;
             }
+
             if (inrange)
             {
                 wasInRange = true;
@@ -64,14 +55,14 @@ public class Bubble : MonoBehaviour
                 Destroy(gameObject, 10);
             }
 
-            var target = (inrange && !isDeleting) ? Vector3.one : Vector3.zero;
+            var target = inrange && !isDeleting ? Vector3.one : Vector3.zero;
 
-            this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, target,
+            transform.localScale = Vector3.MoveTowards(transform.localScale, target,
                 Time.deltaTime * animationSpeed);
         }
         else
         {
-            this.transform.localScale = Vector3.one;
+            transform.localScale = Vector3.one;
         }
     }
 

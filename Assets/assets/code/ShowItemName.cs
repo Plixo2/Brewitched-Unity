@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace assets.code
 {
-public class ShowItemName : MonoBehaviour
-{
-    [SerializeField] private Vector3 playerDistance;
-    [SerializeField] private Player player;
-    void Update()
+    public class ShowItemName : MonoBehaviour
     {
-        this.transform.position = player.transform.position + playerDistance;
+        [SerializeField] private Vector3 playerDistance;
+        [SerializeField] private Player player;
+
+        private void Update()
+        {
+            transform.position = player.transform.position + playerDistance;
+        }
     }
-}
 }

@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using assets.code;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Potions : MonoBehaviour
@@ -20,15 +17,15 @@ public class Potions : MonoBehaviour
     [SerializeField] public PotionType potionType;
     [SerializeField] private float potionDuration = 5f;
 
-    public float remainingDuration = 0f;
+    public float remainingDuration;
 
-    void Update()
+    private void Update()
     {
         remainingDuration -= Time.deltaTime;
     }
 
     /// <summary>
-    /// Start the coroutine for the potion Effect based on the enum type and destroys the gameObejct afterwards
+    ///     Start the coroutine for the potion Effect based on the enum type and destroys the gameObejct afterwards
     /// </summary>
     /// <returns></returns>
     public IEnumerator EnablePotion()
@@ -46,7 +43,7 @@ public class Potions : MonoBehaviour
                 yield return StartCoroutine(EnableFireResistance());
                 break;
             }
-            case  PotionType.jesus:
+            case PotionType.jesus:
             {
                 yield return StartCoroutine(EnableJesusPotion());
                 break;
@@ -62,8 +59,10 @@ public class Potions : MonoBehaviour
                 break;
             }
         }
-        Destroy(this.gameObject);
+
+        Destroy(gameObject);
     }
+
     private IEnumerator EnableDoubleJump()
     {
         player.doubleJumpEnabled = true;
@@ -72,6 +71,7 @@ public class Potions : MonoBehaviour
         player.doubleJumpEnabled = false;
         player.activePotions.Remove(this);
     }
+
     private IEnumerator EnableFireResistance()
     {
         player.fireResistanceEnabled = true;
@@ -80,6 +80,7 @@ public class Potions : MonoBehaviour
         player.fireResistanceEnabled = false;
         player.activePotions.Remove(this);
     }
+
     private IEnumerator EnableJesusPotion()
     {
         player.jesusPotionEnabled = true;
@@ -90,6 +91,7 @@ public class Potions : MonoBehaviour
         player.waterCollider.enabled = false;
         player.activePotions.Remove(this);
     }
+
     private IEnumerator EnableDashPotion()
     {
         player.dashPotionEnabled = true;
@@ -98,6 +100,7 @@ public class Potions : MonoBehaviour
         player.dashPotionEnabled = false;
         player.activePotions.Remove(this);
     }
+
     private IEnumerator EnableReversePotion()
     {
         var waterManager = States.GetWaterManager();
