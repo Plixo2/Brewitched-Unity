@@ -22,6 +22,7 @@ public class GameOverScreenScript : MonoBehaviour
     {
         if (!States.GetPlayerAlive())
         {
+            
             gameOverScreen.style.display = DisplayStyle.Flex;
         } else
         {
