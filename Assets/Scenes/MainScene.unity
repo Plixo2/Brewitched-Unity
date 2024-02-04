@@ -5259,7 +5259,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &56834704
 MonoBehaviour:
@@ -5299,90 +5299,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.03125, y: 0.3582697}
   m_Size: {x: 0.375, y: 0.7165394}
   m_Direction: 0
---- !u!1 &65423601
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 65423603}
-  - component: {fileID: 65423602}
-  m_Layer: 0
-  m_Name: Drain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!212 &65423602
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 65423601}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9fb59f2e98c2dfb468b33879ca6ce075, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.875, y: 0.8125}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!4 &65423603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 65423601}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.46, y: 14.74, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 19
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &70901537 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7878350319992209165, guid: 486dc9fea4fa3b34caf9be15fba4c44a, type: 3}
@@ -5409,7 +5325,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 5a88f00385b0dc847a48590bd9037300, type: 2}
     - target: {fileID: 7878350319992209165, guid: 430450cba07c5874ab071113ffcdb352, type: 3}
       propertyPath: m_RootOrder
-      value: 26
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 430450cba07c5874ab071113ffcdb352, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16767,7 +16683,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2672445287863293514, guid: 7e1319e031fc121428ba464961cb2ed4, type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2672445287863293514, guid: 7e1319e031fc121428ba464961cb2ed4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18388,7 +18304,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 97e20c012ca643e43ba6e69382215d72, type: 2}
     - target: {fileID: 5436693531083659380, guid: 737f3b2800ef1e541ac5c20a1d7f50aa, type: 3}
       propertyPath: m_RootOrder
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 5436693531083659380, guid: 737f3b2800ef1e541ac5c20a1d7f50aa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -33612,8 +33528,8 @@ MonoBehaviour:
   health: 0
   _camera: {fileID: 519420028}
   _spriteRenderer: {fileID: 1450041933}
-  groundOffset: {x: 0, y: -0.69}
-  groundRadius: 0.8
+  groundOffset: {x: 0.02, y: -0.69}
+  groundRadius: 0.68
   groundRectangle: 1
   groundMask:
     serializedVersion: 2
@@ -34790,7 +34706,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 7878350319992209165, guid: 486dc9fea4fa3b34caf9be15fba4c44a, type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 486dc9fea4fa3b34caf9be15fba4c44a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -35844,7 +35760,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1093040121
 PrefabInstance:
@@ -37305,7 +37221,7 @@ Transform:
   - {fileID: 313921854}
   - {fileID: 1008116178}
   m_Father: {fileID: 0}
-  m_RootOrder: 27
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1329747739 stripped
 Transform:
@@ -38231,7 +38147,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1477236299
 PrefabInstance:
@@ -38356,7 +38272,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 28
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1497966583
 PrefabInstance:
@@ -75622,8 +75538,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.25999928, y: -3.5306, z: 0}
-    m_Extent: {x: 19.584301, y: 11.7679, z: 0}
+    m_Center: {x: 0.24880028, y: -3.525, z: 0}
+    m_Extent: {x: 19.5788, y: 11.769199, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
