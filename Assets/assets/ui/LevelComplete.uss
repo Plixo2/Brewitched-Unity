@@ -1,0 +1,6 @@
+.text {
+    font-size: 30px;
+    -unity-font: url('project://database/Assets/assets/ui/Minecraft.ttf?fileID=12800000&guid=e0b9fda3e9994a34c8cf33221b40643f&type=3#Minecraft');
+    -unity-font-definition: url('project://database/Assets/assets/ui/Minecraft%20SDF.asset?fileID=11400000&guid=b87aabd380a3f774d8b282a3330a6b06&type=2#Minecraft SDF');
+    color: rgb(0, 0, 0);
+}

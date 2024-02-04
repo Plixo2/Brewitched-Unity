@@ -22,7 +22,10 @@ namespace assets.code
         private List<Valve> _valves = new();
         public static bool allValvesClosedOnce = false;
         
-        private WaterAsset? _waterManager; 
+        private WaterAsset? _waterManager;
+
+        public static bool playerAlive = true;
+
 
         private void Awake()
         {
@@ -47,6 +50,24 @@ namespace assets.code
         {
             _instance._valves.Add(valve);
         }
+
+        public static void SetPlayerAlive(bool alive)
+        {
+            playerAlive = alive;
+            if(alive)
+            {
+                Time.timeScale = 1.0f;
+            } else
+            {
+                Time.timeScale = 0f;
+            }
+        }
+
+        public static bool GetPlayerAlive()
+        {
+            return playerAlive;
+        }
+
         public static void setWaterManager(WaterAsset asset)
         {
             _instance._waterManager = asset;

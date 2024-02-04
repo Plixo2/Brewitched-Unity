@@ -23,7 +23,7 @@ public class HUD : MonoBehaviour
     private VisualElement _rootVisualElement;
     
     private bool isBookOpen = false;
-    private float time;
+    public static float time;
 
     void Start()
     {

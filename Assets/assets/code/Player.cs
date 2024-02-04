@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using assets.images.mage2;
 using JetBrains.Annotations;
@@ -67,6 +68,8 @@ namespace assets.code
         [SerializeField] private float impactFrameTime = 0.5f;
         [SerializeField] private Color32 impactFrameColor = Color.red;
 
+        public List<Potions> activePotions = new List<Potions>();
+
         [SerializeField] [Range(0, 16)] private int maxHealth = 6;
 
         public bool allowDash = true;
@@ -80,6 +83,7 @@ namespace assets.code
 
         [SerializeField] private TextMeshProUGUI text;
 
+        private bool wasKilled;
 
         void Start()
         {
@@ -89,6 +93,7 @@ namespace assets.code
             _playerAnimator = GetComponent<PlayerAnimator>();
             camFollow = _camera.GetComponent<CamFollow>();
             lastGroundedPosition = transform.position;
+            wasKilled = false;
         }
 
         #region Update
@@ -549,15 +554,14 @@ namespace assets.code
 
             if (health <= 0)
             {
-                _playerSound.PlayDeath();
-                this.Kill();
-                this.health = 0;                
+                this.health = 0;
+                if (States.GetPlayerAlive() && !wasKilled)
+                {
+                    _playerSound.PlayDeath();
+                    wasKilled = true;
+                    States.SetPlayerAlive(false);
+                }
             }
-        }
-
-        public void Kill()
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         #endregion
