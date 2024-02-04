@@ -5,6 +5,7 @@ namespace assets.code
 {
     public class ExitDoor : MonoBehaviour
     {
+        [SerializeField] private AudioSource? winGame;
         [SerializeField] Animator animator;
 
         bool isOpen = false;
@@ -25,6 +26,7 @@ namespace assets.code
                 animator.SetTrigger("open");
                 isOpen = true;
                 _collider.isTrigger = true;
+                winGame.Play();
             }
         }
 

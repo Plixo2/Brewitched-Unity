@@ -26,6 +26,7 @@ namespace assets.code
         [SerializeField] public Image progressBarImage;
         [SerializeField] public Image fillImage;
         [SerializeField] private float brewingTime = 5f;
+        [SerializeField] private AudioSource? finishBrewing;
 
         private float _brewingTimeLeft = -1;
         private String? _itemBrewing;
@@ -69,6 +70,7 @@ namespace assets.code
                 _brewingTimeLeft -= Time.deltaTime;
                 if (!isBrewing() && _itemBrewing != null)
                 {
+                    finishBrewing.Play();
                     NewItem(_itemBrewing);
                     _itemBrewing = null;
                     progressBarImage.enabled = false;
