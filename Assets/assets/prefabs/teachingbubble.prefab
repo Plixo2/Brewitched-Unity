@@ -171,7 +171,7 @@ MonoBehaviour:
 
     looks like the pipes are leaking!!!'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b87aabd380a3f774d8b282a3330a6b06, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 2051567693693477365, guid: b87aabd380a3f774d8b282a3330a6b06, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -338,6 +338,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 5
   animationSpeed: 5
+  delete: 1
+  isRecipe: 0
   text: 'Oh no,
 
     looks like the pipes are leaking!!!'

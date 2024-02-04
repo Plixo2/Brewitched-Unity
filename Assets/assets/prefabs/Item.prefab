@@ -123,6 +123,7 @@ MonoBehaviour:
   _connectionPoint: {fileID: 0}
   itemName: 
   rigidbody: {fileID: 0}
+  _spriteRenderer: {fileID: 0}
 --- !u!61 &7648403513051419614
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -149,4 +150,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.7571334, y: 0.82156175}
   m_EdgeRadius: 0
-  _spriteRenderer: {fileID: 0}

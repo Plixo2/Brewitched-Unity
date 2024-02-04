@@ -77,8 +77,8 @@ namespace assets.code
             }
             else
             {
-                if (_currentItems.Count > 0 && _item._connectionPoint != null &&
-                    _item._connectionPoint.isFireplace)
+                var inFire = _item._connectionPoint != null && _item._connectionPoint.isFireplace;
+                if (_currentItems.Count > 0 && inFire)
                 {
                     var findRecipeResult = FindRecipeResult(_currentItems);
 
@@ -98,9 +98,9 @@ namespace assets.code
 
                         _brewingTimeLeft = brewingTime;
                         _itemBrewing = findRecipeResult.Result;
+                        DropAll();
                     }
 
-                    DropAll();
                     
                 }
             }
