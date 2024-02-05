@@ -11132,11 +11132,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.5563345
+      value: 3.98
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.6830666
+      value: 1.45
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.z
@@ -18206,7 +18206,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1054515571532615247, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_text
-      value: Hold <F> to drop items
+      value: Hold <F> to drop items again
       objectReference: {fileID: 0}
     - target: {fileID: 1054515571532615247, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_margin.z
@@ -18222,11 +18222,11 @@ PrefabInstance:
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 1054515572092986768, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: text
-      value: Hold <F> to drop items
+      value: Hold <F> to drop items again
       objectReference: {fileID: 0}
     - target: {fileID: 1054515572092986768, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: range
-      value: 1.46
+      value: 1.9
       objectReference: {fileID: 0}
     - target: {fileID: 1054515572092986768, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: player
@@ -18238,11 +18238,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.39
+      value: 6.17
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.93
+      value: -3.57
       objectReference: {fileID: 0}
     - target: {fileID: 7203474122882472165, guid: 2a4d3cfecb7c45c43ad086cb62fda073, type: 3}
       propertyPath: m_LocalPosition.z
@@ -75538,8 +75538,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.2507, y: -3.5236, z: 0}
-    m_Extent: {x: 19.5819, y: 11.7631, z: 0}
+    m_Center: {x: 0.24479961, y: -3.5265503, z: 0}
+    m_Extent: {x: 19.582901, y: 11.75935, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
