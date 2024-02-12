@@ -1,21 +1,13 @@
 <h1 align="center">
-    Brewitched (working title)
+    Brewitched
 </h1>
 <div align="center">
   <strong>
-        Unity Project
+        Unity Project for the Game Development course at the University of Tübingen
   </strong>
 </div>
 
-> [!Important]
-> Open the Main Scene inside the Scene Folder
+<br>
+<br>
 
-## Features:
-
-- Crafting (look into RecipieRegister.cs)
-- Unlocking a Gate with an item
-- Player Movement
-- Picking up items
-- Dropping items
-- Placing items
-- Item Outline Shader
+Play it here: [Itch.io](https://brewitched.itch.io/brewitched)
